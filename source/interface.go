@@ -16,5 +16,11 @@ func Discover() []Source {
 		}
 	}
 
+	if projectsDir := defaultProjectDir(); projectsDir != "" {
+		if _, err := os.Stat(projectsDir); err == nil {
+			sources = append(sources, &ClaudeSource{projectsDir: projectsDir})
+		}
+	}
+
 	return sources
 }

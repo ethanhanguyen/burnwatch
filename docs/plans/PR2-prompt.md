@@ -171,6 +171,7 @@ Create an anonymized SQLite DB from the user's actual OpenCode data:
 - [ ] Push to branch `pr2-opencode-source`
 - [ ] Open pull request
 - [ ] Perform code review
+- [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
 

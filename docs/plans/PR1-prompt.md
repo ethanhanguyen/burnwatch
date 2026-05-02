@@ -124,6 +124,7 @@ Match models by substring (e.g. `"claude-sonnet-4-5-20250929"` contains `"claude
 - [ ] Push to branch `pr1-foundation`
 - [ ] Open pull request
 - [ ] Perform code review
+- [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
 
