@@ -6,6 +6,13 @@
 
 Establish the core types and interfaces that all other PRs depend on. No runtime I/O yet — just the contracts and a pricing table.
 
+## Dependencies
+
+- **Must merge first:** None (this is the foundation PR)
+- **External dependencies:** None
+- **Can be parallel with:** None
+- **Breaking changes / Migrations needed:** None
+
 ## Files to create
 
 | File | Purpose |
@@ -15,6 +22,12 @@ Establish the core types and interfaces that all other PRs depend on. No runtime
 | `source/interface.go` | `Source` interface + `Discover()` function |
 | `source/pricing.go` | Embedded pricing table, `CostForModel()` function |
 | `source/pricing_test.go` | Test cost calculation for known models |
+
+## Pre-flight
+
+- [ ] Pull latest main: `git fetch origin && git checkout main && git pull origin main`
+- [ ] Create feature branch: `git checkout -b pr1-foundation`
+- [ ] Verify build environment works on clean main
 
 ## `source/event.go`
 
@@ -106,6 +119,7 @@ Match models by substring (e.g. `"claude-sonnet-4-5-20250929"` contains `"claude
 - [ ] `golangci-lint run` passes with zero issues
 - [ ] `go build ./...` compiles cleanly
 - [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
+- [ ] Document learnings (gotchas, mistakes, patterns, hidden coupling) in `docs/learnings.md`
 - [ ] Commit message: `feat: add TokenEvent, Source interface, and pricing table`
 - [ ] Push to branch `pr1-foundation`
 - [ ] Open pull request

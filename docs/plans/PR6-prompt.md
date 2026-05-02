@@ -24,6 +24,12 @@ Final polish pass. Write all documentation, set up CI guardrails, create a CHANG
 | `.golangci.yml` | Linter configuration |
 | `.github/workflows/ci.yml` | CI pipeline (test, vet, lint, build) |
 
+## Pre-flight
+
+- [ ] Pull latest main: `git fetch origin && git checkout main && git pull origin main`
+- [ ] Create feature branch: `git checkout -b pr6-docs-ci`
+- [ ] Verify build environment works on clean main
+
 ## Dependencies
 
 PR5 must be merged. This PR runs after the binary is functional.
@@ -264,9 +270,35 @@ jobs:
       - run: ./burnwatch --help
 ```
 
+## Test Requirements
+
+1. **CI smoke test**: Push to branch → CI runs all 4 steps (test, vet, lint, build) green.
+2. **Link checker**: Every link in `docs/index.md` resolves to an existing file.
+3. **CHANGELOG format**: v1.0.0 entry includes all major features from PR1–PR5.
+4. **README accuracy**: Every CLI example in README matches actual `--help` output.
+5. **Archive correctness**: After merging, verify `docs/archive/` contains all 6 PR prompts + implementation plan.
+
+**Coverage target**: CI gate applies — all tests in the repo must pass (coverage target from prior PRs).
+
+## Approach
+
+1. Write all docs (`docs/` + `README.md` + `CHANGELOG.md`) first.
+2. Create `.golangci.yml` and `.github/workflows/ci.yml`.
+3. Push to branch → verify CI runs green.
+4. Merge to main.
+5. Archive: move PR prompts + implementation.md → `docs/archive/`, update `docs/index.md`.
+6. Tag `v1.0.0`.
+
 ## Archive
 
 After PR6 merges, move PR*-prompt.md files and implementation.md into `docs/archive/`. Update `docs/index.md` to point to archive.
+
+## Notes
+
+- `docs/index.md` already exists — edit it, don't replace. Add learnings section.
+- README must match actual binary behavior. Use `./burnwatch --help` output as source of truth.
+- CHANGELOG follows keepachangelog.com format for v1.0.0.
+- CI uses `golangci-lint-action@v6` with `version: latest`.
 
 ## Exit criteria
 
@@ -279,6 +311,7 @@ After PR6 merges, move PR*-prompt.md files and implementation.md into `docs/arch
 - [ ] `docs/index.md` links to all docs and they exist
 - [ ] Archive PR prompts and implementation plan
 - [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
+- [ ] Document learnings (gotchas, mistakes, patterns, hidden coupling) in `docs/learnings.md`
 - [ ] Commit: `docs: add full documentation, README, CHANGELOG, CI`
 - [ ] Push to branch `pr6-docs-ci`
 - [ ] Open pull request

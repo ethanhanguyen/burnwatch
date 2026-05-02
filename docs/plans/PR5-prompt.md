@@ -19,6 +19,12 @@ Wire all components together: CLI entrypoint, output formatters (text + JSON), a
 | `testdata/expected_report.txt` | Golden file — expected text output |
 | `testdata/expected_report.json` | Golden file — expected JSON output |
 
+## Pre-flight
+
+- [ ] Pull latest main: `git fetch origin && git checkout main && git pull origin main`
+- [ ] Create feature branch: `git checkout -b pr5-cli-output`
+- [ ] Verify build environment works on clean main
+
 ## Dependencies
 
 PR1, PR2, PR3, PR4 must all be merged. This PR serializes after them.
@@ -219,9 +225,16 @@ func TestEndToEnd(t *testing.T) {
 - [ ] Golden file tests pass (text and JSON match expected)
 - [ ] E2E smoke test passes (at least one waste signal detected)
 - [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
+- [ ] Document learnings (gotchas, mistakes, patterns, hidden coupling) in `docs/learnings.md`
 - [ ] Commit: `feat: wire CLI, text/JSON output, integration tests`
 - [ ] Push to branch `pr5-cli-output`
 - [ ] Open pull request
 - [ ] Perform code review
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
+
+## Notes
+
+- Golden files live in `testdata/` — regenerate with `go test -update` if output format changes.
+- No colors in v1 text output. Keep formatting simple and testable.
+- CLI flags use stdlib `flag` package — no external CLI framework.

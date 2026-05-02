@@ -15,6 +15,12 @@ Implement the `Source` interface for Claude Code by reading its per-project sess
 | `testdata/claude_sample.jsonl` | Anonymized session JSONL (multi-line, multi-type) |
 | `testdata/claude_subagents/` | Anonymized subagent JSONL files |
 
+## Pre-flight
+
+- [ ] Pull latest main: `git fetch origin && git checkout main && git pull origin main`
+- [ ] Create feature branch: `git checkout -b pr3-claude-source`
+- [ ] Verify build environment works on clean main
+
 ## Dependencies
 
 PR1 must be merged. PR3 can be built in parallel with PR2 and PR4.
@@ -169,9 +175,16 @@ For large session files (14MB, 4000+ lines seen in user data), stream line-by-li
 - [ ] `golangci-lint run` zero issues
 - [ ] Update `README.md` "Supported Harnesses" section to include Claude Code
 - [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
+- [ ] Document learnings (gotchas, mistakes, patterns, hidden coupling) in `docs/learnings.md`
 - [ ] Commit: `feat: add Claude Code source (JSONL reader with subagent discovery)`
 - [ ] Push to branch `pr3-claude-source`
 - [ ] Open pull request
 - [ ] Perform code review
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
+
+## Notes
+
+- Large session files (14MB, 4000+ lines) — use `bufio.Scanner` for streaming.
+- Claude Code costs are computed via `pricing.CostForModel()`, not stored in the data.
+- Subagent directories may not exist for all sessions — handle gracefully.

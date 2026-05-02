@@ -14,6 +14,12 @@ Implement the `Source` interface for OpenCode by reading its SQLite database (`~
 | `source/opencode_test.go` | Tests against anonymized test DB |
 | `testdata/opencode_sample.db` | Anonymized 10-session SQLite DB |
 
+## Pre-flight
+
+- [ ] Pull latest main: `git fetch origin && git checkout main && git pull origin main`
+- [ ] Create feature branch: `git checkout -b pr2-opencode-source`
+- [ ] Verify build environment works on clean main
+
 ## Dependencies
 
 PR1 must be merged first. Use `go get` for the SQLite driver — use `modernc.org/sqlite` (pure Go, no CGO):
@@ -160,6 +166,7 @@ Create an anonymized SQLite DB from the user's actual OpenCode data:
 - [ ] `golangci-lint run` zero issues
 - [ ] Update `README.md` with "Supported Harnesses" section listing OpenCode
 - [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
+- [ ] Document learnings (gotchas, mistakes, patterns, hidden coupling) in `docs/learnings.md`
 - [ ] Commit: `feat: add OpenCode source (SQLite reader)`
 - [ ] Push to branch `pr2-opencode-source`
 - [ ] Open pull request

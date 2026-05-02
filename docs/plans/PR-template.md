@@ -4,11 +4,17 @@
 
 <!-- 1-2 sentences. What outcome does this PR achieve? No implementation details — just the result. -->
 
+## Success Criteria
+
+<!-- Each criterion must be verifiable — confirmable true/false by a test, log, or observable output. -->
+- [ ] ...
+
 ## Dependencies
 
 - **Must merge first:** <!-- e.g. PR1 -->
-- **External packages:** <!-- e.g. `go get github.com/foo/bar` -->
+- **External dependencies:** <!-- e.g. `go get github.com/foo/bar` -->
 - **Can be parallel with:** <!-- e.g. PR2, PR3 -->
+- **Breaking changes / Migrations needed:** <!-- if any -->
 
 ---
 
@@ -20,9 +26,9 @@
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `path/to/file` | What it does |
+| File | Purpose | Notes |
+|------|---------|-------|
+| `path/to/file` | What it does |  |
 
 ---
 
@@ -77,12 +83,12 @@
 ## Exit Criteria
 
 - [ ] Pull latest main
-- [ ] Create feature branch from main
-- [ ] `go vet ./...` passes (zero warnings)
-- [ ] `golangci-lint run` passes (zero issues)
-- [ ] `go build ./...` compiles cleanly
-- [ ] `go test ./... -cover` passes (>=90% coverage on new code)
-- [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
+- [ ] Create feature branch from main: `git checkout -b <branch>`
+- [ ] Lint passes (zero warnings) — see `AGENTS.md` for project commands
+- [ ] Build compiles cleanly — see `AGENTS.md` for project commands
+- [ ] Tests pass with required coverage — see `AGENTS.md` for project commands
+- [ ] Self-review: follow project code review guidelines
+- [ ] Document learnings (gotchas, mistakes, patterns, hidden coupling) in `docs/learnings.md`
 - [ ] Commit: `<type>: <description>`
 - [ ] Push to branch `<branch>`
 - [ ] Open pull request with description

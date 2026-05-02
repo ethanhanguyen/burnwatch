@@ -32,6 +32,10 @@ Start here. This file stays short on purpose.
 - [plans/implementation.md](./plans/implementation.md) — PR dependency graph, file map, quality gates
 - [plans/validation.md](./plans/validation.md) — test pyramid, golden files, smoke tests, CI gate
 
+## Learnings
+
+- [learnings.md](./learnings.md) — **read this on session start** — accumulated repo knowledge, past mistakes, gotchas
+
 ## Archive
 
 - [archive/](./archive/) — archived PR prompts, implementation plan

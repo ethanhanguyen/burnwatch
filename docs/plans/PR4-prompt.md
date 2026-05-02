@@ -19,6 +19,12 @@ Build the waste detection pipeline. Given a stream of `TokenEvent` values, compu
 | `analyze/recommend.go` | Map waste signals → human-readable recommendations |
 | `analyze/recommend_test.go` | Test recommendation text generation |
 
+## Pre-flight
+
+- [ ] Pull latest main: `git fetch origin && git checkout main && git pull origin main`
+- [ ] Create feature branch: `git checkout -b pr4-analysis-engine`
+- [ ] Verify build environment works on clean main
+
 ## Dependencies
 
 PR1 must be merged. PR4 can be built in parallel with PR2 and PR3. Tests use constructed `TokenEvent` slices — no real data needed until PR5.
@@ -193,9 +199,17 @@ func GenerateRecommendations(signals []WasteSignal, baselines map[string]Baselin
 - [ ] `go vet ./...` zero warnings
 - [ ] `golangci-lint run` zero issues
 - [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
+- [ ] Document learnings (gotchas, mistakes, patterns, hidden coupling) in `docs/learnings.md`
 - [ ] Commit: `feat: add waste detection engine with statistical baselines and recommendations`
 - [ ] Push to branch `pr4-analysis-engine`
 - [ ] Open pull request
 - [ ] Perform code review
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
+
+## Notes
+
+- Single session → σ = 0 (no outliers will fire). Test with multi-session data.
+- H5 (session churn) needs per-day grouping — use `time.Truncate(24 * time.Hour)`.
+- Negative token counts guarded at input — treat as 0 to avoid NaN ratios.
+- Do NOT add external dependencies. Pure Go stdlib + PR1 types only.
