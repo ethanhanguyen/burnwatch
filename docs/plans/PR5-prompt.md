@@ -230,6 +230,7 @@ func TestEndToEnd(t *testing.T) {
 - [ ] Push to branch `pr5-cli-output`
 - [ ] Open pull request
 - [ ] Perform code review
+- [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
 

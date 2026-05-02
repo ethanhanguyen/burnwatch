@@ -93,6 +93,7 @@
 - [ ] Push to branch `<branch>`
 - [ ] Open pull request with description
 - [ ] Perform code review
+- [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
 

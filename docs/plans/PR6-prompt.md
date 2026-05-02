@@ -285,7 +285,7 @@ jobs:
 1. Write all docs (`docs/` + `README.md` + `CHANGELOG.md`) first.
 2. Create `.golangci.yml` and `.github/workflows/ci.yml`.
 3. Push to branch → verify CI runs green.
-4. Merge to main.
+4. Update `docs/plans/progress.md`, then merge to main.
 5. Archive: move PR prompts + implementation.md → `docs/archive/`, update `docs/index.md`.
 6. Tag `v1.0.0`.
 
@@ -316,6 +316,7 @@ After PR6 merges, move PR*-prompt.md files and implementation.md into `docs/arch
 - [ ] Push to branch `pr6-docs-ci`
 - [ ] Open pull request
 - [ ] Perform code review
+- [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Tag v1.0.0 after merge: `git tag v1.0.0 && git push --tags`
 - [ ] Delete feature branch after merge

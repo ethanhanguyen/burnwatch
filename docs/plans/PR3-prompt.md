@@ -180,6 +180,7 @@ For large session files (14MB, 4000+ lines seen in user data), stream line-by-li
 - [ ] Push to branch `pr3-claude-source`
 - [ ] Open pull request
 - [ ] Perform code review
+- [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
 

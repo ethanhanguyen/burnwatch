@@ -51,8 +51,8 @@ func (s *ClaudeSource) Events() (<-chan TokenEvent, <-chan error) {
 	errs := make(chan error, 10)
 
 	go func() {
-		defer close(events)
 		defer close(errs)
+		defer close(events)
 
 		entries, err := os.ReadDir(s.projectsDir)
 		if err != nil {
@@ -90,6 +90,7 @@ func (s *ClaudeSource) processProject(projDir, projName string, events chan<- To
 		}
 
 		scanner := bufio.NewScanner(f)
+		scanner.Buffer(make([]byte, 0, 1024*1024), 10*1024*1024)
 		var parsedErrs []error
 		for scanner.Scan() {
 			line := scanner.Text()
@@ -100,6 +101,9 @@ func (s *ClaudeSource) processProject(projDir, projName string, events chan<- To
 			if ok {
 				events <- ev
 			}
+		}
+		if err := scanner.Err(); err != nil {
+			errs <- fmt.Errorf("scanner error in %s: %w", sf, err)
 		}
 		f.Close()
 
@@ -132,6 +136,7 @@ func (s *ClaudeSource) processSubagents(subagentsPath, projectDisplay, parentSes
 		}
 
 		scanner := bufio.NewScanner(f)
+		scanner.Buffer(make([]byte, 0, 1024*1024), 10*1024*1024)
 		var parsedErrs []error
 		for scanner.Scan() {
 			line := scanner.Text()
@@ -142,6 +147,9 @@ func (s *ClaudeSource) processSubagents(subagentsPath, projectDisplay, parentSes
 			if ok {
 				events <- ev
 			}
+		}
+		if err := scanner.Err(); err != nil {
+			errs <- fmt.Errorf("scanner error in %s: %w", saf, err)
 		}
 		f.Close()
 
@@ -178,16 +186,16 @@ func (s *ClaudeSource) parseLine(line, project, sessionID, agentID string, isSub
 	}
 
 	uid := entry.SessionID
-	parentUID := sessionID
-	at := agentID
+	parentUID := ""
+	at := ""
 
-	if !isSubagent {
-		uid = sessionID
-		parentUID = ""
-	}
-
-	if isSubagent && entry.AgentID != "" {
-		at = entry.AgentID
+	if isSubagent {
+		parentUID = sessionID
+		if entry.AgentID != "" {
+			at = entry.AgentID
+		} else {
+			at = agentID
+		}
 	}
 
 	cost := CostForModel(

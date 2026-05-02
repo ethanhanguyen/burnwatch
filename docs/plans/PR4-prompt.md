@@ -204,6 +204,7 @@ func GenerateRecommendations(signals []WasteSignal, baselines map[string]Baselin
 - [ ] Push to branch `pr4-analysis-engine`
 - [ ] Open pull request
 - [ ] Perform code review
+- [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
 

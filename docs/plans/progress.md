@@ -2,12 +2,12 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 2/6 PRs complete
+## Overall: 3/6 PRs complete
 
 ```
 PR1 ██████████████████████ Foundation
 PR2 ██████████████████████ OpenCode Source
-PR3 ░░░░░░░░░░░░░░░░░░░░ Claude Code Source
+PR3 ██████████████████████ Claude Code Source
 PR4 ░░░░░░░░░░░░░░░░░░░░ Analysis Engine
 PR5 ░░░░░░░░░░░░░░░░░░░░ CLI + Output + Wiring
 PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Release
@@ -19,7 +19,7 @@ PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Rel
 |----|--------|--------|---------|--------|-------|
 | PR1 | `pr1-foundation` | merged | 2026-05-02 | 2026-05-02 | TokenEvent, interface, pricing |
 | PR2 | `pr2-opencode-source` | merged | 2026-05-02 | 2026-05-02 | SQLite reader |
-| PR3 | `pr3-claude-source` | pending | — | — | JSONL reader + subagents |
+| PR3 | `pr3-claude-source` | merged | 2026-05-02 | 2026-05-02 | JSONL reader + subagents |
 | PR4 | `pr4-analysis-engine` | pending | — | — | Baselines + 5 heuristics |
 | PR5 | `pr5-cli-output` | pending | — | — | CLI + text/JSON + integration |
 | PR6 | `pr6-docs-ci` | pending | — | — | Docs + README + CHANGELOG + CI |
@@ -30,7 +30,7 @@ PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Rel
 
 ## Next action
 
-Execute [`PR3-prompt.md`](./PR3-prompt.md) — Claude Code Source.
+Execute [`PR4-prompt.md`](./PR4-prompt.md) — Analysis Engine.
 
 ## Execution log
 
@@ -38,6 +38,7 @@ Execute [`PR3-prompt.md`](./PR3-prompt.md) — Claude Code Source.
 |------|----|--------|
 | 2026-05-02 | — | Implementation plan and PR prompts written |
 | 2026-05-02 | PR2 | OpenCode source implemented, reviewed, merged |
+| 2026-05-02 | PR3 | Claude Code source implemented, reviewed, merged |
 
 ## Quality snapshot
 
