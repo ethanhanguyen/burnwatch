@@ -1,10 +1,14 @@
 # Repo Learnings
 
 <!--
-  Accumulated knowledge from PR sessions. Read on session start to avoid past mistakes.
+  Curated knowledge reference. Read on session start to avoid past mistakes.
   4 categories — use only those that apply. Every bullet cites a concrete file/function/symptom.
-  "In general" entries are invalid.
+  "In general" entries are invalid. See Rules section for maintenance protocol.
 -->
+
+## Meta
+
+This file is a curated knowledge reference, not a chronological PR log. Its purpose is to prevent AI agents and human contributors from repeating known mistakes. Structured by category to stay compact and searchable regardless of how many PRs have passed.
 
 ## Categories
 
@@ -17,50 +21,39 @@
 
 ---
 
-## 2026-05-02 — PR1: Foundation (TokenEvent, Source interface, Pricing)
+## Gotchas
 
-### Gotcha
-- `pricing.go` uses a `[]struct{key string; p priceEntry}` slice, not a `map[string]priceEntry`. Reason: model matching is substring-based (`strings.Contains`), which requires ordered iteration. A map would hide ambiguous matches silently — the slice ensures first-match-wins is explicit and testable. `source/pricing.go:12-22`
+- `pricing.go` uses a `[]struct{...}` slice, not `map[string]priceEntry`, because model matching is substring-based (`strings.Contains`) and requires ordered iteration. A map would hide ambiguous matches silently — the slice ensures first-match-wins is explicit and testable. `source/pricing.go:12-22`
+- `modernc.org/sqlite` v1.50.0 was incompatible with Go 1.22. The latest pure-Go SQLite isn't always compatible — pin to a version that matches the project's Go toolchain. `go.mod:5`
+- Claude Code subagent entries: both `SessionID` and `ParentSessionID` of the resulting `TokenEvent` are the parent session UUID. The subagent's identity is in the `agentId` field, not a unique session ID. `source/claude.go:196-201`
+- Go runs tests from the package directory, not the project root. All test data paths must use `filepath.Join("..", "testdata", ...)`. `source/*_test.go`
 
-### Mistake
-- Initial `go.mod` declared `go 1.26.2` (nonexistent version). Root cause: not checking `go version` on the actual runtime. Should match Go 1.22 exactly. Fixed in `04692cc`.
-- Added unreachable `if cost < 0 { return 0 }` guard in `CostForModel`. Negative tokens are already clamped at input — the negative-cost branch was dead code. Fixed in `04692cc`. Lesson: check invariants once at the entry point, not redundantly.
+## Mistakes
 
-### Pattern
-- Float comparisons in tests use `math.Abs(got-want) > delta` with `const delta = 0.0001`. Never use `==` for float equality. `source/pricing_test.go:9,86`
-- Separate test function (`TestCostForModelNonNegative`) for the defensive negative-input guard — keeps the main table-driven test focused on normal behavior.
+- Initial `go.mod` declared `go 1.26.2` (nonexistent version). Never write a go.mod version without checking `go version` on the actual runtime.
+- Unreachable `if cost < 0 { return 0 }` guard in `CostForModel`. Negative tokens are already clamped at input — the negative-cost branch was dead code. Check invariants once at the entry point, not redundantly. `source/pricing.go:26`
+- Left an unused `_ any` parameter that survived self-review until golangci-lint caught it. Run `golangci-lint run` before committing, not after.
 
-### Hidden coupling
-- `CostForModel` in `source/pricing.go:26` is the single pricing entry point. Every Source (OpenCode, Claude Code) calls it. Changing its signature or the `priceEntry` struct breaks all sources. When adding new fields to `TokenEvent`, check if pricing needs them too.
+## Patterns
 
-## 2026-05-02 — PR2: OpenCode Source
+- Float comparisons in tests: use `math.Abs(got - want) > delta` with `const delta = 0.0001`. Never `==` for float equality. `source/pricing_test.go:9,86`
+- Separate test function for defensive guards vs. main table-driven behavior. Keeps table-driven tests focused on normal cases. `source/pricing_test.go`
+- Env var override for test path injection: every Source follows the `BURNWATCH_<HARNESS>_<PATH>` convention. See `defaultDBPath()` in `source/opencode.go:177` and `defaultProjectDir()` in `source/claude.go:37-43`.
+- Error channels buffered (cap 10), events channels unbuffered — prevents the goroutine from blocking on error sends while the consumer drains events. `source/opencode.go:24-25`
+- `projectNameToDisplay()` strips leading `-` and replaces `-` with `/` to convert directory paths to display names. `source/claude.go:220-223`
 
-### Gotcha
-- `modernc.org/sqlite` v1.50.0 was incompatible with Go 1.22 (required newer stdlib). Had to downgrade to v1.29.0. The latest pure-Go SQLite isn't always compatible — pin to a version that matches the project's Go toolchain. `go.mod:5` (fixed in `2060479`).
+## Hidden Couplings
 
-### Mistake
-- Left an unused `_ any` parameter on `tokenDataToEvent()` — a leftover from an earlier design draft. Survived self-review until golangci-lint caught it. Fixed in `2060479`. Lesson: run `golangci-lint run` before committing, not after.
+- `CostForModel` in `source/pricing.go:26` is the single pricing entry point. Every Source calls it. Changing its signature or the `priceEntry` struct breaks all Sources. When adding fields to `TokenEvent`, check if pricing needs them too.
+- Adding a Source touches 3 files: (1) the new `source/<name>.go`, (2) `source/interface.go` `Discover()`, (3) `README.md` Supported Harnesses. `source/interface.go:10-20`
+- Test in-memory SQLite DB schemas must match actual harness DB schemas exactly. If a harness changes its schema, tests break silently by failing to create matching tables. `source/opencode_test.go:361-365`
 
-### Pattern
-- `defaultDBPath()` in `source/opencode.go:177` checks `BURNWATCH_OPENCODE_DB` env var first, then falls back to the well-known path. This allows tests to inject custom DB paths without source modification. Every new Source should follow this pattern (env var override).
-- Error channel in `Events()` is buffered (cap 10), events channel is unbuffered. Prevents the goroutine from blocking on error sends while the consumer drains events. `source/opencode.go:24-25`
+## Rules
 
-### Hidden coupling
-- `Discover()` in `source/interface.go:10-19` directly constructs `&OpenCodeSource{}`. Every new harness adds a compile-time dependency to `interface.go`. When adding a Source, you must update: (1) the Source file, (2) `Discover()`, (3) `README.md` Supported Harnesses.
-- Test creates in-memory SQLite DBs with `sql.Open("sqlite", path)` + `CREATE TABLE` statements. Schema must match OpenCode's actual DB schema exactly. If OpenCode changes its schema, tests break silently by failing to create matching tables. `source/opencode_test.go:361-365`
+These govern how this file is maintained. Violating them makes the file less useful over time.
 
-## 2026-05-02 — PR3: Claude Code Source
-
-### Gotcha
-- Claude Code subagent entries store the parent's `sessionId` in their own line. Both the `SessionID` and `ParentSessionID` of the resulting `TokenEvent` end up being the parent session UUID — the subagent is identifier is the `agentId` field, not a unique session. `source/claude.go:196-201`
-- Test data files referenced from `source/claude_test.go` need `filepath.Join("..", "testdata", ...)` — Go runs tests from the package directory, not the project root. Same pattern as opencode_test.go. `source/claude_test.go:30,38`
-
-### Mistake
-- Initial test used relative path `testdata/claude_sample.jsonl` without `..` prefix. Tests in `go test ./source/...` run with working directory set to `source/`, not project root. Fixed by matching the `filepath.Join("..", "testdata", ...)` pattern from opencode_test.go. `source/claude_test.go:30`
-
-### Pattern
-- `defaultProjectDir()` uses `BURNWATCH_CLAUDE_PROJECTS` env var for test overrides, following the same pattern as `defaultDBPath()` from the OpenCode source. `source/claude.go:37-43`
-- `projectNameToDisplay()` strips leading `-` and replaces `-` with `/` to convert `-Users-hoang-project` → `Users/hoang/project`. `source/claude.go:220-223`
-
-### Hidden coupling
-- Adding a Source touches exactly 3 files: (1) the new `source/<name>.go`, (2) `source/interface.go` `Discover()`, (3) `README.md` Supported Harnesses. `source/interface.go:10-20`
+1. **Category-first, not chronological.** Add/edit entries within their category. Never add a new date/PR section.
+2. **Merge before adding.** Before adding a new entry, check if a similar one exists. Consolidate instead of duplicating.
+3. **Staleness gate.** When adding to a category, review the oldest ~3 entries. If a gotcha/pattern hasn't been relevant for 5+ PRs, remove it.
+4. **Cite concrete code.** Every entry must reference a specific file, function, or symptom. "In general" observations are invalid.
+5. **Drop forensic detail.** Commit hashes, dates, and PR numbers belong in git history, not here.
