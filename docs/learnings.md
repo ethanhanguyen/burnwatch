@@ -6,7 +6,7 @@
   "In general" entries are invalid. See Rules section for maintenance protocol.
 -->
 
-## Meta
+## Overview
 
 This file is a curated knowledge reference, not a chronological PR log. Its purpose is to prevent AI agents and human contributors from repeating known mistakes. Structured by category to stay compact and searchable regardless of how many PRs have passed.
 
