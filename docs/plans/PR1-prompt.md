@@ -1,5 +1,7 @@
 # PR1: Foundation — TokenEvent, Source interface, Pricing table
 
+> **Workflow:** Follow `docs/plans/PR-template.md`. Review `AGENTS.md` behavioral guidelines before implementing.
+
 ## Objective
 
 Establish the core types and interfaces that all other PRs depend on. No runtime I/O yet — just the contracts and a pricing table.
@@ -97,11 +99,19 @@ Match models by substring (e.g. `"claude-sonnet-4-5-20250929"` contains `"claude
 
 ## Exit criteria
 
+- [ ] Pull latest main
+- [ ] Create feature branch from main
 - [ ] `go test ./source/... -cover` passes with ≥90% coverage on `pricing.go`
 - [ ] `go vet ./...` passes with zero warnings
+- [ ] `golangci-lint run` passes with zero issues
 - [ ] `go build ./...` compiles cleanly
+- [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
 - [ ] Commit message: `feat: add TokenEvent, Source interface, and pricing table`
 - [ ] Push to branch `pr1-foundation`
+- [ ] Open pull request
+- [ ] Perform code review
+- [ ] Merge to main
+- [ ] Delete feature branch after merge
 
 ## Notes
 

@@ -1,5 +1,7 @@
 # PR2: OpenCode Source
 
+> **Workflow:** Follow `docs/plans/PR-template.md`. Review `AGENTS.md` behavioral guidelines before implementing.
+
 ## Objective
 
 Implement the `Source` interface for OpenCode by reading its SQLite database (`~/.local/share/opencode/opencode.db`). Stream `TokenEvent` values from the `message`, `session`, and `project` tables.
@@ -151,12 +153,19 @@ Create an anonymized SQLite DB from the user's actual OpenCode data:
 
 ## Exit criteria
 
+- [ ] Pull latest main
+- [ ] Create feature branch from main
 - [ ] `go test ./source/... -cover` passes with ≥90% coverage on `opencode.go`
 - [ ] `go vet ./...` zero warnings
 - [ ] `golangci-lint run` zero issues
 - [ ] Update `README.md` with "Supported Harnesses" section listing OpenCode
+- [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
 - [ ] Commit: `feat: add OpenCode source (SQLite reader)`
 - [ ] Push to branch `pr2-opencode-source`
+- [ ] Open pull request
+- [ ] Perform code review
+- [ ] Merge to main
+- [ ] Delete feature branch after merge
 
 ## Notes
 

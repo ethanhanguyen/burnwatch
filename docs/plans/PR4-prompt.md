@@ -1,5 +1,7 @@
 # PR4: Analysis Engine
 
+> **Workflow:** Follow `docs/plans/PR-template.md`. Review `AGENTS.md` behavioral guidelines before implementing.
+
 ## Objective
 
 Build the waste detection pipeline. Given a stream of `TokenEvent` values, compute per-project baselines, flag waste signals using statistical outlier detection, build subagent cost trees, and generate actionable recommendations.
@@ -185,8 +187,15 @@ func GenerateRecommendations(signals []WasteSignal, baselines map[string]Baselin
 
 ## Exit criteria
 
+- [ ] Pull latest main
+- [ ] Create feature branch from main
 - [ ] `go test ./analyze/... -cover` passes with ≥90% coverage on all files
 - [ ] `go vet ./...` zero warnings
 - [ ] `golangci-lint run` zero issues
+- [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
 - [ ] Commit: `feat: add waste detection engine with statistical baselines and recommendations`
 - [ ] Push to branch `pr4-analysis-engine`
+- [ ] Open pull request
+- [ ] Perform code review
+- [ ] Merge to main
+- [ ] Delete feature branch after merge

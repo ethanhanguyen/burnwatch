@@ -1,5 +1,7 @@
 # PR3: Claude Code Source
 
+> **Workflow:** Follow `docs/plans/PR-template.md`. Review `AGENTS.md` behavioral guidelines before implementing.
+
 ## Objective
 
 Implement the `Source` interface for Claude Code by reading its per-project session JSONL files and subagent JSONL files. Stream `TokenEvent` values with costs computed via the pricing table from PR1.
@@ -160,9 +162,16 @@ For large session files (14MB, 4000+ lines seen in user data), stream line-by-li
 
 ## Exit criteria
 
+- [ ] Pull latest main
+- [ ] Create feature branch from main
 - [ ] `go test ./source/... -cover` passes with ≥90% coverage on `claude.go`
 - [ ] `go vet ./...` zero warnings
 - [ ] `golangci-lint run` zero issues
 - [ ] Update `README.md` "Supported Harnesses" section to include Claude Code
+- [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
 - [ ] Commit: `feat: add Claude Code source (JSONL reader with subagent discovery)`
 - [ ] Push to branch `pr3-claude-source`
+- [ ] Open pull request
+- [ ] Perform code review
+- [ ] Merge to main
+- [ ] Delete feature branch after merge

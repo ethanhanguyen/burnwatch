@@ -1,5 +1,7 @@
 # PR5: CLI + Output + Wiring + Integration Tests
 
+> **Workflow:** Follow `docs/plans/PR-template.md`. Review `AGENTS.md` behavioral guidelines before implementing.
+
 ## Objective
 
 Wire all components together: CLI entrypoint, output formatters (text + JSON), and end-to-end integration tests against real test data. This is where burnwatch becomes a usable binary.
@@ -206,6 +208,8 @@ func TestEndToEnd(t *testing.T) {
 
 ## Exit criteria
 
+- [ ] Pull latest main
+- [ ] Create feature branch from main
 - [ ] `go test ./... -cover` passes with ≥90% coverage
 - [ ] `go vet ./...` zero warnings
 - [ ] `golangci-lint run` zero issues
@@ -214,5 +218,10 @@ func TestEndToEnd(t *testing.T) {
 - [ ] `./burnwatch --db testdata/opencode_sample.db --json` outputs valid JSON
 - [ ] Golden file tests pass (text and JSON match expected)
 - [ ] E2E smoke test passes (at least one waste signal detected)
+- [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
 - [ ] Commit: `feat: wire CLI, text/JSON output, integration tests`
 - [ ] Push to branch `pr5-cli-output`
+- [ ] Open pull request
+- [ ] Perform code review
+- [ ] Merge to main
+- [ ] Delete feature branch after merge

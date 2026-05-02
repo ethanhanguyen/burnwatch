@@ -1,5 +1,7 @@
 # PR6: Docs, README, CHANGELOG, CI
 
+> **Workflow:** Follow `docs/plans/PR-template.md`. Review `AGENTS.md` behavioral guidelines before implementing.
+
 ## Objective
 
 Final polish pass. Write all documentation, set up CI guardrails, create a CHANGELOG, and archive the development plans.
@@ -268,12 +270,19 @@ After PR6 merges, move PR*-prompt.md files and implementation.md into `docs/arch
 
 ## Exit criteria
 
+- [ ] Pull latest main
+- [ ] Create feature branch from main
 - [ ] All docs written and internally consistent
 - [ ] README matches actual CLI behavior
 - [ ] CHANGELOG has v1.0.0 entry
 - [ ] CI passes: `go test` + `go vet` + `golangci-lint` + `go build`
 - [ ] `docs/index.md` links to all docs and they exist
 - [ ] Archive PR prompts and implementation plan
+- [ ] Self-review: follow behavioral guidelines in `AGENTS.md`
 - [ ] Commit: `docs: add full documentation, README, CHANGELOG, CI`
 - [ ] Push to branch `pr6-docs-ci`
+- [ ] Open pull request
+- [ ] Perform code review
+- [ ] Merge to main
 - [ ] Tag v1.0.0 after merge: `git tag v1.0.0 && git push --tags`
+- [ ] Delete feature branch after merge
