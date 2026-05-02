@@ -4,6 +4,13 @@ Find waste in your AI agent sessions. Save money.
 
 Supports [OpenCode](https://github.com/sst/opencode) and [Claude Code](https://github.com/anthropics/claude-code). No cloud, no API keys, no telemetry — reads your local session data directly.
 
+## Supported Harnesses
+
+| Harness | Status | Data Source |
+|---------|--------|-------------|
+| [OpenCode](https://github.com/sst/opencode) | Supported | `~/.local/share/opencode/opencode.db` (SQLite) |
+| Claude Code | Planned (PR3) | `~/.claude/projects/` (JSONL) |
+
 ## Install
 
 ```bash
