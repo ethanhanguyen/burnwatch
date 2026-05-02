@@ -51,8 +51,5 @@ func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite
 		float64(cacheRead)/1000.0*p.cacheRead +
 		float64(cacheWrite)/1000.0*p.cacheWrite
 
-	if cost < 0 {
-		return 0
-	}
 	return cost
 }
