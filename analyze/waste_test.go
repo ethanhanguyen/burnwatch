@@ -232,19 +232,35 @@ func TestDetectWasteNoSubagentsNoOverheadSignal(t *testing.T) {
 }
 
 func TestDetectWasteSignalFields(t *testing.T) {
-	events := []source.TokenEvent{
-		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 10.0, InputTokens: 100, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
-		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 10.0, InputTokens: 100, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 10, 30, 0, 0, time.UTC)},
-		{SessionID: "s-outlier", Project: "p", Harness: "h", CostUSD: 100.0, InputTokens: 100, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
-		{SessionID: "s-outlier", Project: "p", Harness: "h", CostUSD: 100.0, InputTokens: 100, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 11, 30, 0, 0, time.UTC)},
+	events := make([]source.TokenEvent, 0, 10)
+	now := time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
+	for i := 0; i < 5; i++ {
+		events = append(events, source.TokenEvent{
+			SessionID:   "s" + string(rune('a'+i)),
+			Project:     "p",
+			Harness:     "h",
+			CostUSD:     1.0,
+			InputTokens: 100,
+			OutputTokens: 50,
+			Timestamp:   now.Add(time.Duration(i) * time.Hour),
+		})
 	}
+	events = append(events, source.TokenEvent{
+		SessionID:   "s-outlier",
+		Project:     "p",
+		Harness:     "h",
+		CostUSD:     30.0,
+		InputTokens: 100,
+		OutputTokens: 50,
+		Timestamp:   now.Add(5 * time.Hour),
+	})
 
 	baselines := ComputeBaselines(events)
 	signals := DetectWaste(events, baselines)
 
 	for _, s := range signals {
 		if s.Reason == "cost_outlier" {
-			if !strings.Contains(s.Detail, "200.00") {
+			if !strings.Contains(s.Detail, "30.00") {
 				t.Errorf("expected detail to mention cost, got: %s", s.Detail)
 			}
 			if s.Metric <= s.Threshold {
@@ -253,6 +269,56 @@ func TestDetectWasteSignalFields(t *testing.T) {
 			if s.Project != "p" {
 				t.Errorf("project = %q, want %q", s.Project, "p")
 			}
+			if s.SessionCost != 30.0 {
+				t.Errorf("SessionCost = %f, want 30.0", s.SessionCost)
+			}
+			return
 		}
+	}
+	t.Error("expected cost_outlier signal, but none found")
+}
+
+func TestDetectWasteSortOrder(t *testing.T) {
+	events := make([]source.TokenEvent, 0, 7)
+	now := time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
+	for i := 0; i < 6; i++ {
+		events = append(events, source.TokenEvent{
+			SessionID:   "s" + string(rune('a'+i)),
+			Project:     "p",
+			Harness:     "h",
+			CostUSD:     1.0,
+			InputTokens: 100,
+			OutputTokens: 50,
+			CacheRead:   50 - int64(i*10),
+			CacheWrite:  50,
+			Timestamp:   now.Add(time.Duration(i) * time.Hour),
+		})
+	}
+	events = append(events, source.TokenEvent{
+		SessionID:   "s-outlier",
+		Project:     "p",
+		Harness:     "h",
+		CostUSD:     30.0,
+		InputTokens: 100,
+		OutputTokens: 50,
+		CacheRead:   0,
+		CacheWrite:  0,
+		Timestamp:   now.Add(6 * time.Hour),
+	})
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines)
+
+	prev := ""
+	for i, s := range signals {
+		cur := s.Severity + ":" + s.Reason + ":" + s.SessionID
+		if prev != "" && cur < prev {
+			t.Errorf("signals out of order at index %d: %q < %q", i, cur, prev)
+		}
+		prev = cur
+	}
+
+	if signals[0].Severity != "high" {
+		t.Errorf("first signal should be high severity, got %s", signals[0].Severity)
 	}
 }

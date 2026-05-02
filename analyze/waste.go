@@ -10,28 +10,29 @@ import (
 )
 
 type WasteSignal struct {
-	SessionID string
-	Project   string
-	Severity  string
-	Reason    string
-	Detail    string
-	Metric    float64
-	Threshold float64
+	SessionID   string
+	Project     string
+	Severity    string
+	Reason      string
+	Detail      string
+	Metric      float64
+	Threshold   float64
+	SessionCost float64
 }
 
 type sessionAgg struct {
-	sessionID   string
-	project     string
-	harness     string
-	cost        float64
-	ratio       float64
-	cacheRate   float64
-	inputSum    int64
-	outputSum   int64
-	cacheRead   int64
-	cacheWrite  int64
-	day         time.Time
-	isSubagent  bool
+	sessionID  string
+	project    string
+	harness    string
+	cost       float64
+	ratio      float64
+	cacheRate  float64
+	inputSum   int64
+	outputSum  int64
+	cacheRead  int64
+	cacheWrite int64
+	day        time.Time
+	isSubagent bool
 }
 
 func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline) []WasteSignal {
@@ -119,9 +120,10 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline) []Wa
 
 	signals = append(signals, checkSessionChurn(agg, baselines)...)
 
+	sevOrder := map[string]int{"high": 3, "medium": 2, "low": 1}
 	sort.Slice(signals, func(i, j int) bool {
 		if signals[i].Severity != signals[j].Severity {
-			return signals[i].Severity > signals[j].Severity
+			return sevOrder[signals[i].Severity] > sevOrder[signals[j].Severity]
 		}
 		if signals[i].Reason != signals[j].Reason {
 			return signals[i].Reason < signals[j].Reason
@@ -139,13 +141,14 @@ func checkCostOutlier(a *sessionAgg, bl Baseline) *WasteSignal {
 	threshold := bl.CostMean + 2*bl.CostStd
 	if a.cost > threshold {
 		return &WasteSignal{
-			SessionID: a.sessionID,
-			Project:   a.project,
-			Severity:  "high",
-			Reason:    "cost_outlier",
-			Detail:    fmt.Sprintf("Session cost $%.2f exceeds project baseline μ+2σ = $%.2f", a.cost, threshold),
-			Metric:    a.cost,
-			Threshold: threshold,
+			SessionID:   a.sessionID,
+			Project:     a.project,
+			Severity:    "high",
+			Reason:      "cost_outlier",
+			Detail:      fmt.Sprintf("Session cost $%.2f exceeds project baseline μ+2σ = $%.2f", a.cost, threshold),
+			Metric:      a.cost,
+			Threshold:   threshold,
+			SessionCost: a.cost,
 		}
 	}
 	return nil
@@ -160,13 +163,14 @@ func checkLowSignal(a *sessionAgg, global Baseline) *WasteSignal {
 	}
 	if a.ratio < global.RatioP10 {
 		return &WasteSignal{
-			SessionID: a.sessionID,
-			Project:   a.project,
-			Severity:  "medium",
-			Reason:    "low_signal",
-			Detail:    fmt.Sprintf("Output/input ratio %.4f below global P10 (%.4f)", a.ratio, global.RatioP10),
-			Metric:    a.ratio,
-			Threshold: global.RatioP10,
+			SessionID:   a.sessionID,
+			Project:     a.project,
+			Severity:    "medium",
+			Reason:      "low_signal",
+			Detail:      fmt.Sprintf("Output/input ratio %.4f below global P10 (%.4f)", a.ratio, global.RatioP10),
+			Metric:      a.ratio,
+			Threshold:   global.RatioP10,
+			SessionCost: a.cost,
 		}
 	}
 	return nil
@@ -179,13 +183,14 @@ func checkSubagentOverhead(a *sessionAgg, treeBySession map[string]*SubagentTree
 	}
 	if tree.OverheadPct > 50 {
 		return &WasteSignal{
-			SessionID: a.sessionID,
-			Project:   a.project,
-			Severity:  "medium",
-			Reason:    "subagent_overhead",
-			Detail:    fmt.Sprintf("Subagent overhead is %.1f%% of session cost ($%.2f of $%.2f)", tree.OverheadPct, tree.SubagentCost, tree.TotalCost),
-			Metric:    tree.OverheadPct,
-			Threshold: 50,
+			SessionID:   a.sessionID,
+			Project:     a.project,
+			Severity:    "medium",
+			Reason:      "subagent_overhead",
+			Detail:      fmt.Sprintf("Subagent overhead is %.1f%% of session cost ($%.2f of $%.2f)", tree.OverheadPct, tree.SubagentCost, tree.TotalCost),
+			Metric:      tree.OverheadPct,
+			Threshold:   50,
+			SessionCost: tree.TotalCost,
 		}
 	}
 	return nil
@@ -201,13 +206,14 @@ func checkCacheUnderutilized(a *sessionAgg, global Baseline) *WasteSignal {
 	}
 	if a.cacheRate < global.CacheP10 {
 		return &WasteSignal{
-			SessionID: a.sessionID,
-			Project:   a.project,
-			Severity:  "low",
-			Reason:    "cache_underutilized",
-			Detail:    fmt.Sprintf("Cache hit rate %.4f below global P10 (%.4f)", a.cacheRate, global.CacheP10),
-			Metric:    a.cacheRate,
-			Threshold: global.CacheP10,
+			SessionID:   a.sessionID,
+			Project:     a.project,
+			Severity:    "low",
+			Reason:      "cache_underutilized",
+			Detail:      fmt.Sprintf("Cache hit rate %.4f below global P10 (%.4f)", a.cacheRate, global.CacheP10),
+			Metric:      a.cacheRate,
+			Threshold:   global.CacheP10,
+			SessionCost: a.cost,
 		}
 	}
 	return nil
@@ -258,15 +264,16 @@ func checkSessionChurn(agg map[string]*sessionAgg, baselines map[string]Baseline
 					continue
 				}
 				seen[s.sessionID] = true
-				signals = append(signals, WasteSignal{
-					SessionID: s.sessionID,
-					Project:   s.project,
-					Severity:  "medium",
-					Reason:    "session_churn",
-					Detail:    fmt.Sprintf("Project %s had %d sessions on %s, all below mean ratio (%.4f)", dk.project, len(sessions), dk.day.Format("2006-01-02"), bl.RatioMean),
-					Metric:    float64(len(sessions)),
-					Threshold: 2,
-				})
+			signals = append(signals, WasteSignal{
+				SessionID:   s.sessionID,
+				Project:     s.project,
+				Severity:    "medium",
+				Reason:      "session_churn",
+				Detail:      fmt.Sprintf("Project %s had %d sessions on %s, all below mean ratio (%.4f)", dk.project, len(sessions), dk.day.Format("2006-01-02"), bl.RatioMean),
+				Metric:      float64(len(sessions)),
+				Threshold:   2,
+				SessionCost: s.cost,
+			})
 			}
 		}
 	}
