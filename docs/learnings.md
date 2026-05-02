@@ -48,3 +48,19 @@
 ### Hidden coupling
 - `Discover()` in `source/interface.go:10-19` directly constructs `&OpenCodeSource{}`. Every new harness adds a compile-time dependency to `interface.go`. When adding a Source, you must update: (1) the Source file, (2) `Discover()`, (3) `README.md` Supported Harnesses.
 - Test creates in-memory SQLite DBs with `sql.Open("sqlite", path)` + `CREATE TABLE` statements. Schema must match OpenCode's actual DB schema exactly. If OpenCode changes its schema, tests break silently by failing to create matching tables. `source/opencode_test.go:361-365`
+
+## 2026-05-02 — PR3: Claude Code Source
+
+### Gotcha
+- Claude Code subagent entries store the parent's `sessionId` in their own line. Both the `SessionID` and `ParentSessionID` of the resulting `TokenEvent` end up being the parent session UUID — the subagent is identifier is the `agentId` field, not a unique session. `source/claude.go:196-201`
+- Test data files referenced from `source/claude_test.go` need `filepath.Join("..", "testdata", ...)` — Go runs tests from the package directory, not the project root. Same pattern as opencode_test.go. `source/claude_test.go:30,38`
+
+### Mistake
+- Initial test used relative path `testdata/claude_sample.jsonl` without `..` prefix. Tests in `go test ./source/...` run with working directory set to `source/`, not project root. Fixed by matching the `filepath.Join("..", "testdata", ...)` pattern from opencode_test.go. `source/claude_test.go:30`
+
+### Pattern
+- `defaultProjectDir()` uses `BURNWATCH_CLAUDE_PROJECTS` env var for test overrides, following the same pattern as `defaultDBPath()` from the OpenCode source. `source/claude.go:37-43`
+- `projectNameToDisplay()` strips leading `-` and replaces `-` with `/` to convert `-Users-hoang-project` → `Users/hoang/project`. `source/claude.go:220-223`
+
+### Hidden coupling
+- Adding a Source touches exactly 3 files: (1) the new `source/<name>.go`, (2) `source/interface.go` `Discover()`, (3) `README.md` Supported Harnesses. `source/interface.go:10-20`
