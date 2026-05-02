@@ -2,11 +2,11 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 0/6 PRs complete
+## Overall: 2/6 PRs complete
 
 ```
-PR1 ░░░░░░░░░░░░░░░░░░░░ Foundation
-PR2 ░░░░░░░░░░░░░░░░░░░░ OpenCode Source (IN PROGRESS)
+PR1 ██████████████████████ Foundation
+PR2 ██████████████████████ OpenCode Source
 PR3 ░░░░░░░░░░░░░░░░░░░░ Claude Code Source
 PR4 ░░░░░░░░░░░░░░░░░░░░ Analysis Engine
 PR5 ░░░░░░░░░░░░░░░░░░░░ CLI + Output + Wiring
@@ -17,8 +17,8 @@ PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Rel
 
 | PR | Branch | Status | Started | Merged | Notes |
 |----|--------|--------|---------|--------|-------|
-| PR1 | `pr1-foundation` | pending | — | — | TokenEvent, interface, pricing |
-| PR2 | `pr2-opencode-source` | in-progress | — | — | SQLite reader |
+| PR1 | `pr1-foundation` | merged | 2026-05-02 | 2026-05-02 | TokenEvent, interface, pricing |
+| PR2 | `pr2-opencode-source` | merged | 2026-05-02 | 2026-05-02 | SQLite reader |
 | PR3 | `pr3-claude-source` | pending | — | — | JSONL reader + subagents |
 | PR4 | `pr4-analysis-engine` | pending | — | — | Baselines + 5 heuristics |
 | PR5 | `pr5-cli-output` | pending | — | — | CLI + text/JSON + integration |
@@ -30,22 +30,23 @@ PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Rel
 
 ## Next action
 
-Execute [`PR1-prompt.md`](./PR1-prompt.md) — Foundation.
+Execute [`PR3-prompt.md`](./PR3-prompt.md) — Claude Code Source.
 
 ## Execution log
 
 | Date | PR | Action |
 |------|----|--------|
 | 2026-05-02 | — | Implementation plan and PR prompts written |
+| 2026-05-02 | PR2 | OpenCode source implemented, reviewed, merged |
 
 ## Quality snapshot
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| Test coverage | ≥90% | — |
-| `go vet` | 0 warnings | — |
-| `golangci-lint` | 0 issues | — |
-| Binary builds | pass | — |
+| Test coverage | ≥90% | 90.6% |
+| `go vet` | 0 warnings | 0 |
+| `golangci-lint` | 0 issues | 0 |
+| Binary builds | pass | pass |
 | Golden files match | pass | — |
 
 ## Post-implementation
