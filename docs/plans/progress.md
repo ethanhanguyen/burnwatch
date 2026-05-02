@@ -6,7 +6,7 @@
 
 ```
 PR1 ░░░░░░░░░░░░░░░░░░░░ Foundation
-PR2 ░░░░░░░░░░░░░░░░░░░░ OpenCode Source
+PR2 ░░░░░░░░░░░░░░░░░░░░ OpenCode Source (IN PROGRESS)
 PR3 ░░░░░░░░░░░░░░░░░░░░ Claude Code Source
 PR4 ░░░░░░░░░░░░░░░░░░░░ Analysis Engine
 PR5 ░░░░░░░░░░░░░░░░░░░░ CLI + Output + Wiring
@@ -18,7 +18,7 @@ PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Rel
 | PR | Branch | Status | Started | Merged | Notes |
 |----|--------|--------|---------|--------|-------|
 | PR1 | `pr1-foundation` | pending | — | — | TokenEvent, interface, pricing |
-| PR2 | `pr2-opencode-source` | pending | — | — | SQLite reader |
+| PR2 | `pr2-opencode-source` | in-progress | — | — | SQLite reader |
 | PR3 | `pr3-claude-source` | pending | — | — | JSONL reader + subagents |
 | PR4 | `pr4-analysis-engine` | pending | — | — | Baselines + 5 heuristics |
 | PR5 | `pr5-cli-output` | pending | — | — | CLI + text/JSON + integration |
