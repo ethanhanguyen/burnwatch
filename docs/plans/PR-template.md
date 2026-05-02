@@ -87,7 +87,7 @@
 - [ ] Lint passes (zero warnings) — see `AGENTS.md` for project commands
 - [ ] Build compiles cleanly — see `AGENTS.md` for project commands
 - [ ] Tests pass with required coverage — see `AGENTS.md` for project commands
-- [ ] Self-review: follow project code review guidelines
+- [ ] Self-review: run through [docs/code-review.md](../code-review.md)
 - [ ] Document learnings (gotchas, mistakes, patterns, hidden coupling) in `docs/learnings.md`
 - [ ] Commit: `<type>: <description>`
 - [ ] Push to branch `<branch>`

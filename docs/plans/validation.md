@@ -123,6 +123,10 @@ func TestEndToEnd(t *testing.T) {
 }
 ```
 
+## Code Review
+
+All PRs must pass review per the checklist in [docs/code-review.md](../code-review.md) before merging. This applies to self-review and peer review.
+
 ## Flag Review (Manual)
 
 After the tool runs against real data:
