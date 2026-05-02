@@ -259,7 +259,7 @@ func TestOpenCodeSource_ParseMessage(t *testing.T) {
 			}
 
 			src := &OpenCodeSource{}
-			event := src.tokenDataToEvent(result, "sess-1", "", "my-project", nil)
+			event := src.tokenDataToEvent(result, "sess-1", "", "my-project")
 
 			if event.AgentType != tt.want.AgentType {
 				t.Errorf("AgentType = %q, want %q", event.AgentType, tt.want.AgentType)
@@ -323,7 +323,7 @@ func TestOpenCodeSource_ParseMessage_CacheDefaults(t *testing.T) {
 	}
 
 	src := &OpenCodeSource{}
-	event := src.tokenDataToEvent(result, "sess-1", "", "test", nil)
+	event := src.tokenDataToEvent(result, "sess-1", "", "test")
 
 	if event.CacheRead != 0 {
 		t.Errorf("expected cache read to default to 0, got %d", event.CacheRead)

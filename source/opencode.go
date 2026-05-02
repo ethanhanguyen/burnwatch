@@ -88,7 +88,7 @@ func (s *OpenCodeSource) Events() (<-chan TokenEvent, <-chan error) {
 				parent = parentID.String
 			}
 
-			event := s.tokenDataToEvent(td, sessionID.String, parent, project, nil)
+			event := s.tokenDataToEvent(td, sessionID.String, parent, project)
 			events <- event
 		}
 
@@ -133,7 +133,7 @@ func parseMessageJSON(data string, td *tokenData) error {
 	return nil
 }
 
-func (s *OpenCodeSource) tokenDataToEvent(td tokenData, sessionID, parentSessionID, project string, _ any) TokenEvent {
+func (s *OpenCodeSource) tokenDataToEvent(td tokenData, sessionID, parentSessionID, project string) TokenEvent {
 	inputTokens := int64(0)
 	outputTokens := int64(0)
 	cacheRead := int64(0)
