@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yourname/burnwatch/analyze"
-	"github.com/yourname/burnwatch/source"
+	"github.com/ethanhanguyen/burnwatch/analyze"
+	"github.com/ethanhanguyen/burnwatch/source"
 )
 
 var updateGolden = flag.Bool("update", false, "update golden files")

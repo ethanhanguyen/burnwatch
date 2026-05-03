@@ -1,6 +1,6 @@
 package analyze
 
-import "github.com/yourname/burnwatch/source"
+import "github.com/ethanhanguyen/burnwatch/source"
 
 type SubagentTree struct {
 	SessionID    string

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yourname/burnwatch/source"
+	"github.com/ethanhanguyen/burnwatch/source"
 )
 
 const delta = 0.0001

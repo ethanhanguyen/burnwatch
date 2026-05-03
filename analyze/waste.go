@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yourname/burnwatch/source"
+	"github.com/ethanhanguyen/burnwatch/source"
 )
 
 type WasteSignal struct {

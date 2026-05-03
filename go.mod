@@ -1,4 +1,4 @@
-module github.com/yourname/burnwatch
+module github.com/ethanhanguyen/burnwatch
 
 go 1.25.0
 

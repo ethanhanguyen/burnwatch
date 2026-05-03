@@ -1,6 +1,6 @@
 package main
 
-import "github.com/yourname/burnwatch/cmd"
+import "github.com/ethanhanguyen/burnwatch/cmd"
 
 func main() {
 	cmd.Execute()

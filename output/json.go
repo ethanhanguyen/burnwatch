@@ -5,8 +5,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/yourname/burnwatch/analyze"
-	"github.com/yourname/burnwatch/source"
+	"github.com/ethanhanguyen/burnwatch/analyze"
+	"github.com/ethanhanguyen/burnwatch/source"
 )
 
 type JSONSummary struct {

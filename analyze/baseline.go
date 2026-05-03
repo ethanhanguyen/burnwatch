@@ -4,7 +4,7 @@ import (
 	"math"
 	"sort"
 
-	"github.com/yourname/burnwatch/source"
+	"github.com/ethanhanguyen/burnwatch/source"
 )
 
 type Baseline struct {

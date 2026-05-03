@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/yourname/burnwatch/source"
+	"github.com/ethanhanguyen/burnwatch/source"
 )
 
 func TestBuildSubagentTreeParentWithChildren(t *testing.T) {
