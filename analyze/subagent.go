@@ -108,6 +108,18 @@ func BuildSubagentTree(events []source.TokenEvent) []SubagentTree {
 }
 
 func buildChildNodes(sessionID string, childMap map[string][]string, sessions map[string]*sessionInfo) []SubagentNode {
+	return buildChildNodesVisited(sessionID, childMap, sessions, nil)
+}
+
+func buildChildNodesVisited(sessionID string, childMap map[string][]string, sessions map[string]*sessionInfo, visited map[string]bool) []SubagentNode {
+	if visited == nil {
+		visited = make(map[string]bool)
+	}
+	if visited[sessionID] {
+		return nil
+	}
+	visited[sessionID] = true
+
 	childIDs := childMap[sessionID]
 	if len(childIDs) == 0 {
 		return nil
@@ -119,7 +131,7 @@ func buildChildNodes(sessionID string, childMap map[string][]string, sessions ma
 		if info == nil {
 			continue
 		}
-		children := buildChildNodes(cid, childMap, sessions)
+		children := buildChildNodesVisited(cid, childMap, sessions, visited)
 		totalCost := info.cost + sumSubagentCosts(children)
 
 		nodes = append(nodes, SubagentNode{

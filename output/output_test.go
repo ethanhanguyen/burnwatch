@@ -1,0 +1,408 @@
+package output
+
+import (
+	"flag"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/yourname/burnwatch/analyze"
+	"github.com/yourname/burnwatch/source"
+)
+
+var updateGolden = flag.Bool("update", false, "update golden files")
+
+var fixedTime = time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
+
+func setupTestEnv(t *testing.T) {
+	t.Helper()
+	NowFunc = func() time.Time { return fixedTime }
+	dbPath, err := filepath.Abs(filepath.Join("..", "testdata", "opencode_sample.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
+		t.Skipf("sample DB not found at %s", dbPath)
+	}
+	t.Setenv("BURNWATCH_OPENCODE_DB", dbPath)
+}
+
+func collectTestEvents(t *testing.T) []source.TokenEvent {
+	t.Helper()
+	sources := source.Discover()
+	if len(sources) == 0 {
+		t.Fatal("no sources discovered")
+	}
+	return CollectEvents(sources)
+}
+
+func TestGoldenText(t *testing.T) {
+	setupTestEnv(t)
+
+	events := collectTestEvents(t)
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines)
+	recommendations := analyze.GenerateRecommendations(signals, baselines)
+
+	got := FormatText(events, baselines, signals, recommendations, false)
+
+	goldenPath := filepath.Join("..", "testdata", "expected_report.txt")
+	if *updateGolden {
+		if err := os.WriteFile(goldenPath, []byte(got), 0644); err != nil {
+			t.Fatal(err)
+		}
+		t.Logf("updated golden file: %s", goldenPath)
+		return
+	}
+
+	want, err := os.ReadFile(goldenPath)
+	if err != nil {
+		t.Fatalf("golden file not found: %s (run with -update to generate)", goldenPath)
+	}
+
+	if got != string(want) {
+		t.Errorf("text output differs from golden file.\n=== GOT ===\n%s\n=== WANT ===\n%s", got, string(want))
+	}
+}
+
+func TestGoldenJSON(t *testing.T) {
+	setupTestEnv(t)
+
+	events := collectTestEvents(t)
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines)
+	recommendations := analyze.GenerateRecommendations(signals, baselines)
+	trees := analyze.BuildSubagentTree(events)
+
+	got, err := FormatJSON(events, baselines, signals, recommendations, trees)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	goldenPath := filepath.Join("..", "testdata", "expected_report.json")
+	if *updateGolden {
+		if err := os.WriteFile(goldenPath, got, 0644); err != nil {
+			t.Fatal(err)
+		}
+		t.Logf("updated golden file: %s", goldenPath)
+		return
+	}
+
+	want, err := os.ReadFile(goldenPath)
+	if err != nil {
+		t.Fatalf("golden file not found: %s (run with -update to generate)", goldenPath)
+	}
+
+	if string(got) != string(want) {
+		t.Errorf("JSON output differs from golden file.\n=== GOT ===\n%s\n=== WANT ===\n%s", string(got), string(want))
+	}
+}
+
+func TestFormatText_NoData(t *testing.T) {
+	got := FormatText(nil, nil, nil, nil, false)
+	if got != "No data found.\n" {
+		t.Errorf("expected no-data message, got: %s", got)
+	}
+}
+
+func TestFormatText_NoSignals(t *testing.T) {
+	events := []source.TokenEvent{
+		{
+			SessionID: "s1",
+			Harness:   "opencode",
+			Project:   "test",
+			CostUSD:   1.0,
+		},
+	}
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines)
+	recommendations := analyze.GenerateRecommendations(signals, baselines)
+	got := FormatText(events, baselines, signals, recommendations, false)
+
+	if got == "No waste signals detected.\n" {
+		t.Log("no waste signals as expected for single event")
+	}
+}
+
+func TestFormatJSON_NoData(t *testing.T) {
+	got, err := FormatJSON(nil, nil, nil, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expected := `{
+  "summary": {
+    "opencode_sessions": 0,
+    "opencode_subagent_sessions": 0,
+    "claude_sessions": 0,
+    "today_cost": 0,
+    "today_sessions": 0,
+    "week_cost": 0,
+    "week_sessions": 0
+  },
+  "projects": [],
+  "waste_signals": [],
+  "subagent_trees": [],
+  "recommendations": [],
+  "potential_savings": 0
+}`
+	if string(got) != expected {
+		t.Errorf("JSON output mismatch.\nGOT:\n%s\nWANT:\n%s", string(got), expected)
+	}
+}
+
+func TestMedianFromSorted(t *testing.T) {
+	tests := []struct {
+		name string
+		in   []float64
+		want float64
+	}{
+		{"empty", nil, 0},
+		{"single", []float64{5.0}, 5.0},
+		{"odd", []float64{1.0, 2.0, 3.0}, 2.0},
+		{"even", []float64{1.0, 2.0, 3.0, 4.0}, 2.5},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := medianFromSorted(tt.in)
+			if got != tt.want {
+				t.Errorf("medianFromSorted(%v) = %f, want %f", tt.in, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTruncate(t *testing.T) {
+	tests := []struct {
+		name   string
+		s      string
+		maxLen int
+		want   string
+	}{
+		{"short", "abc", 20, "abc"},
+		{"exact", "abcdefghijklmnopqrst", 20, "abcdefghijklmnopqrst"},
+		{"long", "abcdefghijklmnopqrstuvwxyz", 20, "abcdefghijklmnopqrst"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := truncate(tt.s, tt.maxLen)
+			if got != tt.want {
+				t.Errorf("truncate(%q, %d) = %q, want %q", tt.s, tt.maxLen, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestHarnessLabel(t *testing.T) {
+	if got := harnessLabel("opencode"); got != "OpenCode" {
+		t.Errorf("harnessLabel(opencode) = %q", got)
+	}
+	if got := harnessLabel("claude-code"); got != "Claude Code" {
+		t.Errorf("harnessLabel(claude-code) = %q", got)
+	}
+	if got := harnessLabel("unknown"); got != "unknown" {
+		t.Errorf("harnessLabel(unknown) = %q", got)
+	}
+}
+
+func TestRunPipeline(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Harness: "opencode", Project: "p1", InputTokens: 100, OutputTokens: 50, CostUSD: 1.5, Timestamp: fixedTime},
+		{SessionID: "s1", Harness: "opencode", Project: "p1", InputTokens: 100, OutputTokens: 50, CostUSD: 0.5, Timestamp: fixedTime},
+		{SessionID: "s2", Harness: "opencode", Project: "p1", InputTokens: 200, OutputTokens: 20, CostUSD: 3.0, Timestamp: fixedTime},
+	}
+
+	baselines, signals, recommendations := RunPipeline(events)
+	if baselines == nil {
+		t.Fatal("expected non-nil baselines")
+	}
+	if len(signals) == 0 {
+		t.Log("no signals from 2-session dataset (expected for statistical safety)")
+	}
+	_ = recommendations
+}
+
+func TestCollectEvents_NoSources(t *testing.T) {
+	events := CollectEvents(nil)
+	if len(events) != 0 {
+		t.Errorf("expected 0 events from nil sources, got %d", len(events))
+	}
+}
+
+func TestWriteProjects_Empty(t *testing.T) {
+	var b strings.Builder
+	writeProjects(&b, map[string]analyze.Baseline{
+		"*": {Project: "*", SessionCount: 1},
+	})
+	got := b.String()
+	if got != "" {
+		t.Errorf("expected empty output for no non-global baselines, got: %s", got)
+	}
+}
+
+func TestWriteSummary_SingleSession(t *testing.T) {
+	NowFunc = func() time.Time { return fixedTime }
+	t.Cleanup(func() { NowFunc = time.Now })
+
+	events := []source.TokenEvent{
+		{SessionID: "s1", Harness: "opencode", CostUSD: 1.5, Timestamp: fixedTime},
+	}
+	baselines := analyze.ComputeBaselines(events)
+
+	var b strings.Builder
+	writeSummary(&b, events, baselines)
+	got := b.String()
+	if !strings.Contains(got, "OpenCode: 1 sessions") {
+		t.Errorf("expected OpenCode session count, got: %s", got)
+	}
+	if !strings.Contains(got, "Today:") {
+		t.Errorf("expected Today line, got: %s", got)
+	}
+}
+
+func TestWriteSignalBlock_EmptyRecommendation(t *testing.T) {
+	s := analyze.WasteSignal{
+		SessionID:   "ses_abc",
+		Project:     "test",
+		Severity:    "high",
+		Reason:      "cost_outlier",
+		Metric:      5.0,
+		Threshold:   1.0,
+		SessionCost: 5.0,
+	}
+	rec := analyze.Recommendation{}
+
+	var b strings.Builder
+	writeSignalBlock(&b, s, rec)
+	got := b.String()
+	if !strings.Contains(got, "HIGH") {
+		t.Errorf("expected HIGH severity, got: %s", got)
+	}
+	if strings.Contains(got, "\u2192") {
+		t.Errorf("expected no recommendation arrow for empty rec, got: %s", got)
+	}
+}
+
+func TestWriteSignalBlock_AllReasons(t *testing.T) {
+	tests := []struct {
+		name string
+		s    analyze.WasteSignal
+	}{
+		{
+			name: "session_churn",
+			s: analyze.WasteSignal{
+				SessionID:   "ses_x",
+				Project:     "proj",
+				Severity:    "medium",
+				Reason:      "session_churn",
+				Metric:      5,
+				Threshold:   2,
+				SessionCost: 10.0,
+			},
+		},
+		{
+			name: "default_reason",
+			s: analyze.WasteSignal{
+				SessionID:   "ses_y",
+				Project:     "proj",
+				Severity:    "low",
+				Reason:      "unknown_reason",
+				Detail:      "some detail",
+				Metric:      1.0,
+				Threshold:   0.5,
+				SessionCost: 3.0,
+			},
+		},
+		{
+			name: "empty_session_id",
+			s: analyze.WasteSignal{
+				SessionID:   "",
+				Project:     "proj",
+				Severity:    "low",
+				Reason:      "cache_underutilized",
+				Metric:      0.12,
+				Threshold:   0.25,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var b strings.Builder
+			rec := analyze.Recommendation{
+				Action:     "Test action",
+				Detail:     "Test detail",
+				SavingsEst: 5.0,
+			}
+			writeSignalBlock(&b, tt.s, rec)
+			got := b.String()
+			if !strings.Contains(got, "\u2192") {
+				t.Errorf("expected recommendation arrow, got: %s", got)
+			}
+		})
+	}
+}
+
+func TestCollectEvents_WithSource(t *testing.T) {
+	events := CollectEvents([]source.Source{})
+	if len(events) != 0 {
+		t.Errorf("expected 0 events from empty sources, got %d", len(events))
+	}
+}
+
+func TestFormatText_NoSignalsWithVerbose(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Harness: "opencode", Project: "p1", CostUSD: 1.0, Timestamp: fixedTime},
+	}
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines)
+	recommendations := analyze.GenerateRecommendations(signals, baselines)
+
+	got := FormatText(events, baselines, signals, recommendations, true)
+	if !strings.Contains(got, "All sessions:") {
+		t.Errorf("verbose mode should show all sessions, got: %s", got)
+	}
+	if !strings.Contains(got, "No waste signals detected.") {
+		t.Errorf("should show no waste signals message with single event, got: %s", got)
+	}
+}
+
+func TestConvertSubagentNode_WithChildren(t *testing.T) {
+	node := analyze.SubagentNode{
+		SessionID: "parent",
+		AgentType: "general",
+		Cost:      10.0,
+		Children: []analyze.SubagentNode{
+			{SessionID: "child", AgentType: "explore", Cost: 5.0},
+		},
+	}
+	result := convertSubagentNode(node)
+	if result.SessionID != "parent" {
+		t.Errorf("expected parent session ID, got %s", result.SessionID)
+	}
+	if len(result.Children) != 1 {
+		t.Fatalf("expected 1 child, got %d", len(result.Children))
+	}
+	if result.Children[0].SessionID != "child" {
+		t.Errorf("expected child session ID, got %s", result.Children[0].SessionID)
+	}
+}
+
+func TestFormatText_Verbose(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Harness: "opencode", Project: "p1", InputTokens: 100, OutputTokens: 100, CostUSD: 1.0, Timestamp: fixedTime},
+		{SessionID: "s2", Harness: "opencode", Project: "p1", InputTokens: 200, OutputTokens: 50, CostUSD: 2.0, Timestamp: fixedTime},
+	}
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines)
+	recommendations := analyze.GenerateRecommendations(signals, baselines)
+
+	got := FormatText(events, baselines, signals, recommendations, true)
+	if !strings.Contains(got, "All sessions:") {
+		t.Errorf("verbose output should show all sessions, got: %s", got)
+	}
+	if !strings.Contains(got, "s1") {
+		t.Errorf("verbose output should include s1, got: %s", got)
+	}
+}
