@@ -2,7 +2,7 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 6/10 PRs complete
+## Overall: 7/10 PRs complete
 
 ```
 PR1 ██████████████████████ Foundation
@@ -11,7 +11,7 @@ PR3 ██████████████████████ Claude Co
 PR4 ██████████████████████ Analysis Engine
 PR5 ██████████████████████ CLI + Output + Wiring
 PR6 ██████████████████████ Docs + CI + Release
-PR7 ░░░░░░░░░░░░░░░░░░░░░░ Config File
+PR7 ██████████████████████ Config File
 PR8 ░░░░░░░░░░░░░░░░░░░░░░ Phase A — Display Fixes
 PR9 ░░░░░░░░░░░░░░░░░░░░░░ Phase B — Noise Reduction
 PR10 ░░░░░░░░░░░░░░░░░░░░░░ Phase C — Deeper Insights
@@ -27,7 +27,7 @@ PR10 ░░░░░░░░░░░░░░░░░░░░░░ Phase C 
 | PR4 | `pr4-analysis-engine` | merged | 2026-05-02 | 2026-05-02 | Baselines + 5 heuristics + recommendations |
 | PR5 | `pr5-cli-output` | merged | 2026-05-02 | 2026-05-02 | CLI + text/JSON + golden files + E2E |
 | PR6 | `pr6-docs-ci` | merged | 2026-05-02 | 2026-05-02 | Docs + README + CHANGELOG + CI |
-| PR7 | `pr7-config` | planned | — | — | Config file: TOML, thresholds, filters, toggles |
+| PR7 | `pr7-config` | merged | 2026-05-02 | 2026-05-02 | Config file: TOML, thresholds, filters, toggles |
 | PR8 | `pr8-display-fixes` | planned | — | — | A1 label fix, A2 churn grouping, A3 dates |
 | PR9 | `pr9-noise-reduction` | planned | — | — | B1 min-cost, B2 dedup, B3 sigma, B4 cost fix |
 | PR10 | `pr10-deeper-insights` | planned | — | — | C1 model/tokens, C2 signal toggles, C3 trends |
@@ -46,7 +46,7 @@ PR7 (config) ──┬── PR8 (display)     [parallel after PR7]
 
 ## Next action
 
-Execute PR7 (config file), then PR8+PR9 in parallel, then PR10.
+Execute PR8+PR9 in parallel, then PR10.
 
 PR prompts: `docs/plans/PR7-prompt.md` through `docs/plans/PR10-prompt.md`.
 
@@ -61,7 +61,7 @@ PR prompts: `docs/plans/PR7-prompt.md` through `docs/plans/PR10-prompt.md`.
 | 2026-05-02 | PR4 | Analysis engine implemented, reviewed, merged |
 | 2026-05-02 | PR5 | CLI + Output + Wiring implemented, reviewed, merged |
 | 2026-05-02 | PR6 | Docs + CI + Release implemented, reviewed, merged |
-| 2026-05-02 | PR7-10 | PR prompts written for Phase A+B+C + config |
+| 2026-05-02 | PR7 | Config file implemented, reviewed, merged |
 
 ## Quality snapshot
 
