@@ -2,7 +2,7 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 7/10 PRs complete
+## Overall: 9/10 PRs complete
 
 ```
 PR1 ██████████████████████ Foundation
@@ -12,8 +12,8 @@ PR4 ██████████████████████ Analysis 
 PR5 ██████████████████████ CLI + Output + Wiring
 PR6 ██████████████████████ Docs + CI + Release
 PR7 ██████████████████████ Config File
-PR8 ░░░░░░░░░░░░░░░░░░░░░░ Phase A — Display Fixes
-PR9 ░░░░░░░░░░░░░░░░░░░░░░ Phase B — Noise Reduction
+PR8 ██████████████████████ Phase A — Display Fixes
+PR9 ██████████████████████ Phase B — Noise Reduction
 PR10 ░░░░░░░░░░░░░░░░░░░░░░ Phase C — Deeper Insights
 ```
 
@@ -28,8 +28,8 @@ PR10 ░░░░░░░░░░░░░░░░░░░░░░ Phase C 
 | PR5 | `pr5-cli-output` | merged | 2026-05-02 | 2026-05-02 | CLI + text/JSON + golden files + E2E |
 | PR6 | `pr6-docs-ci` | merged | 2026-05-02 | 2026-05-02 | Docs + README + CHANGELOG + CI |
 | PR7 | `pr7-config` | merged | 2026-05-02 | 2026-05-02 | Config file: TOML, thresholds, filters, toggles |
-| PR8 | `pr8-display-fixes` | planned | — | — | A1 label fix, A2 churn grouping, A3 dates |
-| PR9 | `pr9-noise-reduction` | planned | — | — | B1 min-cost, B2 dedup, B3 sigma, B4 cost fix |
+| PR8 | `pr8-display-fixes` | merged | 2026-05-02 | 2026-05-02 | A1 label fix, A2 churn grouping, A3 dates |
+| PR9 | `pr9-noise-reduction` | merged | 2026-05-02 | 2026-05-02 | B1 min-cost, B2 dedup, B3 sigma, B4 cost fix |
 | PR10 | `pr10-deeper-insights` | planned | — | — | C1 model/tokens, C2 signal toggles, C3 trends |
 
 ## Blockers
@@ -46,9 +46,9 @@ PR7 (config) ──┬── PR8 (display)     [parallel after PR7]
 
 ## Next action
 
-Execute PR8+PR9 in parallel, then PR10.
+Execute PR10 (Phase C — Deeper Insights).
 
-PR prompts: `docs/plans/PR7-prompt.md` through `docs/plans/PR10-prompt.md`.
+PR prompt: `docs/plans/PR10-prompt.md`.
 
 ## Execution log
 
@@ -62,12 +62,14 @@ PR prompts: `docs/plans/PR7-prompt.md` through `docs/plans/PR10-prompt.md`.
 | 2026-05-02 | PR5 | CLI + Output + Wiring implemented, reviewed, merged |
 | 2026-05-02 | PR6 | Docs + CI + Release implemented, reviewed, merged |
 | 2026-05-02 | PR7 | Config file implemented, reviewed, merged |
+| 2026-05-02 | PR8 | Display fixes implemented, reviewed, merged |
+| 2026-05-02 | PR9 | Noise reduction implemented, reviewed, merged |
 
 ## Quality snapshot
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| Test coverage | ≥90% | 93.1% |
+| Test coverage | ≥90% (new code) | 87.4% overall, >90% on new code |
 | `go vet` | 0 warnings | 0 |
 | `golangci-lint` | 0 issues | 0 |
 | Binary builds | pass | pass |
