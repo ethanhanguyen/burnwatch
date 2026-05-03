@@ -6,19 +6,23 @@ import (
 	"os"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/ethanhanguyen/burnwatch/analyze"
+	"github.com/ethanhanguyen/burnwatch/config"
 	"github.com/ethanhanguyen/burnwatch/output"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
 func Execute() {
 	var flags struct {
-		DBPath  string
-		Harness string
-		Project string
-		JSON    bool
-		Days    int
-		Verbose bool
+		DBPath      string
+		Harness     string
+		Project     string
+		JSON        bool
+		Days        int
+		Verbose     bool
+		ConfigPath  string
+		PrintConfig bool
 	}
 
 	flag.StringVar(&flags.DBPath, "db", "", "OpenCode database path")
@@ -27,7 +31,24 @@ func Execute() {
 	flag.BoolVar(&flags.JSON, "json", false, "Output as JSON instead of text")
 	flag.IntVar(&flags.Days, "days", 0, "Lookback window in days (default: 1 for today, 7 for week, 30 for month)")
 	flag.BoolVar(&flags.Verbose, "verbose", false, "Show all events, not just waste signals")
+	flag.StringVar(&flags.ConfigPath, "config", "", "Config file path (default: ./.burnwatch.toml, ~/.config/burnwatch/config.toml)")
+	flag.BoolVar(&flags.PrintConfig, "print-config", false, "Print effective config and exit")
 	flag.Parse()
+
+	cfg, err := config.Load(flags.ConfigPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
+		os.Exit(1)
+	}
+
+	if flags.PrintConfig {
+		enc := toml.NewEncoder(os.Stdout)
+		if err := enc.Encode(cfg); err != nil {
+			fmt.Fprintf(os.Stderr, "Error encoding config: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
 
 	if flags.DBPath != "" {
 		_ = os.Setenv("BURNWATCH_OPENCODE_DB", flags.DBPath)
