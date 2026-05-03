@@ -42,6 +42,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Infinite recursion in `BuildSubagentTree` — real OpenCode data contained cyclic parent-child relationships among subagent sessions, causing stack overflow. Fix: `buildChildNodesVisited` tracks visited session IDs with a `map[string]bool` passed through the call chain. `analyze/subagent.go:114-145`
 - Golden file tests used `time.Now()` for today/week calculations, making output non-deterministic. Tests passed at generation time but failed on subsequent runs. Fix: extract to package-level `NowFunc = time.Now` variable, override in tests to a fixed reference time. `output/json.go:223, output/output_test.go:21`
 
+- `BurntSushi/toml` unmarshals into an existing struct, only overriding fields present in the TOML file. The `Defaults()` pattern (return a struct, unmarshal on top) gives partial-override semantics without manual field merging. `config/config.go:70-75`
+
 ## Patterns
 
 - Float comparisons in tests: use `math.Abs(got - want) > delta` with `const delta = 0.0001`. Never `==` for float equality. `source/pricing_test.go:9,86`
