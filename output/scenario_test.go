@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/ethanhanguyen/burnwatch/analyze"
+	"github.com/ethanhanguyen/burnwatch/config"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
@@ -122,27 +123,27 @@ func signalIDs(signals []analyze.WasteSignal) []string {
 
 func runPipeline(t *testing.T, events []source.TokenEvent) ([]analyze.WasteSignal, map[string]analyze.Baseline) {
 	t.Helper()
-	baselines := analyze.ComputeBaselines(events)
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
 	if len(baselines) == 0 {
 		t.Fatal("no baselines computed")
 	}
-	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
+	signals := analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
 	return signals, baselines
 }
 
 func runPipelineWithToggles(t *testing.T, events []source.TokenEvent, toggles analyze.SignalToggles) []analyze.WasteSignal {
 	t.Helper()
-	baselines := analyze.ComputeBaselines(events)
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
 	if len(baselines) == 0 {
 		t.Fatal("no baselines computed")
 	}
-	return analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
+	return analyze.DetectWaste(events, baselines, config.Defaults(), toggles)
 }
 
 func TestScenario_CostOutlier(t *testing.T) {
 	events := loadScenarioJSONL(t, "cost_outlier.jsonl")
-	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, v1Toggles)
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	signals := analyze.DetectWaste(events, baselines, config.Defaults(), v1Toggles)
 
 	var costSig, lowSig *analyze.WasteSignal
 	for i := range signals {
@@ -315,8 +316,8 @@ func TestScenario_SubagentOverhead(t *testing.T) {
 
 	toggles := allToggles
 	toggles.SubagentOverhead = true
-	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	signals := analyze.DetectWaste(events, baselines, config.Defaults(), toggles)
 
 	foundSubagent := false
 	for _, s := range signals {
@@ -382,8 +383,8 @@ func TestScenario_MultiSignal(t *testing.T) {
 
 func TestScenario_AllClean(t *testing.T) {
 	events := loadScenarioJSONL(t, "all_clean.jsonl")
-	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, v1Toggles)
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	signals := analyze.DetectWaste(events, baselines, config.Defaults(), v1Toggles)
 
 	for _, s := range signals {
 		if strings.HasPrefix(s.SessionID, "ses_clean_") {

@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ethanhanguyen/burnwatch/config"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
@@ -41,7 +42,7 @@ var sessionEventSet = map[int][]source.TokenEvent{
 
 func TestComputeBaselinesMultipleProjects(t *testing.T) {
 	events := sessions(1, 2, 3, 4, 5, 6)
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 
 	if len(result) != 3 {
 		t.Fatalf("expected 3 baselines (2 project + 1 global), got %d", len(result))
@@ -102,7 +103,7 @@ func TestComputeBaselinesMultipleProjects(t *testing.T) {
 
 func TestComputeBaselinesSingleSession(t *testing.T) {
 	events := sessions(1)
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 
 	pa := result["project-a:opencode"]
 	if pa.SessionCount != 1 {
@@ -133,7 +134,7 @@ func TestComputeBaselinesAllIdentical(t *testing.T) {
 		{SessionID: "s2", Project: "p", Harness: "h", InputTokens: 100, OutputTokens: 50, CacheRead: 10, CacheWrite: 10, CostUSD: 1.0, Timestamp: time.Now()},
 	}
 	events := append(s1, s2...)
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 
 	b := result["p:h"]
 	if math.Abs(b.CostStd) > delta {
@@ -148,12 +149,12 @@ func TestComputeBaselinesAllIdentical(t *testing.T) {
 }
 
 func TestComputeBaselinesEmptyInput(t *testing.T) {
-	result := ComputeBaselines(nil)
+	result := ComputeBaselines(nil, config.Defaults())
 	if len(result) != 0 {
 		t.Errorf("expected empty map for nil input, got %d entries", len(result))
 	}
 
-	result = ComputeBaselines([]source.TokenEvent{})
+	result = ComputeBaselines([]source.TokenEvent{}, config.Defaults())
 	if len(result) != 0 {
 		t.Errorf("expected empty map for empty slice, got %d entries", len(result))
 	}
@@ -163,7 +164,7 @@ func TestComputeBaselinesZeroInput(t *testing.T) {
 	events := []source.TokenEvent{
 		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 0, OutputTokens: 100, CacheRead: 0, CacheWrite: 0, CostUSD: 1.0, Timestamp: time.Now()},
 	}
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 	b := result["p:h"]
 
 	if math.Abs(b.RatioP10) > delta {
@@ -175,7 +176,7 @@ func TestComputeBaselinesNegativeTokens(t *testing.T) {
 	events := []source.TokenEvent{
 		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: -100, OutputTokens: -50, CacheRead: -10, CacheWrite: -10, CostUSD: 1.0, Timestamp: time.Now()},
 	}
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 	b := result["p:h"]
 
 	if b.RatioP10 != 0 {
@@ -188,7 +189,7 @@ func TestComputeBaselinesMultiEventSession(t *testing.T) {
 		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 50, OutputTokens: 25, CostUSD: 0.5, Timestamp: time.Now()},
 		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 50, OutputTokens: 25, CostUSD: 0.5, Timestamp: time.Now()},
 	}
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 	b := result["p:h"]
 
 	if math.Abs(b.CostMean-1.0) > delta {
@@ -201,7 +202,7 @@ func TestComputeBaselinesMultiEventSession(t *testing.T) {
 
 func TestComputeBaselinesSortsSessionCosts(t *testing.T) {
 	events := sessions(3, 1, 2)
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 	b := result["project-a:opencode"]
 
 	if len(b.SessionCosts) != 3 {
@@ -236,7 +237,7 @@ func TestComputeBaselinesTokenStats(t *testing.T) {
 	}
 
 	events := append(append(append(append(e1, e2...), e3...), e4...), e5...)
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 	b := result["p:h"]
 
 	if math.Abs(b.InputMean-3000) > 0.01 {
@@ -274,7 +275,7 @@ func TestComputeBaselinesTER(t *testing.T) {
 	events := []source.TokenEvent{
 		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 100000, OutputTokens: 50000, CacheRead: 10000, CacheWrite: 5000, CostUSD: 0, Timestamp: time.Now()},
 	}
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 	b := result["p:h"]
 
 	expected := 60000.0 / 105000.0
@@ -287,7 +288,7 @@ func TestComputeBaselinesTokenStatsZeroInput(t *testing.T) {
 	events := []source.TokenEvent{
 		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 0, OutputTokens: 0, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
 	}
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 	b := result["p:h"]
 
 	if math.Abs(b.InputMean) > delta {
@@ -317,7 +318,7 @@ func TestComputeBaselinesTokenStatsSingleSession(t *testing.T) {
 	events := []source.TokenEvent{
 		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 500, OutputTokens: 200, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
 	}
-	result := ComputeBaselines(events)
+	result := ComputeBaselines(events, config.Defaults())
 	b := result["p:h"]
 
 	if math.Abs(b.InputMean-500) > delta {

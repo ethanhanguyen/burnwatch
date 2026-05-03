@@ -44,6 +44,12 @@ func Execute() {
 
 		RefreshPricing bool
 		NoFetchPricing bool
+
+		InputOverconsumptionSigma float64
+		OutputExplosionSigma      float64
+		TokenEfficiencyPercentile float64
+		FragmentationThreshold    float64
+		SubagentOverheadPct       float64
 	}
 
 	flag.StringVar(&flags.DBPath, "db", "", "OpenCode database path")
@@ -67,6 +73,12 @@ func Execute() {
 	flag.BoolVar(&flags.ShowTrends, "show-trends", false, "Show time-trend summary")
 	flag.BoolVar(&flags.RefreshPricing, "refresh-pricing", false, "Force re-fetch pricing from OpenRouter")
 	flag.BoolVar(&flags.NoFetchPricing, "no-fetch-pricing", false, "Skip network fetch, use embedded pricing only")
+
+	flag.Float64Var(&flags.InputOverconsumptionSigma, "input-sigma", 0, "Sigma for input overconsumption detection (0 = use config)")
+	flag.Float64Var(&flags.OutputExplosionSigma, "output-sigma", 0, "Sigma for output explosion detection (0 = use config)")
+	flag.Float64Var(&flags.TokenEfficiencyPercentile, "ter-percentile", 0, "Percentile for token efficiency threshold (0 = use config)")
+	flag.Float64Var(&flags.FragmentationThreshold, "fragmentation-threshold", 0, "Threshold for fragmentation index (0 = use config)")
+	flag.Float64Var(&flags.SubagentOverheadPct, "subagent-overhead", 0, "Subagent overhead percentage threshold (0 = use config)")
 
 	versionFlag := flag.Bool("version", false, "Print version and exit")
 	flag.Parse()
@@ -138,8 +150,7 @@ func Execute() {
 		os.Exit(1)
 	}
 
-	baselines := analyze.ComputeBaselines(events)
-	costSigma := cfg.Thresholds.CostOutlierSigma
+	baselines := analyze.ComputeBaselines(events, cfg)
 	if flags.NoCostOutlier {
 		cfg.Signals.CostOutlier = false
 	}
@@ -167,6 +178,23 @@ func Execute() {
 	if flags.ShowTrends {
 		cfg.Output.ShowTrends = true
 	}
+
+	if flags.InputOverconsumptionSigma > 0 {
+		cfg.Thresholds.InputOverconsumptionSigma = flags.InputOverconsumptionSigma
+	}
+	if flags.OutputExplosionSigma > 0 {
+		cfg.Thresholds.OutputExplosionSigma = flags.OutputExplosionSigma
+	}
+	if flags.TokenEfficiencyPercentile > 0 {
+		cfg.Thresholds.TokenEfficiencyPercentile = flags.TokenEfficiencyPercentile
+	}
+	if flags.FragmentationThreshold > 0 {
+		cfg.Thresholds.FragmentationIndexThreshold = flags.FragmentationThreshold
+	}
+	if flags.SubagentOverheadPct > 0 {
+		cfg.Thresholds.SubagentOverheadPct = flags.SubagentOverheadPct
+	}
+
 	toggles := analyze.SignalToggles{
 		CostOutlier:          cfg.Signals.CostOutlier,
 		LowSignal:            cfg.Signals.LowSignal,
@@ -177,7 +205,7 @@ func Execute() {
 		OutputExplosion:      cfg.Signals.OutputExplosion,
 		TokenEfficiency:      cfg.Signals.TokenEfficiency,
 	}
-	signals := analyze.DetectWaste(events, baselines, costSigma, 2.0, 2.0, 3.0, 3, toggles)
+	signals := analyze.DetectWaste(events, baselines, cfg, toggles)
 
 	minCost := cfg.Filters.MinCost
 	if flags.MinCost > 0 {

@@ -75,6 +75,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - The embedded pricing table (`source/pricing.go:12-22`) only covers 6 models. All other models fall back to claude-sonnet pricing, inflating costs 5x–17x for deepseek, kimi, minimax, qwen, gpt-5.4. Fix: fetch pricing from OpenRouter API dynamically (PR11). Changing `CostForModel` signature adds a return value — all callers must be updated.
 - Adding a new field to `TokenEvent` (`source/event.go`) that is consumed downstream requires touching: (1) all source implementations that create TokenEvent (claude.go, opencode.go), (2) all test helpers that construct events (scenario_test.go, bench_test.go), (3) all aggregation structs (sessionAgg in waste.go), (4) all output structs (WasteSignal, JSONWasteSignal). Propagation of a single field touches 8+ files. `source/event.go:21`
 
+- Changing `ComputeBaselines` or `DetectWaste` function signatures requires updating every call site: `cmd/root.go`, `output/text.go`, `output/bench_test.go`, `cmd/root_test.go`, `analyze/baseline_test.go`, `analyze/waste_test.go`, `output/scenario_test.go`, `output/output_test.go`. Use `replaceAll` with precise old/new strings for mechanical edits, but always review diff manually. `analyze/baseline.go:41`, `analyze/waste.go:56`
+
 ## Rules
 
 These govern how this file is maintained. Violating them makes the file less useful over time.

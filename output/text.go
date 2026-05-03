@@ -358,7 +358,7 @@ func RunPipeline(events []source.TokenEvent) (
 	signals []analyze.WasteSignal,
 	recommendations []analyze.Recommendation,
 ) {
-	baselines = analyze.ComputeBaselines(events)
+	baselines = analyze.ComputeBaselines(events, config.Defaults())
 	toggles := analyze.SignalToggles{
 		CostOutlier:          true,
 		LowSignal:            true,
@@ -369,7 +369,7 @@ func RunPipeline(events []source.TokenEvent) (
 		OutputExplosion:      true,
 		TokenEfficiency:      true,
 	}
-	signals = analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
+	signals = analyze.DetectWaste(events, baselines, config.Defaults(), toggles)
 	recommendations = analyze.GenerateRecommendations(signals, baselines)
 	_ = analyze.BuildSubagentTree(events)
 	return

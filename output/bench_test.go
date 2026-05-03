@@ -61,8 +61,8 @@ func BenchmarkPipeline_1K(b *testing.B) {
 	cfg := config.Defaults()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		baselines := analyze.ComputeBaselines(events)
-		_ = analyze.DetectWaste(events, baselines, cfg.Thresholds.CostOutlierSigma, 2.0, 2.0, 3.0, 3, allToggles)
+		baselines := analyze.ComputeBaselines(events, cfg)
+		_ = analyze.DetectWaste(events, baselines, cfg, allToggles)
 	}
 }
 
@@ -71,8 +71,8 @@ func BenchmarkPipeline_10K(b *testing.B) {
 	cfg := config.Defaults()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		baselines := analyze.ComputeBaselines(events)
-		_ = analyze.DetectWaste(events, baselines, cfg.Thresholds.CostOutlierSigma, 2.0, 2.0, 3.0, 3, allToggles)
+		baselines := analyze.ComputeBaselines(events, cfg)
+		_ = analyze.DetectWaste(events, baselines, cfg, allToggles)
 	}
 }
 
@@ -81,17 +81,17 @@ func BenchmarkBaselineComputation(b *testing.B) {
 	cfg := config.Defaults()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = analyze.ComputeBaselines(events)
+		_ = analyze.ComputeBaselines(events, cfg)
 		_ = cfg
 	}
 }
 
 func BenchmarkWasteDetection(b *testing.B) {
 	events := generateSyntheticEvents(5000)
-	baselines := analyze.ComputeBaselines(events)
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
+		_ = analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
 	}
 }
 
@@ -167,13 +167,13 @@ func BenchmarkSignalQuality(b *testing.B) {
 	events = append(events, loadScenarioJSONL(b, "cache_underutilized.jsonl")...)
 	events = append(events, loadScenarioJSONL(b, "multi_signal.jsonl")...)
 
-	baselines := analyze.ComputeBaselines(events)
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
 	b.ResetTimer()
 
 	var tp, fp, fn int
 	for i := 0; i < b.N; i++ {
 		tp, fp, fn = 0, 0, 0
-		signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
+		signals := analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
 		for _, s := range signals {
 			if strings.Contains(s.SessionID, "_waste") {
 				tp++

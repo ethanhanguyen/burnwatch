@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ethanhanguyen/burnwatch/config"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
@@ -53,9 +54,7 @@ type sessionAgg struct {
 }
 
 func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
-	costSigma float64, inputSigma float64, outputSigma float64,
-	fragmentationThreshold float64, fragmentationMinSessions int,
-	toggles SignalToggles) []WasteSignal {
+	cfg config.Config, toggles SignalToggles) []WasteSignal {
 
 	if len(events) == 0 || len(baselines) == 0 {
 		return nil
@@ -139,7 +138,7 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		bl := baselines[key]
 
 		if toggles.CostOutlier {
-			if signal := checkCostOutlier(a, bl, costSigma); signal != nil {
+			if signal := checkCostOutlier(a, bl, cfg.Thresholds.CostOutlierSigma); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
@@ -151,7 +150,7 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		}
 
 		if toggles.SubagentOverhead {
-			if signal := checkSubagentOverhead(a, treeBySession); signal != nil {
+			if signal := checkSubagentOverhead(a, treeBySession, cfg.Thresholds.SubagentOverheadPct); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
@@ -163,13 +162,13 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		}
 
 		if toggles.InputOverconsumption {
-			if signal := checkInputOverconsumption(a, bl, inputSigma); signal != nil {
+			if signal := checkInputOverconsumption(a, bl, cfg.Thresholds.InputOverconsumptionSigma); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
 
 		if toggles.OutputExplosion {
-			if signal := checkOutputExplosion(a, bl, outputSigma); signal != nil {
+			if signal := checkOutputExplosion(a, bl, cfg.Thresholds.OutputExplosionSigma); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
@@ -182,7 +181,7 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 	}
 
 	if toggles.FragmentationIndex {
-		signals = append(signals, checkFragmentationIndex(agg, baselines, fragmentationThreshold, fragmentationMinSessions)...)
+		signals = append(signals, checkFragmentationIndex(agg, baselines, cfg.Thresholds.FragmentationIndexThreshold, cfg.Thresholds.ChurnMinSessions)...)
 	}
 
 	sortSignals(signals)
@@ -240,12 +239,12 @@ func checkLowSignal(a *sessionAgg, global Baseline) *WasteSignal {
 	return nil
 }
 
-func checkSubagentOverhead(a *sessionAgg, treeBySession map[string]*SubagentTree) *WasteSignal {
+func checkSubagentOverhead(a *sessionAgg, treeBySession map[string]*SubagentTree, thresholdPct float64) *WasteSignal {
 	tree := treeBySession[a.sessionID]
 	if tree == nil || tree.SubagentCost == 0 {
 		return nil
 	}
-	if tree.OverheadPct > 50 {
+	if tree.OverheadPct > thresholdPct {
 		return &WasteSignal{
 			SessionID:       a.sessionID,
 			Project:         a.project,
@@ -253,7 +252,7 @@ func checkSubagentOverhead(a *sessionAgg, treeBySession map[string]*SubagentTree
 			Reason:          "subagent_overhead",
 			Detail:          fmt.Sprintf("Subagent overhead is %.1f%% of session cost ($%.2f of $%.2f)", tree.OverheadPct, tree.SubagentCost, tree.TotalCost),
 			Metric:          tree.OverheadPct,
-			Threshold:       50,
+			Threshold:       thresholdPct,
 			SessionCost:     tree.TotalCost,
 			Model:           a.model,
 			InputTokens:     a.inputSum,

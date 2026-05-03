@@ -4,6 +4,7 @@ import (
 	"math"
 	"sort"
 
+	"github.com/ethanhanguyen/burnwatch/config"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
@@ -38,7 +39,7 @@ type Baseline struct {
 
 const globalKey = "*"
 
-func ComputeBaselines(events []source.TokenEvent) map[string]Baseline {
+func ComputeBaselines(events []source.TokenEvent, cfg config.Config) map[string]Baseline {
 	if len(events) == 0 {
 		return nil
 	}
@@ -65,11 +66,11 @@ func ComputeBaselines(events []source.TokenEvent) map[string]Baseline {
 			allSessionMetrics = append(allSessionMetrics, m)
 		}
 
-		b := buildBaseline(key, metrics)
+		b := buildBaseline(key, metrics, cfg)
 		result[key] = b
 	}
 
-	global := buildBaseline(globalKey, allSessionMetrics)
+	global := buildBaseline(globalKey, allSessionMetrics, cfg)
 	result[globalKey] = global
 
 	return result
@@ -131,7 +132,7 @@ func aggregateMetrics(sessionID string, events []source.TokenEvent) sessionMetri
 	return m
 }
 
-func buildBaseline(key string, metrics []sessionMetrics) Baseline {
+func buildBaseline(key string, metrics []sessionMetrics, cfg config.Config) Baseline {
 	proj, harness := splitKey(key)
 	b := Baseline{
 		Project:      proj,
@@ -171,10 +172,10 @@ func buildBaseline(key string, metrics []sessionMetrics) Baseline {
 	sort.Float64s(b.CacheRates)
 
 	b.RatioMean = mean(b.Ratios)
-	b.RatioP10 = percentile(b.Ratios, 10)
+	b.RatioP10 = percentile(b.Ratios, cfg.Thresholds.LowSignalPercentile)
 	b.RatioP50 = percentile(b.Ratios, 50)
 	b.RatioP90 = percentile(b.Ratios, 90)
-	b.CacheP10 = percentile(b.CacheRates, 10)
+	b.CacheP10 = percentile(b.CacheRates, cfg.Thresholds.CachePercentile)
 	b.CacheP50 = percentile(b.CacheRates, 50)
 
 	b.InputTokens = make([]float64, n)
@@ -206,7 +207,7 @@ func buildBaseline(key string, metrics []sessionMetrics) Baseline {
 		b.TERs[i] = m.ter
 	}
 	sort.Float64s(b.TERs)
-	b.TERP10 = percentile(b.TERs, 10)
+	b.TERP10 = percentile(b.TERs, cfg.Thresholds.TokenEfficiencyPercentile)
 
 	return b
 }

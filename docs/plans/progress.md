@@ -2,11 +2,11 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 3/8 PRs complete (v2)
+## Overall: 10/10 PRs complete (v1), 4/8 PRs complete (v2)
 
 ```
 v1 ████████████████████████████████████████ 10/10 merged
-v2 ████████████░░░░░░░░░░░░░░░░░░░░░░░░░░ 3/8
+v2 ████████████████░░░░░░░░░░░░░░░░░░░░ 4/8
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -22,7 +22,7 @@ PR10 ██████████████████████ Phase C 
 PR11 ██████████████████████ Dynamic Pricing (OpenRouter)
 PR12 ██████████████████████ Token Baselines
 PR13 ██████████████████████ Token-Based Heuristics
-PR14 ····················· Config-Wired Thresholds
+PR14 ██████████████████████ Config-Wired Thresholds
 PR15 ····················· Calibration Mode
 PR16 ····················· Unsupervised Anomaly Detection
 PR17 ····················· LLM Verification
@@ -46,7 +46,7 @@ PR18 ····················· ML Pipeline (experimental)
 | PR11 | `pr11-dynamic-pricing` | merged | 2026-05-02 | 2026-05-02 | OpenRouter fetch, cache, fallback, fix wrong $ |
 | PR12 | `pr12-token-baselines` | merged | 2026-05-02 | 2026-05-02 | InputMean, OutputMean, TER, token percentiles |
 | PR13 | `pr13-token-heuristics` | **merged** | 2026-05-03 | 2026-05-03 | H6 input overconsumption, H7 output explosion, H8 token efficiency, H9 fragmentation index |
-| PR14 | `pr14-config-wiring` | **not started** | — | — | Wire all thresholds to config, complete PR7 work |
+| PR14 | `pr14-config-wiring` | **merged** | 2026-05-03 | 2026-05-03 | Wire all thresholds to config, new CLI flags, complete PR7 work |
 | PR15 | `pr15-calibrate` | **not started** | — | — | --calibrate mode, distribution, suggestions |
 | PR16 | `pr16-anomaly-detection` | **not started** | — | — | Isolation forest on session feature vectors |
 | PR17 | `pr17-llm-verification` | **not started** | — | — | LLM review of top-N waste signals |
@@ -76,7 +76,7 @@ Phase C (ML — experimental)
 
 ## Next action
 
-Start PR14: Config-Wired Thresholds. Wire all new thresholds to config file. See `docs/plans/PR14-prompt.md`.
+Start PR15: Calibration Mode. Use baselines to generate --calibrate suggestions. See `docs/plans/PR15-prompt.md`.
 
 ## Execution log
 
@@ -98,6 +98,7 @@ Start PR14: Config-Wired Thresholds. Wire all new thresholds to config file. See
 | 2026-05-02 | PR11 | Dynamic pricing: OpenRouter API, 7-day cache, CostApproximate propagation, ≈ indicator |
 | 2026-05-02 | PR12 | Token baselines: InputMean, InputStd, InputP50/P90, OutputMean, OutputStd, OutputP50/P90, TERP10, raw arrays |
 | 2026-05-03 | PR13 | Token heuristics: H6 input overconsumption, H7 output explosion, H8 token efficiency, H9 fragmentation index (replaces H5) |
+| 2026-05-03 | PR14 | Config-wired thresholds: all hardcoded constants moved to config, new CLI flags, signature changes, full test coverage |
 
 ## Quality snapshot
 
@@ -122,7 +123,7 @@ All v1 PRs merged. Tasks:
 - [x] PR11: Fix pricing (OpenRouter) — highest impact, fixes wrong dollar amounts
 - [x] PR12: Token baselines — prerequisite for token heuristics
 - [x] PR13: Token heuristics — H6–H9
-- [ ] PR14: Config wiring — complete PR7's unfinished work
+- [x] PR14: Config wiring — complete PR7's unfinished work
 - [ ] PR15: Calibration mode
 - [ ] PR16: Anomaly detection
 - [ ] PR17: LLM verification
