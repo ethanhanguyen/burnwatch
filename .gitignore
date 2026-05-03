@@ -27,6 +27,7 @@ go.work.sum
 # OS
 .DS_Store
 Thumbs.db
+.zshrc
 
 # Environment
 .env

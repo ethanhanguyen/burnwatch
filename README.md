@@ -1,46 +1,54 @@
-# burnwatch
+# Burnwatch
 
-Find waste in your AI agent sessions. Save money.
+**Measure what your AI agents cost — and where they waste it.**
 
-Supports [OpenCode](https://github.com/sst/opencode) and [Claude Code](https://github.com/anthropics/claude-code). No cloud, no API keys, no telemetry — reads your local session data directly.
+Burnwatch reads your local AI agent session data and pinpoints the exact sessions, patterns, and behaviors burning money without delivering value.
 
-## Supported Harnesses
+Works offline. Zero configuration. No API keys, no cloud, no telemetry.
 
-| Harness | Status | Data Source |
-|---------|--------|-------------|
-| [OpenCode](https://github.com/sst/opencode) | Supported | `~/.local/share/opencode/opencode.db` (SQLite) |
-| [Claude Code](https://github.com/anthropics/claude-code) | Supported | `~/.claude/projects/` (JSONL) |
+## Supported Agents
 
-## Install
+| Agent | Status | Source |
+|-------|--------|--------|
+| [OpenCode](https://github.com/sst/opencode) | Stable | `~/.local/share/opencode/opencode.db` (SQLite) |
+| [Claude Code](https://github.com/anthropics/claude-code) | Stable | `~/.claude/projects/` (JSONL) |
+
+## Quickstart
 
 ```bash
 go install github.com/ethanhanguyen/burnwatch@latest
 ```
 
-## Usage
+Then run it:
 
 ```bash
-burnwatch                    # today's waste report (all harnesses)
-burnwatch --json             # machine-readable JSON
-burnwatch --harness opencode # filter to one harness
-burnwatch --project my-project
-burnwatch --days 7           # look back 7 days
-burnwatch --verbose          # show all sessions, not just waste
+burnwatch
 ```
 
-## How it works
+That's it. Burnwatch discovers your session data automatically and prints a waste report.
 
-Reads your local session data, computes statistical baselines from your own behavior, and flags outliers:
+### Common Options
 
-1. **Cost outliers** — sessions >2σ above your project median
-2. **Low signal** — sessions where the agent reads far more than it produces
-3. **Subagent overhead** — >50% of session cost spent on subagents
-4. **Cache underutilization** — low prompt cache hit rates
-5. **Session churn** — many short sessions losing cached context
+```bash
+burnwatch                      # Today's waste across all agents
+burnwatch --days 7             # Last 7 days
+burnwatch --project my-app     # Single project
+burnwatch --harness claude-code  # One agent only
+burnwatch --json               # Machine-readable output
+burnwatch --verbose            # Show all sessions, not just waste
+```
 
-All thresholds self-calibrate to your data. No hardcoded constants.
+## What It Detects
 
-## Output
+Burnwatch runs five self-calibrating heuristics against your own session history. No hardcoded thresholds — everything adapts to your usage patterns.
+
+1. **Cost Spikes** — Sessions exceeding 2σ above your project's median cost. Catches runaway loops, forgotten prompts, or agents stuck retrying.
+2. **Low-Signal Sessions** — Sessions where the agent reads significantly more than it produces. Indicates context thrashing, poor prompts, or unnecessary model capacity.
+3. **Subagent Proliferation** — Parent sessions where >50% of cost went to spawned subagents instead of inline work. Surfaces coordination overhead you might not realize you're paying for.
+4. **Cache Misses** — Sessions with abnormally low prompt cache hit rates. Points at sessions that don't benefit from caching — often due to non-deterministic prompts or large tool output.
+5. **Session Churn** — Days where many short sessions fall below your average output ratio. Suggests repeated restarts losing cached context each time.
+
+## Example Output
 
 ```
 $ burnwatch
@@ -48,25 +56,31 @@ OpenCode: 1610 sessions, 1089 subagent sessions
 Today: $2.34 (8 sessions) | This week: $14.21 (37 sessions)
 
 Waste signals:
-  HIGH ses_abc Bright-Butterfly (lilysbeauty): $1.86 — 3.4x project median ($0.55)
+  HIGH  ses_abc Bright-Butterfly (lilysbeauty): $1.86 — 3.4x project median ($0.55)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $1.31
-  MED  ses_def Cool-Ocean (reka-travel): 87% subagent overhead ($0.82 / $0.94)
+  MED   ses_def Cool-Ocean (reka-travel): 87% subagent overhead ($0.82 / $0.94)
     → Evaluate whether subagent delegation was necessary vs inline. Potential savings: $0.57
-  LOW  Project lilysbeauty: Cache hit rate 12% (P10 = 25%)
+  LOW   Project lilysbeauty: Cache hit rate 12% (P10 = 25%)
     → Consider CLAUDE.md optimization for better caching. Potential savings: $2.48
 
-Summary: 3 waste signals found. Potential savings: $4.36 / day
+Summary: 3 waste signals found. Potential savings: $4.36/day
 ```
 
-JSON mode for piping:
+Pipe JSON output into `jq` for scripting:
 
 ```bash
 burnwatch --json | jq '.waste_signals[] | select(.severity == "high")'
 ```
 
-## Docs
+## Why Self-Calibrating?
 
-[Full documentation](./docs/index.md) — quickstart, architecture, contributing, specs, and ADRs.
+Fixed thresholds break. A \$2 session might be routine for you but expensive for someone else. Burnwatch computes per-project and per-agent baselines from your own data — medians, standard deviations, and percentile cutoffs — so waste signals are always relative to *your* normal.
+
+## Documentation
+
+- [Quickstart](./docs/quickstart.md) — Install, first run, interpreting output
+- [Architecture](./docs/architecture.md) — Module design and data flow
+- [Contributing](./docs/contributing.md) — Local setup, testing, adding a new agent source
 
 ## License
 
