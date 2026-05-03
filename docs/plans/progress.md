@@ -77,7 +77,7 @@ All PRs complete. Implementation phase done.
 ## Post-implementation
 
 All 10 PRs merged:
-1. [x] Tag `v1.0.0`
+1. [x] Tag `v0.1.0`
 2. [x] Archive PR prompts and implementation plan → `docs/archive/`
 3. [x] Update `docs/index.md` to reflect current state
-4. [ ] Ship: `go install github.com/ethanhanguyen/burnwatch@v1.0.0`
+4. [ ] Ship: `go install github.com/ethanhanguyen/burnwatch@v0.1.0`

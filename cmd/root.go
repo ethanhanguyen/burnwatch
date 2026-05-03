@@ -13,6 +13,12 @@ import (
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
+var (
+	version = "dev"
+	commit  = "unknown"
+	date    = "unknown"
+)
+
 func Execute() {
 	var flags struct {
 		DBPath      string
@@ -49,7 +55,14 @@ func Execute() {
 	flag.BoolVar(&flags.NoCacheUnderutil, "no-cache-underutil", false, "Disable cache underutilization detection")
 	flag.BoolVar(&flags.NoChurn, "no-churn", false, "Disable session churn detection")
 	flag.BoolVar(&flags.ShowTrends, "show-trends", false, "Show time-trend summary")
+
+	versionFlag := flag.Bool("version", false, "Print version and exit")
 	flag.Parse()
+
+	if *versionFlag {
+		fmt.Printf("burnwatch %s (%s) built %s\n", version, commit, date)
+		return
+	}
 
 	cfg, err := config.Load(flags.ConfigPath)
 	if err != nil {

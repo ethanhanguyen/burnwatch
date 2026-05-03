@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0.0 (2026-05-02)
+## v0.1.0 (2026-05-02)
 
 ### Added
 - OpenCode source: SQLite reader for session data

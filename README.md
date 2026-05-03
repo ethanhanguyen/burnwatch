@@ -15,11 +15,23 @@ Works offline. Zero configuration. No API keys, no cloud, no telemetry.
 
 ## Quickstart
 
+### Install
+
+**Go toolchain** (any platform):
+
 ```bash
 go install github.com/ethanhanguyen/burnwatch@latest
 ```
 
-Then run it:
+**Homebrew** (macOS / Linux):
+
+```bash
+brew install ethanhanguyen/tap/burnwatch
+```
+
+**Pre-built binaries** — download from [GitHub Releases](https://github.com/ethanhanguyen/burnwatch/releases) for macOS, Linux, Windows (x86_64 + arm64).
+
+### Run
 
 ```bash
 burnwatch
