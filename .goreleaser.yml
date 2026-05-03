@@ -18,7 +18,7 @@ builds:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
 
 archives:
-  - format: tar.gz
+  - id: unix
     name_template: >-
       {{ .ProjectName }}_
       {{- .Version }}_
@@ -26,9 +26,10 @@ archives:
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
+    formats: ['tar.gz']
     format_overrides:
       - goos: windows
-        format: zip
+        formats: ['zip']
 
 checksum:
   name_template: "checksums.txt"
@@ -46,10 +47,12 @@ changelog:
       - Merge pull request
 
 brews:
-  - name: burnwatch
+  - ids: [unix]
+    name: burnwatch
     repository:
       owner: ethanhanguyen
       name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
     homepage: "https://github.com/ethanhanguyen/burnwatch"
     description: "Measure what your AI agents cost — and where they waste it."
     license: MIT
