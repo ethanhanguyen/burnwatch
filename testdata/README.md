@@ -8,8 +8,9 @@ Data used by the test suite. Each subdirectory and file has a specific purpose.
 testdata/
 ├── README.md                    # this file
 ├── opencode_sample.db           # SQLite DB with actual OpenCode session data
-├── claude_sample.jsonl          # 7-line JSONL of a Claude Code session
-├── claude_subagents/            # subagent JSONL for the Claude session above
+├── opencode_part_migration.sql  # Migration script: adds part table for v3 tool calls
+├── claude_projects/             # Claude Code session fixtures (JSONL + subagents)
+│   └── sample-project/          # Contains tool_use content blocks (v3 format)
 ├── expected_report.txt          # golden file: full text report output
 ├── expected_report.json         # golden file: full JSON report output
 ├── scenarios/                   # crafted scenarios for E2E heuristic testing
@@ -21,9 +22,17 @@ testdata/
 │   ├── subagent_overhead.jsonl  # 2 sessions + subagent tree
 │   ├── cache_underutilized.jsonl # 6 sessions, 1 with write-only cache
 │   ├── all_clean.jsonl          # 10 identical sessions, zero waste expected
-│   └── multi_signal.jsonl       # 6 sessions, 1 triggers multiple heuristics
+│   ├── multi_signal.jsonl       # 6 sessions, 1 triggers multiple heuristics
+│   ├── tool_loop.jsonl          # 3 sessions, 1 with Read/Edit loop (H10, v3)
+│   ├── tool_loop_edge.jsonl      # 3 sessions, 1 at threshold=5, 1 no-repeat, 1 normal (H10 edge)
+│   ├── file_reread.jsonl        # 3 sessions, 1 with uncached re-reads (H11, v3)
+│   ├── file_reread_mixed.jsonl   # 3 sessions: 1 waste, 1 below-threshold, 1 cached (H11 edges)
+│   ├── subagent_overlap.jsonl   # 4 sessions, parent+subagent 50% overlap (H12, v3)
+│   ├── subagent_overlap_multi.jsonl # 5 sessions: 2 subagents, one overlaps 75%, other 0% (H12 edges)
+│   ├── session_restart.jsonl    # 4 sessions, A→B 80% overlap flagged (H13, v3)
+│   └── session_restart_chain.jsonl # 4 sessions: A→B→C chain, only B flagged (H13 edges)
 ├── labels/                      # labeled sessions for signal quality benchmarking
-│   ├── labels.jsonl             # 54 labeled sessions (14 waste, 40 clean)
+│   ├── labels.jsonl             # labeled sessions
 │   └── README.md                # labeling guide
 └── benchmarks/                  # baseline performance data for benchstat
 ```
@@ -42,12 +51,20 @@ The golden files are compared against actual output in CI. Any change to output 
 
 ### Scenarios
 
-Each scenario JSONL file is a crafted Claude Code session log. The files follow the same JSONL format as `claude_sample.jsonl` — one JSON object per line, with `type: "assistant"` entries containing `model` and `usage` fields.
+Each scenario JSONL file is a crafted Claude Code session log. The files follow the same JSONL format as the Claude fixture — one JSON object per line, with `type: "assistant"` entries containing `model`, `usage`, and optionally `content` with `tool_use` blocks.
+
+**v1/v2 scenarios** (H1–H9): Basic format with `model` + `usage` only. No content blocks.
+
+**v3 scenarios** (H10–H13): Extended format with `message.content` containing `tool_use` blocks. Required for behavioral heuristics that need tool call sequences and file operation data.
 
 Scenario file naming convention:
 - `<heuristic_name>.jsonl` — exercises one heuristic
+- `*_edge.jsonl` — boundary cases (threshold, below-threshold, chains)
+- `*_mixed.jsonl` — mixed waste/normal scenarios within one file
 - `all_clean.jsonl` — no waste expected (negative test)
 - `multi_signal.jsonl` — multiple heuristics fire (overlap test)
+
+Scenario file format: Token Event Format (TEF). See [`docs/specs/scenario-tef-format.md`](../docs/specs/scenario-tef-format.md) for the full spec and harness-agnostic design.
 
 Session ID convention within scenarios:
 - `ses_<scenario>_waste` — the session that SHOULD trigger the heuristic

@@ -2,8 +2,42 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/6 complete (v2.5→v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 0/4 started (v3)
 
+```
+v1    ████████████████████████████████████████ 10/10 merged
+v2    ████████████████████████████████████████ 4/4 merged
+v2.5  ████████████████████████████████████████ 3/3 merged
+v3    ········································ 0/4 (planned)
+
+PR1  ██████████████████████ Foundation
+PR2  ██████████████████████ OpenCode Source
+PR3  ██████████████████████ Claude Code Source
+PR4  ██████████████████████ Analysis Engine
+PR5  ██████████████████████ CLI + Output + Wiring
+PR6  ██████████████████████ Docs + CI + Release
+PR7  ██████████████████████ Config File
+PR8  ██████████████████████ Phase A — Display Fixes
+PR9  ██████████████████████ Phase B — Noise Reduction
+PR10 ██████████████████████ Phase C — Deeper Insights
+
+PR11 ██████████████████████ Dynamic Pricing (OpenRouter)
+PR12 ██████████████████████ Token Baselines
+PR13 ██████████████████████ Token-Based Heuristics
+PR14 ██████████████████████ Config-Wired Thresholds
+
+PR15 ██████████████████████ Fix Pricing + Uncosted
+PR16 ██████████████████████ Output Quality Fixes
+PR17 ██████████████████████ Calibration Mode
+
+N1   ····················· Data Model Expansion
+N2   ····················· Loop + Re-read (H10,H11)
+N3   ····················· Subagent Overlap + Restart (H12,H13)
+N4   ····················· Polish + Calibration
+
+PR18 ····················· Unsupervised Anomaly Detection (DEFERRED)
+PR19 ····················· LLM Verification (DEFERRED)
+PR20 ····················· ML Pipeline (DEFERRED)
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
@@ -56,9 +90,13 @@ PR20 ····················· ML Pipeline (experimental)
 | PR15 | `pr15-pricing-fix` | **merged** | 2026-05-03 | 2026-05-03 | 1000x embedded bug, cache validation, uncosted fallback |
 | PR16 | `pr15-pricing-fix` | **merged** | 2026-05-03 | 2026-05-03 | Fragment min-cost gating, savings dedup, --init |
 | PR17 | `pr17-calibrate` | **merged** | 2026-05-03 | 2026-05-03 | --calibrate mode, distribution, suggestions |
-| PR18 | `pr18-anomaly-detection` | **not started** | — | — | Isolation forest on session feature vectors |
-| PR19 | `pr19-llm-verification` | **not started** | — | — | LLM review of top-N waste signals |
-| PR20 | `pr20-ml-pipeline` | **not started** | — | — | Supervised logistic regression (experimental) |
+| PR18 | `pr18-anomaly-detection` | **deferred** | — | — | See ADR 2026-05-03 |
+| PR19 | `pr19-llm-verification` | **deferred** | — | — | Reschedule post-v3 |
+| PR20 | `pr20-ml-pipeline` | **deferred** | — | — | Replaced by behavioral detection |
+| N1 | `n1-data-model-expansion` | **planned** | — | — | ToolCall + FileOp in TokenEvent |
+| N2 | `n2-loop-reread` | **planned** | — | — | H10, H11 — loop + file re-read detection |
+| N3 | `n3-overlap-restart` | **planned** | — | — | H12, H13 — subagent overlap + session restart |
+| N4 | `n4-polish` | **planned** | — | — | Performance, calibration, path normalization |
 
 ## Blockers
 
@@ -67,18 +105,19 @@ PR20 ····················· ML Pipeline (experimental)
 ## Dependency graph
 
 ```
-Phase 0 (Critical Fix — sequential)
-  PR15 ─── PR16
-  pricing   output-quality
-  fix       (noise + dedup + init)
+v3 (Event-Level Waste Detection — 4 PRs)
+  N1 ─── N2
+  │       │
+  │       └── N4
+  │
+  └────── N3 ─── N4
 
-Phase 1 (v2 Features — sequential)
-  PR17 ─── PR18 ─── PR19
-  calibrate anomaly  llm-verify
+Phase 2 (Deferred — post v3)
+  N4 ─── PR19 (LLM verification)
 
-Phase 2 (Experimental)
-  PR20
-  supervised
+Phase 3 (Deferred — unless behavioral analysis proves expensive)
+  PR18 (Isolation Forest)
+  PR20 (Supervised ML)
 ```
 
 ## Validation gates
@@ -102,51 +141,13 @@ Each milestone requires a gate check before the next PR can start.
 - [x] **P17.1 — Output compact:** `burnwatch --calibrate` prints <80 lines, readable on a terminal.
 - [x] **P17.2 — Suggestions valid:** Copy suggested thresholds to `.burnwatch.toml`. Re-run `burnwatch`. Verify same metrics produce same signals (no breakage).
 
-### Gate P18 (after PR18 merge)
+### Gate P18 (after PR18 merge) — DEFERRED
 
-- [ ] **P18.1 — Isolation correct:** Known-outlier test: 95 normal + 5 outliers → all 5 score >0.6.
-- [ ] **P18.2 — No false positives:** Identical data → all scores ≈0.5 (no isolation possible, no false anomaly).
-- [ ] **P18.3 — Performance:** 1000 sessions × 100 trees <200ms.
+- [ ] **P18.1 — Isolation correct:** Not applicable. Behavioral detection replaces anomaly detection.
 
-### Gate P19 (after PR19 merge)
+### Gate P19 (after PR19 merge) — DEFERRED (post-v3)
 
-- [ ] **P19.1 — Parse reliability:** Manual test with real API key. All verdicts parse correctly (WASTE/NOT_WASTE/UNKNOWN).
-- [ ] **P19.2 — Cost estimate:** Estimate before confirm is accurate within 50%.
-
-### Gate P20 (after PR20 merge)
-
-- [ ] **P20.1 — F1 score:** Precision + recall on held-out labeled data >0.70.
-
-## Next action
-
-Start PR18: Unsupervised Anomaly Detection. See `docs/plans/PR18-prompt.md`.
-
-## Execution log
-
-| Date | PR | Action |
-|------|----|--------|
-| 2026-05-02 | — | Implementation plan and PR prompts written (PR1-6) |
-| 2026-05-02 | PR1 | Foundation (no-op, already in place) |
-| 2026-05-02 | PR2 | OpenCode source implemented, reviewed, merged |
-| 2026-05-02 | PR3 | Claude Code source implemented, reviewed, merged |
-| 2026-05-02 | PR4 | Analysis engine implemented, reviewed, merged |
-| 2026-05-02 | PR5 | CLI + Output + Wiring implemented, reviewed, merged |
-| 2026-05-02 | PR6 | Docs + CI + Release implemented, reviewed, merged |
-| 2026-05-02 | PR7 | Config file implemented, reviewed, merged |
-| 2026-05-02 | PR8 | Display fixes implemented, reviewed, merged |
-| 2026-05-02 | PR9 | Noise reduction implemented, reviewed, merged |
-| 2026-05-02 | PR10 | Deeper insights implemented, reviewed, merged |
-| 2026-05-02 | — | Burnwatch assessment complete. Identified 3 root problems. |
-| 2026-05-02 | — | V2 implementation plan and PR11–PR18 prompts written. |
-| 2026-05-02 | PR11 | Dynamic pricing: OpenRouter API, 7-day cache, CostApproximate propagation, ≈ indicator |
-| 2026-05-02 | PR12 | Token baselines: InputMean, InputStd, InputP50/P90, OutputMean, OutputStd, OutputP50/P90, TERP10, raw arrays |
-| 2026-05-03 | PR13 | Token heuristics: H6 input overconsumption, H7 output explosion, H8 token efficiency, H9 fragmentation index (replaces H5) |
-| 2026-05-03 | PR14 | Config-wired thresholds: all hardcoded constants moved to config, new CLI flags, signature changes, full test coverage |
-| 2026-05-03 | — | **Post-PR14 review found 1000x pricing bug.** Embedded table uses $/MTok values but CostForModel treats as $/1K. All costs inflated. Cache corrupted (1 fake entry). OpenCode trusts DB costs instead of recalculating. Fallback price fabricates costs for unknown models. |
-| 2026-05-03 | — | v2.5 plan drafted: PR15 (pricing fix), PR16 (output quality). Original PR15-18 renumbered to PR17-20. Validation gates added at each milestone. |
-| 2026-05-03 | PR15 | Fix embedded pricing 1000x, remove fallback, add CostUnknown, gate cost heuristics |
-| 2026-05-03 | PR16 | Fragment min-cost gating, savings dedup, --init flag, config.example.toml |
-| 2026-05-03 | PR17 | Calibration mode: distribution analysis, threshold suggestions, text+JSON output |
+- [ ] **P19.1 — Parse reliability:** Not applicable until behavioral signals ship and accumulate labels.
 
 ## Quality snapshot
 
@@ -156,4 +157,4 @@ Start PR18: Unsupervised Anomaly Detection. See `docs/plans/PR18-prompt.md`.
 | `go vet` | 0 warnings | 0 |
 | `golangci-lint` | 0 issues | 0 |
 | Binary builds | pass | pass |
-| Golden files match | pass | pass (will break in PR15 — costs drop 1000x) |
+| Golden files match | pass | pass |
