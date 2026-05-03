@@ -10,6 +10,30 @@ import (
 	"github.com/yourname/burnwatch/source"
 )
 
+type sessionData struct {
+	cost    float64
+	project string
+	harness string
+}
+
+type sessionEntry struct {
+	sessionID string
+	data      *sessionData
+}
+
+type harnessStats struct {
+	sessions         map[string]bool
+	subagentSessions map[string]bool
+}
+
+type projInfo struct {
+	name    string
+	harness string
+	count   int
+	cost    float64
+	median  float64
+}
+
 func FormatText(
 	events []source.TokenEvent,
 	baselines map[string]analyze.Baseline,
@@ -58,11 +82,6 @@ func FormatText(
 }
 
 func writeAllSessions(b *strings.Builder, events []source.TokenEvent) {
-	type sessionData struct {
-		cost    float64
-		project string
-		harness string
-	}
 	sessions := make(map[string]*sessionData)
 	for _, e := range events {
 		s, ok := sessions[e.SessionID]
@@ -73,13 +92,9 @@ func writeAllSessions(b *strings.Builder, events []source.TokenEvent) {
 		s.cost += e.CostUSD
 	}
 
-	type entry struct {
-		sessionID string
-		data      *sessionData
-	}
-	var sorted []entry
+	var sorted []sessionEntry
 	for sid, sd := range sessions {
-		sorted = append(sorted, entry{sid, sd})
+		sorted = append(sorted, sessionEntry{sid, sd})
 	}
 	sort.Slice(sorted, func(i, j int) bool {
 		return sorted[i].data.cost > sorted[j].data.cost
@@ -93,10 +108,6 @@ func writeAllSessions(b *strings.Builder, events []source.TokenEvent) {
 }
 
 func writeSummary(b *strings.Builder, events []source.TokenEvent, baselines map[string]analyze.Baseline) {
-	type harnessStats struct {
-		sessions         map[string]bool
-		subagentSessions map[string]bool
-	}
 	harness := make(map[string]*harnessStats)
 
 	now := NowFunc()
@@ -176,13 +187,6 @@ func harnessLabel(name string) string {
 }
 
 func writeProjects(b *strings.Builder, baselines map[string]analyze.Baseline) {
-	type projInfo struct {
-		name    string
-		harness string
-		count   int
-		cost    float64
-		median  float64
-	}
 	var projects []projInfo
 	for k, bl := range baselines {
 		if k == "*" {
@@ -292,7 +296,6 @@ func RunPipeline(events []source.TokenEvent) (
 	baselines = analyze.ComputeBaselines(events)
 	signals = analyze.DetectWaste(events, baselines)
 	recommendations = analyze.GenerateRecommendations(signals, baselines)
-	// Build subagent trees (needed by DetectWaste internally, exposed for JSON)
 	_ = analyze.BuildSubagentTree(events)
 	return
 }

@@ -142,10 +142,6 @@ func convertSubagentNode(n analyze.SubagentNode) JSONSubagentNode {
 func buildJSONSummary(events []source.TokenEvent) JSONSummary {
 	var s JSONSummary
 
-	type harnessStats struct {
-		sessions         map[string]bool
-		subagentSessions map[string]bool
-	}
 	harness := make(map[string]*harnessStats)
 
 	todayStart := todayTrunc()

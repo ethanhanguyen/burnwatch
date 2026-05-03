@@ -29,6 +29,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Go runs tests from the package directory, not the project root. All test data paths must use `filepath.Join("..", "testdata", ...)`. `source/*_test.go`
 - With N ≤ 5 sessions and a single cost outlier, the 2σ threshold (population stddev) can never trip because the max z-score for one outlier is `sqrt(N-1)`. For N=5, max z = 2.0 — exactly equals the threshold, never exceeds it. Use N ≥ 6 for cost outlier test data. `analyze/waste_test.go`
 - Global baseline key `"*"` provides cross-project percentile thresholds for H2 (low signal) and H4 (cache underutilized). `splitKey` handles this sentinel by returning `"*"` as project and `""` as harness. `analyze/baseline.go:21,166-173`
+- Map iteration order in Go is non-deterministic. `BuildSubagentTree` iterates over `sessions` map, causing different output per run. Golden file tests must either sort output or avoid map-iteration-dependent sections. `output/json.go:113-115`
+- Unexported helper types must be declared at package level, not inside functions. Defining types inside functions is prohibited by the codebase convention and makes types invisible to other package-level functions. `output/text.go:12-29`
 
 ## Mistakes
 
@@ -36,6 +38,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Unreachable `if cost < 0 { return 0 }` guard in `CostForModel`. Negative tokens are already clamped at input — the negative-cost branch was dead code. Check invariants once at the entry point, not redundantly. `source/pricing.go:26`
 - Left an unused `_ any` parameter that survived self-review until golangci-lint caught it. Run `golangci-lint run` before committing, not after.
 - Defined `sessionInfo` as a local type inside `BuildSubagentTree` but tried to use it in helper function signatures. Local types defined inside a function can't be referenced from other function signatures — must be package-level. `analyze/subagent.go:25-31`
+- Infinite recursion in `BuildSubagentTree` — real OpenCode data contained cyclic parent-child relationships among subagent sessions, causing stack overflow. Fix: `buildChildNodesVisited` tracks visited session IDs with a `map[string]bool` passed through the call chain. `analyze/subagent.go:114-145`
+- Golden file tests used `time.Now()` for today/week calculations, making output non-deterministic. Tests passed at generation time but failed on subsequent runs. Fix: extract to package-level `NowFunc = time.Now` variable, override in tests to a fixed reference time. `output/json.go:223, output/output_test.go:21`
 
 ## Patterns
 
@@ -46,6 +50,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - `projectNameToDisplay()` strips leading `-` and replaces `-` with `/` to convert directory paths to display names. `source/claude.go:220-223`
 - Waste signal sorting: severity descending (high → medium → low), then reason alphabetically, then SessionID. Ensures deterministic output ordering before CLI rendering. `analyze/waste.go:122-130`
 - Per-session metric aggregation: `map[string]*sessionAgg` groups events by SessionID, then ratios and cache rates are computed from summed token counts. Same pattern in `aggregateMetrics` and `DetectWaste`. `analyze/baseline.go:77`, `analyze/waste.go:50-87`
+- Use a package-level `var NowFunc = time.Now` for testable time-dependent code. Override in tests to a fixed reference time so today/week/month calculations produce deterministic output. `output/json.go:223`, `output/output_test.go:21`
+- Golden file tests with `-update` flag: use `flag.Bool("update", ...)` and `os.WriteFile` to regenerate expected output when format changes. Run `go test ./pkg/... -update` to update, then re-run without flag to verify. `output/output_test.go:15,51-57`
 
 ## Hidden Couplings
 

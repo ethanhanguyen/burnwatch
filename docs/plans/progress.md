@@ -2,14 +2,14 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 4/6 PRs complete
+## Overall: 5/6 PRs complete
 
 ```
 PR1 ██████████████████████ Foundation
 PR2 ██████████████████████ OpenCode Source
 PR3 ██████████████████████ Claude Code Source
 PR4 ██████████████████████ Analysis Engine
-PR5 ░░░░░░░░░░░░░░░░░░░░ CLI + Output + Wiring
+PR5 ██████████████████████ CLI + Output + Wiring
 PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Release
 ```
 
@@ -21,7 +21,7 @@ PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Rel
 | PR2 | `pr2-opencode-source` | merged | 2026-05-02 | 2026-05-02 | SQLite reader |
 | PR3 | `pr3-claude-source` | merged | 2026-05-02 | 2026-05-02 | JSONL reader + subagents |
 | PR4 | `pr4-analysis-engine` | merged | 2026-05-02 | 2026-05-02 | Baselines + 5 heuristics + recommendations |
-| PR5 | `pr5-cli-output` | pending | — | — | CLI + text/JSON + integration |
+| PR5 | `pr5-cli-output` | **merged** | 2026-05-02 | 2026-05-02 | CLI + text/JSON + golden files + E2E |
 | PR6 | `pr6-docs-ci` | pending | — | — | Docs + README + CHANGELOG + CI |
 
 ## Blockers
@@ -30,7 +30,7 @@ PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Rel
 
 ## Next action
 
-Execute [`PR5-prompt.md`](./PR5-prompt.md) — CLI + Output + Wiring.
+Execute [`PR6-prompt.md`](./PR6-prompt.md) — Docs + CI + Release.
 
 ## Execution log
 
@@ -40,6 +40,7 @@ Execute [`PR5-prompt.md`](./PR5-prompt.md) — CLI + Output + Wiring.
 | 2026-05-02 | PR2 | OpenCode source implemented, reviewed, merged |
 | 2026-05-02 | PR3 | Claude Code source implemented, reviewed, merged |
 | 2026-05-02 | PR4 | Analysis engine implemented, reviewed, merged |
+| 2026-05-02 | PR5 | CLI + Output + Wiring implemented, reviewed, merged |
 
 ## Quality snapshot
 
@@ -49,7 +50,7 @@ Execute [`PR5-prompt.md`](./PR5-prompt.md) — CLI + Output + Wiring.
 | `go vet` | 0 warnings | 0 |
 | `golangci-lint` | 0 issues | 0 |
 | Binary builds | pass | pass |
-| Golden files match | pass | — |
+| Golden files match | pass | pass |
 
 ## Post-implementation
 
