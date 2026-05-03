@@ -195,17 +195,8 @@ func Execute() {
 		cfg.Thresholds.SubagentOverheadPct = flags.SubagentOverheadPct
 	}
 
-	toggles := analyze.SignalToggles{
-		CostOutlier:          cfg.Signals.CostOutlier,
-		LowSignal:            cfg.Signals.LowSignal,
-		SubagentOverhead:     cfg.Signals.SubagentOverhead,
-		CacheUnderutilized:   cfg.Signals.CacheUnderutilized,
-		FragmentationIndex:   cfg.Signals.FragmentationIndex,
-		InputOverconsumption: cfg.Signals.InputOverconsumption,
-		OutputExplosion:      cfg.Signals.OutputExplosion,
-		TokenEfficiency:      cfg.Signals.TokenEfficiency,
-	}
-	signals := analyze.DetectWaste(events, baselines, cfg, toggles)
+	trees := analyze.BuildSubagentTree(events)
+	signals := analyze.DetectWaste(events, baselines, trees, cfg)
 
 	minCost := cfg.Filters.MinCost
 	if flags.MinCost > 0 {
@@ -220,7 +211,6 @@ func Execute() {
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	if flags.JSON {
-		trees := analyze.BuildSubagentTree(events)
 		jsonBytes, err := output.FormatJSON(events, baselines, signals, recommendations, trees)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error formatting JSON: %v\n", err)

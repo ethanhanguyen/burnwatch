@@ -285,7 +285,7 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 		}
 		if s.Model != "" {
 			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
-				s.Model, formatTokens(s.InputTokens), formatTokens(s.OutputTokens))
+				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
 		}
 	case "subagent_overhead":
 		fmt.Fprintf(b, " — %.1f%% subagent overhead ($%.2f / $%.2f)\n", s.Metric, s.Metric*s.SessionCost/100.0, s.SessionCost)
@@ -297,19 +297,19 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 		if s.Model != "" {
 			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
-				s.Model, formatTokens(s.InputTokens), formatTokens(s.OutputTokens))
+				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
 		}
 	case "output_explosion":
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 		if s.Model != "" {
 			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
-				s.Model, formatTokens(s.InputTokens), formatTokens(s.OutputTokens))
+				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
 		}
 	case "low_token_efficiency":
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 		if s.Model != "" {
 			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
-				s.Model, formatTokens(s.InputTokens), formatTokens(s.OutputTokens))
+				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
 		}
 	case "fragmentation_index":
 		fmt.Fprintf(b, " — %s\n", s.Detail)
@@ -353,28 +353,6 @@ func CollectEvents(sources []source.Source) []source.TokenEvent {
 	return events
 }
 
-func RunPipeline(events []source.TokenEvent) (
-	baselines map[string]analyze.Baseline,
-	signals []analyze.WasteSignal,
-	recommendations []analyze.Recommendation,
-) {
-	baselines = analyze.ComputeBaselines(events, config.Defaults())
-	toggles := analyze.SignalToggles{
-		CostOutlier:          true,
-		LowSignal:            true,
-		SubagentOverhead:     true,
-		CacheUnderutilized:   true,
-		FragmentationIndex:   true,
-		InputOverconsumption: true,
-		OutputExplosion:      true,
-		TokenEfficiency:      true,
-	}
-	signals = analyze.DetectWaste(events, baselines, config.Defaults(), toggles)
-	recommendations = analyze.GenerateRecommendations(signals, baselines)
-	_ = analyze.BuildSubagentTree(events)
-	return
-}
-
 func findBaselineForSignal(s analyze.WasteSignal, baselines map[string]analyze.Baseline) *analyze.Baseline {
 	for k, bl := range baselines {
 		if k == "*" {
@@ -388,16 +366,6 @@ func findBaselineForSignal(s analyze.WasteSignal, baselines map[string]analyze.B
 		return &gl
 	}
 	return nil
-}
-
-func formatTokens(n int64) string {
-	if n >= 1_000_000 {
-		return fmt.Sprintf("%.1fM", float64(n)/1_000_000)
-	}
-	if n >= 1_000 {
-		return fmt.Sprintf("%.1fK", float64(n)/1_000)
-	}
-	return fmt.Sprintf("%d", n)
 }
 
 func extractDateFromDetail(detail string) string {

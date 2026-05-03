@@ -9,17 +9,6 @@ import (
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
-var allToggles = SignalToggles{
-	CostOutlier:          true,
-	LowSignal:            true,
-	SubagentOverhead:     true,
-	CacheUnderutilized:   true,
-	FragmentationIndex:   true,
-	InputOverconsumption: true,
-	OutputExplosion:      true,
-	TokenEfficiency:      true,
-}
-
 func TestDetectWasteCostOutlier(t *testing.T) {
 	events := make([]source.TokenEvent, 0, 6)
 	for i := 1; i <= 5; i++ {
@@ -44,7 +33,7 @@ func TestDetectWasteCostOutlier(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -84,7 +73,7 @@ func TestDetectWasteLowSignal(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -107,7 +96,8 @@ func TestDetectWasteSubagentOverhead(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	trees := BuildSubagentTree(events)
+	signals := DetectWaste(events, baselines, trees, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -151,7 +141,7 @@ func TestDetectWasteCacheUnderutilized(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -176,7 +166,7 @@ func TestDetectWasteFragmentationIndex(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -209,7 +199,7 @@ func TestDetectWasteFragmentationIndex_BelowMinSessions(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "fragmentation_index" {
@@ -226,7 +216,7 @@ func TestDetectWasteFragmentationIndex_LowFragmentation(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "fragmentation_index" {
@@ -246,7 +236,7 @@ func TestDetectWasteFragmentationIndex_Dedup(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	seen := make(map[string]bool)
 	for _, s := range signals {
@@ -271,7 +261,7 @@ func TestDetectWasteInputOverconsumption(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -298,7 +288,7 @@ func TestDetectWasteInputOverconsumption_Normal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "input_overconsumption" && s.SessionID == "s-normal" {
@@ -315,7 +305,7 @@ func TestDetectWasteInputOverconsumption_ZeroInput(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "input_overconsumption" && s.SessionID == "s-zero-input" {
@@ -331,7 +321,7 @@ func TestDetectWasteInputOverconsumption_ZeroStd(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "input_overconsumption" {
@@ -351,7 +341,7 @@ func TestDetectWasteOutputExplosion(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -375,7 +365,7 @@ func TestDetectWasteOutputExplosion_ZeroOutput(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "output_explosion" && s.SessionID == "s-zero-out" {
@@ -395,7 +385,7 @@ func TestDetectWasteTokenEfficiency(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -422,7 +412,7 @@ func TestDetectWasteTokenEfficiency_Normal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "low_token_efficiency" && s.SessionID == "s-normal-ter" {
@@ -432,12 +422,12 @@ func TestDetectWasteTokenEfficiency_Normal(t *testing.T) {
 }
 
 func TestDetectWasteEmptyInput(t *testing.T) {
-	signals := DetectWaste(nil, nil, config.Defaults(), allToggles)
+	signals := DetectWaste(nil, nil, nil, config.Defaults())
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for nil input, got %d", len(signals))
 	}
 
-	signals = DetectWaste([]source.TokenEvent{}, nil, config.Defaults(), allToggles)
+	signals = DetectWaste([]source.TokenEvent{}, nil, nil, config.Defaults())
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty input, got %d", len(signals))
 	}
@@ -451,7 +441,7 @@ func TestDetectWasteAllNormal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for normal data, got %d", len(signals))
@@ -464,7 +454,7 @@ func TestDetectWasteNoSubagentsNoOverheadSignal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "subagent_overhead" {
@@ -499,7 +489,7 @@ func TestDetectWasteSignalFields(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	for _, s := range signals {
 		if s.Reason == "cost_outlier" {
@@ -550,13 +540,14 @@ func TestDetectWasteSortOrder(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	sortToggles := SignalToggles{
+	sortCfg := config.Defaults()
+	sortCfg.Signals = config.Signals{
 		CostOutlier:        true,
 		LowSignal:          true,
 		SubagentOverhead:   true,
 		CacheUnderutilized: true,
 	}
-	signals := DetectWaste(events, baselines, config.Defaults(), sortToggles)
+	signals := DetectWaste(events, baselines, nil, sortCfg)
 
 	prev := ""
 	for i, s := range signals {
@@ -602,7 +593,7 @@ func TestCheckCostOutlier_Sigma3(t *testing.T) {
 	baselines := ComputeBaselines(events, config.Defaults())
 	cfg3 := config.Defaults()
 	cfg3.Thresholds.CostOutlierSigma = 3.0
-	signals := DetectWaste(events, baselines, cfg3, allToggles)
+	signals := DetectWaste(events, baselines, nil, cfg3)
 
 	var found bool
 	for _, s := range signals {
@@ -614,7 +605,7 @@ func TestCheckCostOutlier_Sigma3(t *testing.T) {
 		t.Log("cost 20 was still flagged at sigma=3 (expected if variance is low)")
 	}
 
-	signals2 := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals2 := DetectWaste(events, baselines, nil, config.Defaults())
 	var found2 bool
 	for _, s := range signals2 {
 		if s.Reason == "cost_outlier" && s.SessionID == "s-outlier" {
@@ -652,7 +643,7 @@ func TestCheckCostOutlier_Sigma1(t *testing.T) {
 	baselines := ComputeBaselines(events, config.Defaults())
 	cfg1 := config.Defaults()
 	cfg1.Thresholds.CostOutlierSigma = 1.0
-	signals := DetectWaste(events, baselines, cfg1, allToggles)
+	signals := DetectWaste(events, baselines, nil, cfg1)
 
 	var found bool
 	for _, s := range signals {
@@ -675,7 +666,7 @@ func TestCheckCostOutlier_ZeroSigma(t *testing.T) {
 	baselines := ComputeBaselines(events, config.Defaults())
 	cfg0 := config.Defaults()
 	cfg0.Thresholds.CostOutlierSigma = 0
-	signals := DetectWaste(events, baselines, cfg0, allToggles)
+	signals := DetectWaste(events, baselines, nil, cfg0)
 
 	for _, s := range signals {
 		if s.Reason == "cost_outlier" {
@@ -710,8 +701,8 @@ func TestDetectWaste_WithSigma(t *testing.T) {
 	baselines := ComputeBaselines(events, config.Defaults())
 	cfg4 := config.Defaults()
 	cfg4.Thresholds.CostOutlierSigma = 4.0
-	signals2 := DetectWaste(events, baselines, config.Defaults(), allToggles)
-	signals4 := DetectWaste(events, baselines, cfg4, allToggles)
+	signals2 := DetectWaste(events, baselines, nil, config.Defaults())
+	signals4 := DetectWaste(events, baselines, nil, cfg4)
 
 	countOutlier := func(signals []WasteSignal) int {
 		c := 0
@@ -740,7 +731,8 @@ func TestCostConsistency(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	trees := BuildSubagentTree(events)
+	signals := DetectWaste(events, baselines, trees, config.Defaults())
 
 	var parentSignals []WasteSignal
 	for _, s := range signals {
@@ -789,7 +781,7 @@ func TestWasteSignalHasModel(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events, config.Defaults())
-	signals := DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := DetectWaste(events, baselines, nil, config.Defaults())
 
 	var found bool
 	for _, s := range signals {
@@ -836,17 +828,9 @@ func TestDetectWaste_ToggleOff(t *testing.T) {
 
 	baselines := ComputeBaselines(events, config.Defaults())
 
-	off := SignalToggles{
-		CostOutlier:          false,
-		LowSignal:            false,
-		SubagentOverhead:     false,
-		CacheUnderutilized:   false,
-		FragmentationIndex:   false,
-		InputOverconsumption: false,
-		OutputExplosion:      false,
-		TokenEfficiency:      false,
-	}
-	signals := DetectWaste(events, baselines, config.Defaults(), off)
+	offCfg := config.Defaults()
+	offCfg.Signals = config.Signals{}
+	signals := DetectWaste(events, baselines, nil, offCfg)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals with all toggles off, got %d", len(signals))

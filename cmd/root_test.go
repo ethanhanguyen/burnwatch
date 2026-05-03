@@ -43,17 +43,8 @@ func TestEndToEnd(t *testing.T) {
 	}
 
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	toggles := analyze.SignalToggles{
-		CostOutlier:          true,
-		LowSignal:            true,
-		SubagentOverhead:     true,
-		CacheUnderutilized:   true,
-		FragmentationIndex:   true,
-		InputOverconsumption: true,
-		OutputExplosion:      true,
-		TokenEfficiency:      true,
-	}
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), toggles)
+	cfg := config.Defaults()
+	signals := analyze.DetectWaste(events, baselines, nil, cfg)
 
 	if len(signals) == 0 {
 		t.Log("no waste signals found from test data (may be expected for clean data)")
@@ -142,17 +133,8 @@ func TestFilterByDays(t *testing.T) {
 func TestZeroEvents(t *testing.T) {
 	events := []source.TokenEvent{}
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	toggles := analyze.SignalToggles{
-		CostOutlier:          true,
-		LowSignal:            true,
-		SubagentOverhead:     true,
-		CacheUnderutilized:   true,
-		FragmentationIndex:   true,
-		InputOverconsumption: true,
-		OutputExplosion:      true,
-		TokenEfficiency:      true,
-	}
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), toggles)
+	cfg := config.Defaults()
+	signals := analyze.DetectWaste(events, baselines, nil, cfg)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty events, got %d", len(signals))
@@ -170,49 +152,25 @@ func TestTogglesSuppressOutput(t *testing.T) {
 	events := output.CollectEvents(sources)
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
 
-	allOff := analyze.SignalToggles{
-		CostOutlier:          false,
-		LowSignal:            false,
-		SubagentOverhead:     false,
-		CacheUnderutilized:   false,
-		FragmentationIndex:   false,
-		InputOverconsumption: false,
-		OutputExplosion:      false,
-		TokenEfficiency:      false,
-	}
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), allOff)
+	allOff := config.Defaults()
+	allOff.Signals = config.Signals{}
+	signals := analyze.DetectWaste(events, baselines, nil, allOff)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals with all toggles off, got %d", len(signals))
 	}
 
-	noFrag := analyze.SignalToggles{
-		CostOutlier:          true,
-		LowSignal:            true,
-		SubagentOverhead:     true,
-		CacheUnderutilized:   true,
-		FragmentationIndex:   false,
-		InputOverconsumption: true,
-		OutputExplosion:      true,
-		TokenEfficiency:      true,
-	}
-	signalsNoFrag := analyze.DetectWaste(events, baselines, config.Defaults(), noFrag)
+	noFragCfg := config.Defaults()
+	noFragCfg.Signals.FragmentationIndex = false
+	signalsNoFrag := analyze.DetectWaste(events, baselines, nil, noFragCfg)
 	for _, s := range signalsNoFrag {
 		if s.Reason == "fragmentation_index" {
 			t.Error("found fragmentation_index signal with toggle off")
 		}
 	}
 
-	noCost := analyze.SignalToggles{
-		CostOutlier:          false,
-		LowSignal:            true,
-		SubagentOverhead:     true,
-		CacheUnderutilized:   true,
-		FragmentationIndex:   true,
-		InputOverconsumption: true,
-		OutputExplosion:      true,
-		TokenEfficiency:      true,
-	}
-	signalsNoCost := analyze.DetectWaste(events, baselines, config.Defaults(), noCost)
+	noCostCfg := config.Defaults()
+	noCostCfg.Signals.CostOutlier = false
+	signalsNoCost := analyze.DetectWaste(events, baselines, nil, noCostCfg)
 	for _, s := range signalsNoCost {
 		if s.Reason == "cost_outlier" {
 			t.Error("found cost_outlier signal with toggle off")
@@ -227,20 +185,11 @@ func TestTrendsOutput(t *testing.T) {
 	}
 
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	toggles := analyze.SignalToggles{
-		CostOutlier:          true,
-		LowSignal:            true,
-		SubagentOverhead:     true,
-		CacheUnderutilized:   true,
-		FragmentationIndex:   true,
-		InputOverconsumption: true,
-		OutputExplosion:      true,
-		TokenEfficiency:      true,
-	}
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), toggles)
+	cfg := config.Defaults()
+	signals := analyze.DetectWaste(events, baselines, nil, cfg)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
-	cfg := config.Config{}
+	cfg = config.Config{}
 	cfg.Output.ShowTrends = true
 	text := output.FormatText(events, baselines, signals, recommendations, false, cfg)
 

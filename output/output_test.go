@@ -17,15 +17,38 @@ var updateGolden = flag.Bool("update", false, "update golden files")
 
 var fixedTime = time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
 
-var allToggles = analyze.SignalToggles{
-	CostOutlier:          true,
-	LowSignal:            true,
-	SubagentOverhead:     true,
-	CacheUnderutilized:   true,
-	FragmentationIndex:   true,
-	InputOverconsumption: true,
-	OutputExplosion:      true,
-	TokenEfficiency:      true,
+func useDefaults(cfg *config.Config) {
+	d := config.Defaults()
+	cfg.Thresholds = d.Thresholds
+	cfg.Filters = d.Filters
+	cfg.Output = d.Output
+}
+
+var allCfg = func() config.Config {
+	cfg := config.Config{Signals: config.Signals{
+		CostOutlier:          true,
+		LowSignal:            true,
+		SubagentOverhead:     true,
+		CacheUnderutilized:   true,
+		FragmentationIndex:   true,
+		InputOverconsumption: true,
+		OutputExplosion:      true,
+		TokenEfficiency:      true,
+	}}
+	useDefaults(&cfg)
+	return cfg
+}()
+
+func runPipeline(events []source.TokenEvent) (
+	baselines map[string]analyze.Baseline,
+	signals []analyze.WasteSignal,
+	recommendations []analyze.Recommendation,
+) {
+	baselines = analyze.ComputeBaselines(events, config.Defaults())
+	trees := analyze.BuildSubagentTree(events)
+	signals = analyze.DetectWaste(events, baselines, trees, allCfg)
+	recommendations = analyze.GenerateRecommendations(signals, baselines)
+	return
 }
 
 func setupTestEnv(t *testing.T) {
@@ -55,7 +78,7 @@ func TestGoldenText(t *testing.T) {
 
 	events := collectTestEvents(t)
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := analyze.DetectWaste(events, baselines, nil, config.Defaults())
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	got := FormatText(events, baselines, signals, recommendations, false, config.Config{})
@@ -84,7 +107,7 @@ func TestGoldenJSON(t *testing.T) {
 
 	events := collectTestEvents(t)
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := analyze.DetectWaste(events, baselines, nil, config.Defaults())
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 	trees := analyze.BuildSubagentTree(events)
 
@@ -129,7 +152,7 @@ func TestFormatText_NoSignals(t *testing.T) {
 		},
 	}
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := analyze.DetectWaste(events, baselines, nil, config.Defaults())
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 	got := FormatText(events, baselines, signals, recommendations, false, config.Config{})
 
@@ -225,7 +248,7 @@ func TestRunPipeline(t *testing.T) {
 		{SessionID: "s2", Harness: "opencode", Project: "p1", InputTokens: 200, OutputTokens: 20, CostUSD: 3.0, Timestamp: fixedTime},
 	}
 
-	baselines, signals, recommendations := RunPipeline(events)
+	baselines, signals, recommendations := runPipeline(events)
 	if baselines == nil {
 		t.Fatal("expected non-nil baselines")
 	}
@@ -369,7 +392,7 @@ func TestFormatText_NoSignalsWithVerbose(t *testing.T) {
 		{SessionID: "s1", Harness: "opencode", Project: "p1", CostUSD: 1.0, Timestamp: fixedTime},
 	}
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := analyze.DetectWaste(events, baselines, nil, config.Defaults())
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	got := FormatText(events, baselines, signals, recommendations, true, config.Config{})
@@ -408,7 +431,7 @@ func TestFormatText_Verbose(t *testing.T) {
 		{SessionID: "s2", Harness: "opencode", Project: "p1", InputTokens: 200, OutputTokens: 50, CostUSD: 2.0, Timestamp: fixedTime},
 	}
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := analyze.DetectWaste(events, baselines, nil, config.Defaults())
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	got := FormatText(events, baselines, signals, recommendations, true, config.Config{})
@@ -543,7 +566,7 @@ func TestFormatText_GroupChurn(t *testing.T) {
 	}
 
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
-	signals := analyze.DetectWaste(events, baselines, config.Defaults(), allToggles)
+	signals := analyze.DetectWaste(events, baselines, nil, config.Defaults())
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	hasFrag := false

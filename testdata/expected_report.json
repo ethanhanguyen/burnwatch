@@ -65,32 +65,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $22208.88 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 22208.881820000017,
+      "detail": "Session cost $11104.44 exceeds project baseline μ+2σ = $8782.75",
+      "metric": 11104.440910000008,
       "threshold": 8782.746918877187,
-      "session_cost": 22208.881820000017,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "0ffdd08e-42db-4ff5-a9b2-b47c72f63f58",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $15229.61 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 15229.6062,
-      "threshold": 12499.682868751142,
-      "session_cost": 15229.6062,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "1d5ac8c6-c875-45be-9ac9-5e72b537b1b9",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $12571.52 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 12571.517940000007,
-      "threshold": 8782.746918877187,
-      "session_cost": 12571.517940000007,
+      "session_cost": 11104.440910000008,
       "cost_approximate": true
     },
     {
@@ -98,10 +76,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $94510.79 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 94510.78545999993,
+      "detail": "Session cost $47255.39 exceeds project baseline μ+2σ = $12499.68",
+      "metric": 47255.39272999996,
       "threshold": 12499.682868751142,
-      "session_cost": 94510.78545999993,
+      "session_cost": 47255.39272999996,
       "cost_approximate": true
     },
     {
@@ -109,32 +87,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $27582.55 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 27582.55290000002,
+      "detail": "Session cost $13791.28 exceeds project baseline μ+2σ = $12499.68",
+      "metric": 13791.27645000001,
       "threshold": 12499.682868751142,
-      "session_cost": 27582.55290000002,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "2ad7a59d-31a1-44b3-9f0b-415060434a23",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $14768.90 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 14768.899459999997,
-      "threshold": 8782.746918877187,
-      "session_cost": 14768.899459999997,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "2e8f450b-811a-4588-8b44-507702359ddd",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $11544.53 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 11544.53028,
-      "threshold": 8782.746918877187,
-      "session_cost": 11544.53028,
+      "session_cost": 13791.27645000001,
       "cost_approximate": true
     },
     {
@@ -142,54 +98,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $21797.26 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 21797.25698000001,
+      "detail": "Session cost $10898.63 exceeds project baseline μ+2σ = $8782.75",
+      "metric": 10898.628490000005,
       "threshold": 8782.746918877187,
-      "session_cost": 21797.25698000001,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "33394beb-e67f-4e47-a009-f5af6c5b89e7",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $10584.25 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 10584.2466,
-      "threshold": 8782.746918877187,
-      "session_cost": 10584.2466,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "38e4ad56-3682-444f-8206-7e0f88941a94",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $19573.62 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 19573.620880000017,
-      "threshold": 12499.682868751142,
-      "session_cost": 19573.620880000017,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "3b22407e-4da9-4216-8f3a-c964542b1ac4",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $14334.98 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 14334.980099999993,
-      "threshold": 8782.746918877187,
-      "session_cost": 14334.980099999993,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "4042e074-8321-4675-9b86-0cb9bcd674a6",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $10101.92 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 10101.917700000005,
-      "threshold": 8782.746918877187,
-      "session_cost": 10101.917700000005,
+      "session_cost": 10898.628490000005,
       "cost_approximate": true
     },
     {
@@ -197,10 +109,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $39757.15 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 39757.15139999999,
+      "detail": "Session cost $19878.58 exceeds project baseline μ+2σ = $12499.68",
+      "metric": 19878.575699999994,
       "threshold": 12499.682868751142,
-      "session_cost": 39757.15139999999,
+      "session_cost": 19878.575699999994,
       "cost_approximate": true
     },
     {
@@ -208,21 +120,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $20807.56 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 20807.55660000001,
+      "detail": "Session cost $10403.78 exceeds project baseline μ+2σ = $8782.75",
+      "metric": 10403.778300000005,
       "threshold": 8782.746918877187,
-      "session_cost": 20807.55660000001,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "4c8a8d3d-f45a-49e0-b3dc-7ce689a2dfb2",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $12681.92 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 12681.91764,
-      "threshold": 12499.682868751142,
-      "session_cost": 12681.91764,
+      "session_cost": 10403.778300000005,
       "cost_approximate": true
     },
     {
@@ -230,98 +131,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $28320.60 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 28320.6012,
+      "detail": "Session cost $14160.30 exceeds project baseline μ+2σ = $8782.75",
+      "metric": 14160.3006,
       "threshold": 8782.746918877187,
-      "session_cost": 28320.6012,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "58b7fa75-a18b-4753-94e0-70809d917f96",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $16551.95 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 16551.954759999993,
-      "threshold": 12499.682868751142,
-      "session_cost": 16551.954759999993,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "68bb8ddf-aad8-415c-9ce1-1d5a1ed8ef27",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $15182.69 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 15182.69370000001,
-      "threshold": 12499.682868751142,
-      "session_cost": 15182.69370000001,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "68fa0d19-cdac-4fe2-834f-5b7d885add34",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $9584.63 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 9584.631599999999,
-      "threshold": 8782.746918877187,
-      "session_cost": 9584.631599999999,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "6f92b0fa-46ed-4303-8f1b-2797bbbf6ce2",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $9109.56 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 9109.561200000002,
-      "threshold": 8782.746918877187,
-      "session_cost": 9109.561200000002,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "70c668d8-a33c-4b44-8b5a-b6fef16856cb",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $11764.04 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 11764.039360000006,
-      "threshold": 8782.746918877187,
-      "session_cost": 11764.039360000006,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "79645d09-62ea-4b8f-ad92-99cfa4d5687a",
-      "project": "Users/hoang/reka/ads",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $28489.53 exceeds project baseline μ+2σ = $18105.42",
-      "metric": 28489.52644,
-      "threshold": 18105.42135986517,
-      "session_cost": 28489.52644,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "840038cd-f09b-48bd-85c2-9b8242df4bdc",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $20859.85 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 20859.849479999986,
-      "threshold": 12499.682868751142,
-      "session_cost": 20859.849479999986,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "92b2750d-f72c-4ed7-b4de-a865490efc4b",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $9614.74 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 9614.73570000001,
-      "threshold": 8782.746918877187,
-      "session_cost": 9614.73570000001,
+      "session_cost": 14160.3006,
       "cost_approximate": true
     },
     {
@@ -336,58 +149,14 @@
       "cost_approximate": true
     },
     {
-      "session_id": "99fc0590-e235-4363-894d-1673f490392f",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $10427.59 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 10427.591600000003,
-      "threshold": 8782.746918877187,
-      "session_cost": 10427.591600000003,
-      "cost_approximate": true
-    },
-    {
       "session_id": "9bb7a461-f536-42d1-80f2-bd8d5a363005",
       "project": "Users/hoang/reka/ads",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $40228.67 exceeds project baseline μ+2σ = $18105.42",
-      "metric": 40228.67339999995,
+      "detail": "Session cost $20114.34 exceeds project baseline μ+2σ = $18105.42",
+      "metric": 20114.336699999974,
       "threshold": 18105.42135986517,
-      "session_cost": 40228.67339999995,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "a34c35e2-5072-45bc-9a36-92a86e37dcec",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $15276.44 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 15276.441260000009,
-      "threshold": 12499.682868751142,
-      "session_cost": 15276.441260000009,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "aa723c3f-86f9-4081-9fc5-0662758ad737",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $15440.45 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 15440.453700000002,
-      "threshold": 8782.746918877187,
-      "session_cost": 15440.453700000002,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "bf48e097-e3a2-4678-81b7-091d55c93367",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $15412.17 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 15412.171199999997,
-      "threshold": 12499.682868751142,
-      "session_cost": 15412.171199999997,
+      "session_cost": 20114.336699999974,
       "cost_approximate": true
     },
     {
@@ -395,10 +164,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $89194.53 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 89194.53307999998,
+      "detail": "Session cost $44597.27 exceeds project baseline μ+2σ = $12499.68",
+      "metric": 44597.26653999999,
       "threshold": 12499.682868751142,
-      "session_cost": 89194.53307999998,
+      "session_cost": 44597.26653999999,
       "cost_approximate": true
     },
     {
@@ -406,43 +175,10 @@
       "project": "Users/hoang/reka/ads",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $39159.24 exceeds project baseline μ+2σ = $18105.42",
-      "metric": 39159.23859999997,
+      "detail": "Session cost $19579.62 exceeds project baseline μ+2σ = $18105.42",
+      "metric": 19579.619299999984,
       "threshold": 18105.42135986517,
-      "session_cost": 39159.23859999997,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "e8132be0-9bc0-4d2a-bb13-eb926b72cbb6",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $12961.80 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 12961.795199999993,
-      "threshold": 8782.746918877187,
-      "session_cost": 12961.795199999993,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "ea459dc9-1bb7-432b-9daa-bf53c4fd8d23",
-      "project": "Users/hoang/reka/travel",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $10130.00 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 10130.000459999997,
-      "threshold": 8782.746918877187,
-      "session_cost": 10130.000459999997,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "f49c015c-21dc-46f7-9739-db7baa62c7f9",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "high",
-      "reason": "cost_outlier",
-      "detail": "Session cost $12943.72 exceeds project baseline μ+2σ = $12499.68",
-      "metric": 12943.7157,
-      "threshold": 12499.682868751142,
-      "session_cost": 12943.7157,
+      "session_cost": 19579.619299999984,
       "cost_approximate": true
     },
     {
@@ -450,10 +186,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "cost_outlier",
-      "detail": "Session cost $47576.21 exceeds project baseline μ+2σ = $8782.75",
-      "metric": 47576.21240000001,
+      "detail": "Session cost $23788.11 exceeds project baseline μ+2σ = $8782.75",
+      "metric": 23788.106200000006,
       "threshold": 8782.746918877187,
-      "session_cost": 47576.21240000001,
+      "session_cost": 23788.106200000006,
       "cost_approximate": true
     },
     {
@@ -461,7 +197,7 @@
       "project": "Users/hoang",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "20 input tokens (μ=9, σ=4)",
+      "detail": "20 input tokens (μ=9, σ=4, P90=14)",
       "metric": 20,
       "threshold": 18.830317790596467,
       "session_cost": 143.06799999999998
@@ -471,10 +207,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "9.7K input tokens (μ=1.8K, σ=3.8K)",
+      "detail": "9.7K input tokens (μ=1.8K, σ=3.8K, P90=7.2K)",
       "metric": 9731,
       "threshold": 9486.965320298737,
-      "session_cost": 6309.787840000005,
+      "session_cost": 3154.8939200000027,
       "cost_approximate": true
     },
     {
@@ -482,10 +218,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "30.4K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "30.4K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 30379,
       "threshold": 18104.96358810063,
-      "session_cost": 94510.78545999993,
+      "session_cost": 47255.39272999996,
       "cost_approximate": true
     },
     {
@@ -493,10 +229,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "22.7K input tokens (μ=1.8K, σ=3.8K)",
+      "detail": "22.7K input tokens (μ=1.8K, σ=3.8K, P90=7.2K)",
       "metric": 22653,
       "threshold": 9486.965320298737,
-      "session_cost": 20807.55660000001,
+      "session_cost": 10403.778300000005,
       "cost_approximate": true
     },
     {
@@ -504,10 +240,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "31.6K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "31.6K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 31637,
       "threshold": 18104.96358810063,
-      "session_cost": 5832.804460000001,
+      "session_cost": 2916.4022300000006,
       "cost_approximate": true
     },
     {
@@ -515,10 +251,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "39.9K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "39.9K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 39892,
       "threshold": 18104.96358810063,
-      "session_cost": 4871.7568599999995,
+      "session_cost": 2435.8784299999998,
       "cost_approximate": true
     },
     {
@@ -526,7 +262,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "12.5K input tokens (μ=1.8K, σ=3.8K)",
+      "detail": "12.5K input tokens (μ=1.8K, σ=3.8K, P90=7.2K)",
       "metric": 12488,
       "threshold": 9486.965320298737,
       "session_cost": 1937.65905,
@@ -537,10 +273,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "32.1K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "32.1K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 32085,
       "threshold": 18104.96358810063,
-      "session_cost": 9721.769400000005,
+      "session_cost": 4860.884700000002,
       "cost_approximate": true
     },
     {
@@ -548,10 +284,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "35.4K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "35.4K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 35396,
       "threshold": 18104.96358810063,
-      "session_cost": 5944.814940000002,
+      "session_cost": 2972.407470000001,
       "cost_approximate": true
     },
     {
@@ -559,7 +295,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "21.1K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "21.1K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 21112,
       "threshold": 18104.96358810063,
       "session_cost": 835.1835000000001,
@@ -570,10 +306,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "19.3K input tokens (μ=1.8K, σ=3.8K)",
+      "detail": "19.3K input tokens (μ=1.8K, σ=3.8K, P90=7.2K)",
       "metric": 19342,
       "threshold": 9486.965320298737,
-      "session_cost": 6328.656479999999,
+      "session_cost": 3164.3282399999994,
       "cost_approximate": true
     },
     {
@@ -581,10 +317,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "35.9K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "35.9K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 35932,
       "threshold": 18104.96358810063,
-      "session_cost": 12031.88696,
+      "session_cost": 6015.94348,
       "cost_approximate": true
     },
     {
@@ -592,10 +328,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "21.7K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "21.7K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 21740,
       "threshold": 18104.96358810063,
-      "session_cost": 3120.5771400000003,
+      "session_cost": 1560.2885700000002,
       "cost_approximate": true
     },
     {
@@ -603,10 +339,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "24.2K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "24.2K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 24236,
       "threshold": 18104.96358810063,
-      "session_cost": 6984.398399999998,
+      "session_cost": 3492.199199999999,
       "cost_approximate": true
     },
     {
@@ -614,10 +350,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "29.1K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "29.1K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 29148,
       "threshold": 18104.96358810063,
-      "session_cost": 1714.1353400000005,
+      "session_cost": 857.0676700000002,
       "cost_approximate": true
     },
     {
@@ -625,10 +361,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "15.7K input tokens (μ=1.8K, σ=3.8K)",
+      "detail": "15.7K input tokens (μ=1.8K, σ=3.8K, P90=7.2K)",
       "metric": 15703,
       "threshold": 9486.965320298737,
-      "session_cost": 8303.3334,
+      "session_cost": 4151.6667,
       "cost_approximate": true
     },
     {
@@ -636,10 +372,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "31.7K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "31.7K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 31685,
       "threshold": 18104.96358810063,
-      "session_cost": 5073.279960000001,
+      "session_cost": 2536.6399800000004,
       "cost_approximate": true
     },
     {
@@ -647,10 +383,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "31.7K input tokens (μ=3.3K, σ=7.4K)",
+      "detail": "31.7K input tokens (μ=3.3K, σ=7.4K, P90=10.2K)",
       "metric": 31697,
       "threshold": 18104.96358810063,
-      "session_cost": 5336.454900000001,
+      "session_cost": 2668.2274500000003,
       "cost_approximate": true
     },
     {
@@ -658,10 +394,10 @@
       "project": "Users/hoang/reka/ads",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "63.1K input tokens (μ=5.1K, σ=14.7K)",
+      "detail": "63.1K input tokens (μ=5.1K, σ=14.7K, P90=6.4K)",
       "metric": 63058,
       "threshold": 34408.3898599068,
-      "session_cost": 39159.23859999997,
+      "session_cost": 19579.619299999984,
       "cost_approximate": true
     },
     {
@@ -669,7 +405,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "12.1K input tokens (μ=1.8K, σ=3.8K)",
+      "detail": "12.1K input tokens (μ=1.8K, σ=3.8K, P90=7.2K)",
       "metric": 12097,
       "threshold": 9486.965320298737,
       "session_cost": 5767.463999999999,
@@ -680,7 +416,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "high",
       "reason": "input_overconsumption",
-      "detail": "10.3K input tokens (μ=1.8K, σ=3.8K)",
+      "detail": "10.3K input tokens (μ=1.8K, σ=3.8K, P90=7.2K)",
       "metric": 10330,
       "threshold": 9486.965320298737,
       "session_cost": 2939.1712499999994,
@@ -771,10 +507,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 1.6355 below global P10 (1.6552)",
+      "detail": "Output/input ratio 1.6355 below global P10 (1.6552, median=70.6194)",
       "metric": 1.635526611273299,
       "threshold": 1.655197845085111,
-      "session_cost": 1806.0067399999996,
+      "session_cost": 903.0033699999998,
       "cost_approximate": true
     },
     {
@@ -782,10 +518,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.9384 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.9384 below global P10 (1.6552, median=70.6194)",
       "metric": 0.938408611696815,
       "threshold": 1.655197845085111,
-      "session_cost": 6975.49458,
+      "session_cost": 3487.74729,
       "cost_approximate": true
     },
     {
@@ -793,10 +529,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.9415 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.9415 below global P10 (1.6552, median=70.6194)",
       "metric": 0.9414803998652139,
       "threshold": 1.655197845085111,
-      "session_cost": 2595.221699999999,
+      "session_cost": 1297.6108499999996,
       "cost_approximate": true
     },
     {
@@ -804,10 +540,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 1.1008 below global P10 (1.6552)",
+      "detail": "Output/input ratio 1.1008 below global P10 (1.6552, median=70.6194)",
       "metric": 1.1007967623624637,
       "threshold": 1.655197845085111,
-      "session_cost": 1585.3695199999986,
+      "session_cost": 792.6847599999993,
       "cost_approximate": true
     },
     {
@@ -815,7 +551,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 1.3333 below global P10 (1.6552)",
+      "detail": "Output/input ratio 1.3333 below global P10 (1.6552, median=70.6194)",
       "metric": 1.3333333333333333,
       "threshold": 1.655197845085111,
       "session_cost": 310.34549999999996,
@@ -826,10 +562,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.6803 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.6803 below global P10 (1.6552, median=70.6194)",
       "metric": 0.6803110282264437,
       "threshold": 1.655197845085111,
-      "session_cost": 5832.804460000001,
+      "session_cost": 2916.4022300000006,
       "cost_approximate": true
     },
     {
@@ -837,10 +573,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.8260 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.8260 below global P10 (1.6552, median=70.6194)",
       "metric": 0.826045170591062,
       "threshold": 1.655197845085111,
-      "session_cost": 1424.2756400000007,
+      "session_cost": 712.1378200000004,
       "cost_approximate": true
     },
     {
@@ -848,10 +584,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.5043 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.5043 below global P10 (1.6552, median=70.6194)",
       "metric": 0.5042865737491227,
       "threshold": 1.655197845085111,
-      "session_cost": 4871.7568599999995,
+      "session_cost": 2435.8784299999998,
       "cost_approximate": true
     },
     {
@@ -859,10 +595,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 1.4275 below global P10 (1.6552)",
+      "detail": "Output/input ratio 1.4275 below global P10 (1.6552, median=70.6194)",
       "metric": 1.4275206482780116,
       "threshold": 1.655197845085111,
-      "session_cost": 9721.769400000005,
+      "session_cost": 4860.884700000002,
       "cost_approximate": true
     },
     {
@@ -870,10 +606,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.3419 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.3419 below global P10 (1.6552, median=70.6194)",
       "metric": 0.34190303989151316,
       "threshold": 1.655197845085111,
-      "session_cost": 5944.814940000002,
+      "session_cost": 2972.407470000001,
       "cost_approximate": true
     },
     {
@@ -881,7 +617,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.0996 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.0996 below global P10 (1.6552, median=70.6194)",
       "metric": 0.0995642288745737,
       "threshold": 1.655197845085111,
       "session_cost": 835.1835000000001,
@@ -892,10 +628,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.8771 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.8771 below global P10 (1.6552, median=70.6194)",
       "metric": 0.8771068141867439,
       "threshold": 1.655197845085111,
-      "session_cost": 6328.656479999999,
+      "session_cost": 3164.3282399999994,
       "cost_approximate": true
     },
     {
@@ -903,10 +639,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.7263 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.7263 below global P10 (1.6552, median=70.6194)",
       "metric": 0.7262607146832907,
       "threshold": 1.655197845085111,
-      "session_cost": 12031.88696,
+      "session_cost": 6015.94348,
       "cost_approximate": true
     },
     {
@@ -914,10 +650,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.3799 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.3799 below global P10 (1.6552, median=70.6194)",
       "metric": 0.3798988040478381,
       "threshold": 1.655197845085111,
-      "session_cost": 3120.5771400000003,
+      "session_cost": 1560.2885700000002,
       "cost_approximate": true
     },
     {
@@ -925,10 +661,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 1.2688 below global P10 (1.6552)",
+      "detail": "Output/input ratio 1.2688 below global P10 (1.6552, median=70.6194)",
       "metric": 1.268773725037135,
       "threshold": 1.655197845085111,
-      "session_cost": 6984.398399999998,
+      "session_cost": 3492.199199999999,
       "cost_approximate": true
     },
     {
@@ -936,10 +672,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.4479 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.4479 below global P10 (1.6552, median=70.6194)",
       "metric": 0.4478523397831755,
       "threshold": 1.655197845085111,
-      "session_cost": 1714.1353400000005,
+      "session_cost": 857.0676700000002,
       "cost_approximate": true
     },
     {
@@ -947,10 +683,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.5162 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.5162 below global P10 (1.6552, median=70.6194)",
       "metric": 0.5162379674925044,
       "threshold": 1.655197845085111,
-      "session_cost": 5073.279960000001,
+      "session_cost": 2536.6399800000004,
       "cost_approximate": true
     },
     {
@@ -958,10 +694,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 1.5961 below global P10 (1.6552)",
+      "detail": "Output/input ratio 1.5961 below global P10 (1.6552, median=70.6194)",
       "metric": 1.596079139940374,
       "threshold": 1.655197845085111,
-      "session_cost": 7447.667700000001,
+      "session_cost": 3723.8338500000004,
       "cost_approximate": true
     },
     {
@@ -969,10 +705,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 1.4592 below global P10 (1.6552)",
+      "detail": "Output/input ratio 1.4592 below global P10 (1.6552, median=70.6194)",
       "metric": 1.4592198581560283,
       "threshold": 1.655197845085111,
-      "session_cost": 4283.179980000002,
+      "session_cost": 2141.589990000001,
       "cost_approximate": true
     },
     {
@@ -980,10 +716,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.9757 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.9757 below global P10 (1.6552, median=70.6194)",
       "metric": 0.9757390289301827,
       "threshold": 1.655197845085111,
-      "session_cost": 5336.454900000001,
+      "session_cost": 2668.2274500000003,
       "cost_approximate": true
     },
     {
@@ -991,10 +727,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.9390 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.9390 below global P10 (1.6552, median=70.6194)",
       "metric": 0.9389736477115118,
       "threshold": 1.655197845085111,
-      "session_cost": 1853.0309199999997,
+      "session_cost": 926.5154599999998,
       "cost_approximate": true
     },
     {
@@ -1002,7 +738,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 1.5420 below global P10 (1.6552)",
+      "detail": "Output/input ratio 1.5420 below global P10 (1.6552, median=70.6194)",
       "metric": 1.5420135527589545,
       "threshold": 1.655197845085111,
       "session_cost": 2939.1712499999994,
@@ -1013,7 +749,7 @@
       "project": "project-a",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.0107 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.0107 below global P10 (1.6552, median=70.6194)",
       "metric": 0.010695795642032201,
       "threshold": 1.655197845085111,
       "session_cost": 5
@@ -1023,7 +759,7 @@
       "project": "project-a",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.3073 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.3073 below global P10 (1.6552, median=70.6194)",
       "metric": 0.3073310629145008,
       "threshold": 1.655197845085111,
       "session_cost": 67.5
@@ -1033,7 +769,7 @@
       "project": "project-a",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.0803 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.0803 below global P10 (1.6552, median=70.6194)",
       "metric": 0.08032812258164371,
       "threshold": 1.655197845085111,
       "session_cost": 87.5
@@ -1043,7 +779,7 @@
       "project": "project-a",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.1747 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.1747 below global P10 (1.6552, median=70.6194)",
       "metric": 0.1747130669186305,
       "threshold": 1.655197845085111,
       "session_cost": 400
@@ -1053,7 +789,7 @@
       "project": "project-c",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.1793 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.1793 below global P10 (1.6552, median=70.6194)",
       "metric": 0.17930892513284127,
       "threshold": 1.655197845085111,
       "session_cost": 147.5
@@ -1063,7 +799,7 @@
       "project": "project-b",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.0535 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.0535 below global P10 (1.6552, median=70.6194)",
       "metric": 0.05353863995103566,
       "threshold": 1.655197845085111,
       "session_cost": 15
@@ -1073,7 +809,7 @@
       "project": "project-b",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.1238 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.1238 below global P10 (1.6552, median=70.6194)",
       "metric": 0.12375039525211004,
       "threshold": 1.655197845085111,
       "session_cost": 405
@@ -1083,7 +819,7 @@
       "project": "project-b",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.1223 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.1223 below global P10 (1.6552, median=70.6194)",
       "metric": 0.1223499711044195,
       "threshold": 1.655197845085111,
       "session_cost": 47.5
@@ -1093,7 +829,7 @@
       "project": "project-b",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.0519 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.0519 below global P10 (1.6552, median=70.6194)",
       "metric": 0.05192125936239189,
       "threshold": 1.655197845085111,
       "session_cost": 32.5
@@ -1103,7 +839,7 @@
       "project": "project-b",
       "severity": "medium",
       "reason": "low_signal",
-      "detail": "Output/input ratio 0.1372 below global P10 (1.6552)",
+      "detail": "Output/input ratio 0.1372 below global P10 (1.6552, median=70.6194)",
       "metric": 0.1371738483415457,
       "threshold": 1.655197845085111,
       "session_cost": 32.5
@@ -1113,10 +849,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "112.0K output tokens (μ=26.0K, σ=38.6K)",
+      "detail": "112.0K output tokens (μ=26.0K, σ=38.6K, P90=59.5K)",
       "metric": 111968,
       "threshold": 103175.19985108031,
-      "session_cost": 22208.881820000017,
+      "session_cost": 11104.440910000008,
       "cost_approximate": true
     },
     {
@@ -1124,10 +860,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "306.2K output tokens (μ=24.7K, σ=35.7K)",
+      "detail": "306.2K output tokens (μ=24.7K, σ=35.7K, P90=52.4K)",
       "metric": 306199,
       "threshold": 96077.06433267014,
-      "session_cost": 94510.78545999993,
+      "session_cost": 47255.39272999996,
       "cost_approximate": true
     },
     {
@@ -1135,10 +871,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "103.0K output tokens (μ=24.7K, σ=35.7K)",
+      "detail": "103.0K output tokens (μ=24.7K, σ=35.7K, P90=52.4K)",
       "metric": 103020,
       "threshold": 96077.06433267014,
-      "session_cost": 27582.55290000002,
+      "session_cost": 13791.27645000001,
       "cost_approximate": true
     },
     {
@@ -1146,7 +882,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "345.8K output tokens (μ=26.0K, σ=38.6K)",
+      "detail": "345.8K output tokens (μ=26.0K, σ=38.6K, P90=59.5K)",
       "metric": 345757,
       "threshold": 103175.19985108031,
       "session_cost": 7296.680400000002,
@@ -1157,10 +893,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "146.9K output tokens (μ=24.7K, σ=35.7K)",
+      "detail": "146.9K output tokens (μ=24.7K, σ=35.7K, P90=52.4K)",
       "metric": 146877,
       "threshold": 96077.06433267014,
-      "session_cost": 39757.15139999999,
+      "session_cost": 19878.575699999994,
       "cost_approximate": true
     },
     {
@@ -1168,10 +904,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "114.1K output tokens (μ=26.0K, σ=38.6K)",
+      "detail": "114.1K output tokens (μ=26.0K, σ=38.6K, P90=59.5K)",
       "metric": 114075,
       "threshold": 103175.19985108031,
-      "session_cost": 20807.55660000001,
+      "session_cost": 10403.778300000005,
       "cost_approximate": true
     },
     {
@@ -1179,10 +915,10 @@
       "project": "Users/hoang/reka/ads",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "220.3K output tokens (μ=48.1K, σ=54.5K)",
+      "detail": "220.3K output tokens (μ=48.1K, σ=54.5K, P90=110.0K)",
       "metric": 220323,
       "threshold": 157109.3385383364,
-      "session_cost": 28489.52644,
+      "session_cost": 14244.76322,
       "cost_approximate": true
     },
     {
@@ -1190,10 +926,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "100.3K output tokens (μ=24.7K, σ=35.7K)",
+      "detail": "100.3K output tokens (μ=24.7K, σ=35.7K, P90=52.4K)",
       "metric": 100286,
       "threshold": 96077.06433267014,
-      "session_cost": 20859.849479999986,
+      "session_cost": 10429.924739999993,
       "cost_approximate": true
     },
     {
@@ -1201,10 +937,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "303.2K output tokens (μ=24.7K, σ=35.7K)",
+      "detail": "303.2K output tokens (μ=24.7K, σ=35.7K, P90=52.4K)",
       "metric": 303238,
       "threshold": 96077.06433267014,
-      "session_cost": 89194.53307999998,
+      "session_cost": 44597.26653999999,
       "cost_approximate": true
     },
     {
@@ -1212,10 +948,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "125.7K output tokens (μ=24.7K, σ=35.7K)",
+      "detail": "125.7K output tokens (μ=24.7K, σ=35.7K, P90=52.4K)",
       "metric": 125670,
       "threshold": 96077.06433267014,
-      "session_cost": 12943.7157,
+      "session_cost": 6471.85785,
       "cost_approximate": true
     },
     {
@@ -1223,10 +959,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "medium",
       "reason": "output_explosion",
-      "detail": "148.8K output tokens (μ=26.0K, σ=38.6K)",
+      "detail": "148.8K output tokens (μ=26.0K, σ=38.6K, P90=59.5K)",
       "metric": 148811,
       "threshold": 103175.19985108031,
-      "session_cost": 47576.21240000001,
+      "session_cost": 23788.106200000006,
       "cost_approximate": true
     },
     {
@@ -1234,7 +970,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.4764 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.4764 below global P10 (0.5665, median=0.9199)",
       "metric": 0.4763756858058558,
       "threshold": 0.5665426156395104,
       "session_cost": 1135.53345,
@@ -1245,7 +981,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5624 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5624 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5624354859235587,
       "threshold": 0.5665426156395104,
       "session_cost": 257.8341,
@@ -1256,7 +992,7 @@
       "project": "Users/hoang",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.0000 below global P10 (0.5665, median=0.9199)",
       "metric": 0,
       "threshold": 0.5665426156395104,
       "session_cost": 143.06799999999998
@@ -1266,7 +1002,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.0000 below global P10 (0.5665, median=0.9199)",
       "metric": 0,
       "threshold": 0.5665426156395104,
       "session_cost": 175.6515,
@@ -1277,7 +1013,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.0000 below global P10 (0.5665, median=0.9199)",
       "metric": 0,
       "threshold": 0.5665426156395104,
       "session_cost": 444.4455,
@@ -1288,7 +1024,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.0000 below global P10 (0.5665, median=0.9199)",
       "metric": 0,
       "threshold": 0.5665426156395104,
       "session_cost": 357.408,
@@ -1299,7 +1035,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5644 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5644 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5643788146711539,
       "threshold": 0.5665426156395104,
       "session_cost": 254.92815000000002,
@@ -1310,7 +1046,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5649 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5649 below global P10 (0.5665, median=0.9199)",
       "metric": 0.564934044103986,
       "threshold": 0.5665426156395104,
       "session_cost": 253.58339999999998,
@@ -1321,7 +1057,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5654 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5654 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5654157089357192,
       "threshold": 0.5665426156395104,
       "session_cost": 253.60485,
@@ -1332,7 +1068,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5593 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5593 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5592987496600442,
       "threshold": 0.5665426156395104,
       "session_cost": 263.12595,
@@ -1343,7 +1079,7 @@
       "project": "Users/hoang",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.0000 below global P10 (0.5665, median=0.9199)",
       "metric": 0,
       "threshold": 0.5665426156395104,
       "session_cost": 352.488,
@@ -1354,7 +1090,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.3525 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.3525 below global P10 (0.5665, median=0.9199)",
       "metric": 0.35245712366437854,
       "threshold": 0.5665426156395104,
       "session_cost": 371.74275,
@@ -1365,7 +1101,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5554 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5554 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5554187706046823,
       "threshold": 0.5665426156395104,
       "session_cost": 267.37185,
@@ -1376,7 +1112,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5065 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5065 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5064765745413086,
       "threshold": 0.5665426156395104,
       "session_cost": 385.80315,
@@ -1387,7 +1123,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5624 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5624 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5623652645938324,
       "threshold": 0.5665426156395104,
       "session_cost": 257.99895,
@@ -1398,7 +1134,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.0000 below global P10 (0.5665, median=0.9199)",
       "metric": 0,
       "threshold": 0.5665426156395104,
       "session_cost": 310.34549999999996,
@@ -1409,7 +1145,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.4678 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.4678 below global P10 (0.5665, median=0.9199)",
       "metric": 0.4678011449883114,
       "threshold": 0.5665426156395104,
       "session_cost": 478.3206,
@@ -1420,10 +1156,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.4218 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.4218 below global P10 (0.5665, median=0.9199)",
       "metric": 0.421828941554192,
       "threshold": 0.5665426156395104,
-      "session_cost": 869.6930799999999,
+      "session_cost": 434.84653999999995,
       "cost_approximate": true
     },
     {
@@ -1431,7 +1167,7 @@
       "project": "Users/hoang",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.4997 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.4997 below global P10 (0.5665, median=0.9199)",
       "metric": 0.49967781651650617,
       "threshold": 0.5665426156395104,
       "session_cost": 356.28555000000006,
@@ -1442,10 +1178,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.4459 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.4459 below global P10 (0.5665, median=0.9199)",
       "metric": 0.4459345970313501,
       "threshold": 0.5665426156395104,
-      "session_cost": 1640.1123,
+      "session_cost": 820.05615,
       "cost_approximate": true
     },
     {
@@ -1453,10 +1189,10 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.2664 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.2664 below global P10 (0.5665, median=0.9199)",
       "metric": 0.266369219117865,
       "threshold": 0.5665426156395104,
-      "session_cost": 1296.1302,
+      "session_cost": 648.0651,
       "cost_approximate": true
     },
     {
@@ -1464,7 +1200,7 @@
       "project": "Users/hoang",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.1922 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.1922 below global P10 (0.5665, median=0.9199)",
       "metric": 0.192190703743243,
       "threshold": 0.5665426156395104,
       "session_cost": 732.7168499999999,
@@ -1475,10 +1211,10 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5026 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5026 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5026499551611436,
       "threshold": 0.5665426156395104,
-      "session_cost": 2935.7346,
+      "session_cost": 1467.8673,
       "cost_approximate": true
     },
     {
@@ -1486,7 +1222,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.3173 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.3173 below global P10 (0.5665, median=0.9199)",
       "metric": 0.31728483776463434,
       "threshold": 0.5665426156395104,
       "session_cost": 197.856,
@@ -1497,7 +1233,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5064 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5064 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5063927363691111,
       "threshold": 0.5665426156395104,
       "session_cost": 462.6666,
@@ -1508,7 +1244,7 @@
       "project": "Users/hoang/reka/ads",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5358 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5358 below global P10 (0.5665, median=0.9199)",
       "metric": 0.535764507359145,
       "threshold": 0.5665426156395104,
       "session_cost": 307.25249999999994,
@@ -1519,7 +1255,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5395 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5395 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5395183197956508,
       "threshold": 0.5665426156395104,
       "session_cost": 294.86895000000004,
@@ -1530,7 +1266,7 @@
       "project": "Users/hoang",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.4943 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.4943 below global P10 (0.5665, median=0.9199)",
       "metric": 0.494325552999662,
       "threshold": 0.5665426156395104,
       "session_cost": 392.15580000000006,
@@ -1541,7 +1277,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.3309 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.3309 below global P10 (0.5665, median=0.9199)",
       "metric": 0.3309315910524923,
       "threshold": 0.5665426156395104,
       "session_cost": 261.9774,
@@ -1552,7 +1288,7 @@
       "project": "Users/hoang",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5354 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5354 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5353926554990435,
       "threshold": 0.5665426156395104,
       "session_cost": 83.7699,
@@ -1563,7 +1299,7 @@
       "project": "Users/hoang/reka/travel",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.5487 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.5487 below global P10 (0.5665, median=0.9199)",
       "metric": 0.5487400139959953,
       "threshold": 0.5665426156395104,
       "session_cost": 275.72415,
@@ -1574,7 +1310,7 @@
       "project": "Users/hoang/lilysbeauty",
       "severity": "low",
       "reason": "cache_underutilized",
-      "detail": "Cache hit rate 0.3329 below global P10 (0.5665)",
+      "detail": "Cache hit rate 0.3329 below global P10 (0.5665, median=0.9199)",
       "metric": 0.3329209233270883,
       "threshold": 0.5665426156395104,
       "session_cost": 369.64425000000006,
@@ -1763,7 +1499,7 @@
       "detail": "TER = 0.74 (P10 = 1.30)",
       "metric": 0.7449293445144067,
       "threshold": 1.3003730904880242,
-      "session_cost": 869.6930799999999,
+      "session_cost": 434.84653999999995,
       "cost_approximate": true
     },
     {
@@ -1785,7 +1521,7 @@
       "detail": "TER = 0.86 (P10 = 1.30)",
       "metric": 0.8560429670489186,
       "threshold": 1.3003730904880242,
-      "session_cost": 1640.1123,
+      "session_cost": 820.05615,
       "cost_approximate": true
     },
     {
@@ -1796,7 +1532,7 @@
       "detail": "TER = 0.43 (P10 = 1.30)",
       "metric": 0.42895289955345456,
       "threshold": 1.3003730904880242,
-      "session_cost": 1296.1302,
+      "session_cost": 648.0651,
       "cost_approximate": true
     },
     {
@@ -1818,7 +1554,7 @@
       "detail": "TER = 1.02 (P10 = 1.30)",
       "metric": 1.0190399425811156,
       "threshold": 1.3003730904880242,
-      "session_cost": 2935.7346,
+      "session_cost": 1467.8673,
       "cost_approximate": true
     },
     {
@@ -5328,146 +5064,44 @@
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $22208.88 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 19602.39356333335
+      "detail": "This session cost $11104.44 which exceeds the project baseline μ+2σ = $8782.75.",
+      "savings_est": 8497.952653333341
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $15229.61 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 12385.120624583333
+      "detail": "This session cost $47255.39 which exceeds the project baseline μ+2σ = $12499.68.",
+      "savings_est": 44410.9071545833
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $12571.52 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 9965.02968333334
+      "detail": "This session cost $13791.28 which exceeds the project baseline μ+2σ = $12499.68.",
+      "savings_est": 10946.790874583343
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $94510.79 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 91666.29988458326
+      "detail": "This session cost $10898.63 which exceeds the project baseline μ+2σ = $8782.75.",
+      "savings_est": 8292.140233333337
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $27582.55 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 24738.067324583353
+      "detail": "This session cost $19878.58 which exceeds the project baseline μ+2σ = $12499.68.",
+      "savings_est": 17034.090124583327
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $14768.90 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 12162.41120333333
+      "detail": "This session cost $10403.78 which exceeds the project baseline μ+2σ = $8782.75.",
+      "savings_est": 7797.290043333338
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $11544.53 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 8938.042023333333
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $21797.26 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 19190.76872333334
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $10584.25 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 7977.758343333333
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $19573.62 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 16729.13530458335
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $14334.98 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 11728.491843333326
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $10101.92 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 7495.429443333338
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $39757.15 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 36912.665824583324
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $20807.56 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 18201.068343333343
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $12681.92 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 9837.432064583332
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $28320.60 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 25714.112943333334
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $16551.95 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 13707.469184583326
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $15182.69 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 12338.208124583343
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $9584.63 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 6978.143343333331
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $9109.56 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 6503.0729433333345
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $11764.04 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 9157.551103333339
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $28489.53 which exceeds the project baseline μ+2σ = $18105.42.",
-      "savings_est": 22535.627625294124
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $20859.85 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 18015.36390458332
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $9614.74 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 7008.247443333343
+      "detail": "This session cost $14160.30 which exceeds the project baseline μ+2σ = $8782.75.",
+      "savings_est": 11553.812343333333
     },
     {
       "signal": "cost_outlier",
@@ -5478,68 +5112,26 @@
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $10427.59 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 7821.103343333336
+      "detail": "This session cost $20114.34 which exceeds the project baseline μ+2σ = $18105.42.",
+      "savings_est": 14160.437885294095
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $40228.67 which exceeds the project baseline μ+2σ = $18105.42.",
-      "savings_est": 34274.77458529407
+      "detail": "This session cost $44597.27 which exceeds the project baseline μ+2σ = $12499.68.",
+      "savings_est": 41752.780964583326
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $15276.44 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 12431.955684583341
+      "detail": "This session cost $19579.62 which exceeds the project baseline μ+2σ = $18105.42.",
+      "savings_est": 13625.720485294105
     },
     {
       "signal": "cost_outlier",
       "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $15440.45 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 12833.965443333334
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $15412.17 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 12567.68562458333
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $89194.53 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 86350.04750458332
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $39159.24 which exceeds the project baseline μ+2σ = $18105.42.",
-      "savings_est": 33205.33978529409
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $12961.80 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 10355.306943333326
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $10130.00 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 7523.51220333333
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $12943.72 which exceeds the project baseline μ+2σ = $12499.68.",
-      "savings_est": 10099.230124583333
-    },
-    {
-      "signal": "cost_outlier",
-      "action": "Investigate session for unnecessary loops or re-prompts",
-      "detail": "This session cost $47576.21 which exceeds the project baseline μ+2σ = $8782.75.",
-      "savings_est": 44969.72414333334
+      "detail": "This session cost $23788.11 which exceeds the project baseline μ+2σ = $8782.75.",
+      "savings_est": 21181.61794333334
     },
     {
       "signal": "input_overconsumption",
@@ -5551,31 +5143,31 @@
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 5130.599288258024
+      "savings_est": 2565.299644129012
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 84343.46393093503
+      "savings_est": 42171.731965467516
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 19137.15333737997
+      "savings_est": 9568.576668689984
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 5230.271537288066
+      "savings_est": 2615.135768644033
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 4472.64148879556
+      "savings_est": 2236.32074439778
     },
     {
       "signal": "input_overconsumption",
@@ -5587,13 +5179,13 @@
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 8731.526058239837
+      "savings_est": 4365.763029119918
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 5395.928107426053
+      "savings_est": 2697.9640537130267
     },
     {
       "signal": "input_overconsumption",
@@ -5605,55 +5197,55 @@
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 5733.630245926433
+      "savings_est": 2866.8151229632167
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 10937.55014125487
+      "savings_est": 5468.775070627435
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 2651.4678407514953
+      "savings_est": 1325.7339203757476
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 6042.580978767122
+      "savings_est": 3021.290489383561
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 1521.9434723577094
+      "savings_est": 760.9717361788547
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 7341.730386805938
+      "savings_est": 3670.865193402969
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 4550.000393350955
+      "savings_est": 2275.0001966754776
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 4786.238738531644
+      "savings_est": 2393.119369265822
     },
     {
       "signal": "input_overconsumption",
       "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
       "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
-      "savings_est": 36000.12074457406
+      "savings_est": 18000.06037228703
     },
     {
       "signal": "input_overconsumption",
@@ -5719,25 +5311,25 @@
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 1.6355 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 903.0033699999998
+      "savings_est": 451.5016849999999
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.9384 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 3487.74729
+      "savings_est": 1743.873645
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.9415 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 1297.6108499999996
+      "savings_est": 648.8054249999998
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 1.1008 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 792.6847599999993
+      "savings_est": 396.34237999999965
     },
     {
       "signal": "low_signal",
@@ -5749,31 +5341,31 @@
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.6803 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 2916.4022300000006
+      "savings_est": 1458.2011150000003
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.8260 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 712.1378200000004
+      "savings_est": 356.0689100000002
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.5043 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 2435.8784299999998
+      "savings_est": 1217.9392149999999
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 1.4275 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 4860.884700000002
+      "savings_est": 2430.442350000001
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.3419 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 2972.407470000001
+      "savings_est": 1486.2037350000005
     },
     {
       "signal": "low_signal",
@@ -5785,61 +5377,61 @@
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.8771 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 3164.3282399999994
+      "savings_est": 1582.1641199999997
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.7263 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 6015.94348
+      "savings_est": 3007.97174
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.3799 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 1560.2885700000002
+      "savings_est": 780.1442850000001
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 1.2688 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 3492.199199999999
+      "savings_est": 1746.0995999999996
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.4479 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 857.0676700000002
+      "savings_est": 428.5338350000001
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.5162 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 2536.6399800000004
+      "savings_est": 1268.3199900000002
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 1.5961 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 3723.8338500000004
+      "savings_est": 1861.9169250000002
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 1.4592 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 2141.589990000001
+      "savings_est": 1070.7949950000004
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.9757 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 2668.2274500000003
+      "savings_est": 1334.1137250000002
     },
     {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.9390 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
-      "savings_est": 926.5154599999998
+      "savings_est": 463.2577299999999
     },
     {
       "signal": "low_signal",
@@ -5911,19 +5503,19 @@
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 17047.569154202225
+      "savings_est": 8523.784577101113
     },
     {
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 86878.74081884777
+      "savings_est": 43439.370409423886
     },
     {
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 20962.27513007298
+      "savings_est": 10481.13756503649
     },
     {
       "signal": "output_explosion",
@@ -5935,43 +5527,43 @@
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 33064.090699010805
+      "savings_est": 16532.045349505403
     },
     {
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 16061.22579675896
+      "savings_est": 8030.61289837948
     },
     {
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 22268.358836196378
+      "savings_est": 11134.179418098189
     },
     {
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 15716.640649712235
+      "savings_est": 7858.320324856118
     },
     {
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 81921.46068899408
+      "savings_est": 40960.73034449704
     },
     {
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 10396.940290968985
+      "savings_est": 5198.470145484493
     },
     {
       "signal": "output_explosion",
       "action": "Check for runaway generation loops or repeated corrections",
       "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
-      "savings_est": 39256.99974530116
+      "savings_est": 19628.49987265058
     },
     {
       "signal": "cache_underutilized",
@@ -6079,7 +5671,7 @@
       "signal": "cache_underutilized",
       "action": "Consider CLAUDE.md / skills optimization for better caching",
       "detail": "Cache hit rate 0.4218 is below P10 (0.5665). Optimize instruction files to improve cache reuse.",
-      "savings_est": 173.938616
+      "savings_est": 86.969308
     },
     {
       "signal": "cache_underutilized",
@@ -6091,13 +5683,13 @@
       "signal": "cache_underutilized",
       "action": "Consider CLAUDE.md / skills optimization for better caching",
       "detail": "Cache hit rate 0.4459 is below P10 (0.5665). Optimize instruction files to improve cache reuse.",
-      "savings_est": 328.02246
+      "savings_est": 164.01123
     },
     {
       "signal": "cache_underutilized",
       "action": "Consider CLAUDE.md / skills optimization for better caching",
       "detail": "Cache hit rate 0.2664 is below P10 (0.5665). Optimize instruction files to improve cache reuse.",
-      "savings_est": 259.22604
+      "savings_est": 129.61302
     },
     {
       "signal": "cache_underutilized",
@@ -6109,7 +5701,7 @@
       "signal": "cache_underutilized",
       "action": "Consider CLAUDE.md / skills optimization for better caching",
       "detail": "Cache hit rate 0.5026 is below P10 (0.5665). Optimize instruction files to improve cache reuse.",
-      "savings_est": 587.14692
+      "savings_est": 293.57346
     },
     {
       "signal": "cache_underutilized",
@@ -6265,7 +5857,7 @@
       "signal": "low_token_efficiency",
       "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
       "detail": "TER = 0.74 is below P10 (1.30). Session produced very little output relative to context consumed.",
-      "savings_est": 173.938616
+      "savings_est": 86.969308
     },
     {
       "signal": "low_token_efficiency",
@@ -6277,13 +5869,13 @@
       "signal": "low_token_efficiency",
       "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
       "detail": "TER = 0.86 is below P10 (1.30). Session produced very little output relative to context consumed.",
-      "savings_est": 328.02246
+      "savings_est": 164.01123
     },
     {
       "signal": "low_token_efficiency",
       "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
       "detail": "TER = 0.43 is below P10 (1.30). Session produced very little output relative to context consumed.",
-      "savings_est": 259.22604
+      "savings_est": 129.61302
     },
     {
       "signal": "low_token_efficiency",
@@ -6295,7 +5887,7 @@
       "signal": "low_token_efficiency",
       "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
       "detail": "TER = 1.02 is below P10 (1.30). Session produced very little output relative to context consumed.",
-      "savings_est": 587.14692
+      "savings_est": 293.57346
     },
     {
       "signal": "low_token_efficiency",
@@ -6358,5 +5950,5 @@
       "savings_est": 1
     }
   ],
-  "potential_savings": 1331819.951186841
+  "potential_savings": 526281.3320022761
 }

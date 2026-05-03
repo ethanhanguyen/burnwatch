@@ -124,6 +124,7 @@ All v1 PRs merged. Tasks:
 - [x] PR12: Token baselines — prerequisite for token heuristics
 - [x] PR13: Token heuristics — H6–H9
 - [x] PR14: Config wiring — complete PR7's unfinished work
+- [x] Post-PR14 code review — removed dead code, deduplicated, fixed unwired components
 - [ ] PR15: Calibration mode
 - [ ] PR16: Anomaly detection
 - [ ] PR17: LLM verification

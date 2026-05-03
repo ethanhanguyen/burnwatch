@@ -24,17 +24,6 @@ type WasteSignal struct {
 	CostApproximate bool
 }
 
-type SignalToggles struct {
-	CostOutlier          bool
-	LowSignal            bool
-	SubagentOverhead     bool
-	CacheUnderutilized   bool
-	FragmentationIndex   bool
-	InputOverconsumption bool
-	OutputExplosion      bool
-	TokenEfficiency      bool
-}
-
 type sessionAgg struct {
 	sessionID       string
 	project         string
@@ -54,7 +43,7 @@ type sessionAgg struct {
 }
 
 func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
-	cfg config.Config, toggles SignalToggles) []WasteSignal {
+	trees []SubagentTree, cfg config.Config) []WasteSignal {
 
 	if len(events) == 0 || len(baselines) == 0 {
 		return nil
@@ -117,7 +106,6 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		}
 	}
 
-	trees := BuildSubagentTree(events)
 	treeBySession := make(map[string]*SubagentTree)
 	for i := range trees {
 		treeBySession[trees[i].SessionID] = &trees[i]
@@ -137,51 +125,51 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		key := a.project + ":" + a.harness
 		bl := baselines[key]
 
-		if toggles.CostOutlier {
+		if cfg.Signals.CostOutlier {
 			if signal := checkCostOutlier(a, bl, cfg.Thresholds.CostOutlierSigma); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
 
-		if toggles.LowSignal {
+		if cfg.Signals.LowSignal {
 			if signal := checkLowSignal(a, global); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
 
-		if toggles.SubagentOverhead {
+		if cfg.Signals.SubagentOverhead {
 			if signal := checkSubagentOverhead(a, treeBySession, cfg.Thresholds.SubagentOverheadPct); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
 
-		if toggles.CacheUnderutilized {
+		if cfg.Signals.CacheUnderutilized {
 			if signal := checkCacheUnderutilized(a, global); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
 
-		if toggles.InputOverconsumption {
+		if cfg.Signals.InputOverconsumption {
 			if signal := checkInputOverconsumption(a, bl, cfg.Thresholds.InputOverconsumptionSigma); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
 
-		if toggles.OutputExplosion {
+		if cfg.Signals.OutputExplosion {
 			if signal := checkOutputExplosion(a, bl, cfg.Thresholds.OutputExplosionSigma); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
 
-		if toggles.TokenEfficiency {
+		if cfg.Signals.TokenEfficiency {
 			if signal := checkTokenEfficiency(a, global); signal != nil {
 				signals = append(signals, *signal)
 			}
 		}
 	}
 
-	if toggles.FragmentationIndex {
-		signals = append(signals, checkFragmentationIndex(agg, baselines, cfg.Thresholds.FragmentationIndexThreshold, cfg.Thresholds.ChurnMinSessions)...)
+	if cfg.Signals.FragmentationIndex {
+		signals = append(signals, checkFragmentationIndex(agg, cfg.Thresholds.FragmentationIndexThreshold, cfg.Thresholds.ChurnMinSessions)...)
 	}
 
 	sortSignals(signals)
@@ -226,7 +214,7 @@ func checkLowSignal(a *sessionAgg, global Baseline) *WasteSignal {
 			Project:         a.project,
 			Severity:        "medium",
 			Reason:          "low_signal",
-			Detail:          fmt.Sprintf("Output/input ratio %.4f below global P10 (%.4f)", a.ratio, global.RatioP10),
+			Detail:          fmt.Sprintf("Output/input ratio %.4f below global P10 (%.4f, median=%.4f)", a.ratio, global.RatioP10, global.RatioP50),
 			Metric:          a.ratio,
 			Threshold:       global.RatioP10,
 			SessionCost:     a.cost,
@@ -277,7 +265,7 @@ func checkCacheUnderutilized(a *sessionAgg, global Baseline) *WasteSignal {
 			Project:         a.project,
 			Severity:        "low",
 			Reason:          "cache_underutilized",
-			Detail:          fmt.Sprintf("Cache hit rate %.4f below global P10 (%.4f)", a.cacheRate, global.CacheP10),
+			Detail:          fmt.Sprintf("Cache hit rate %.4f below global P10 (%.4f, median=%.4f)", a.cacheRate, global.CacheP10, global.CacheP50),
 			Metric:          a.cacheRate,
 			Threshold:       global.CacheP10,
 			SessionCost:     a.cost,
@@ -304,7 +292,7 @@ func checkInputOverconsumption(a *sessionAgg, bl Baseline, sigma float64) *Waste
 			Project:         a.project,
 			Severity:        "high",
 			Reason:          "input_overconsumption",
-			Detail:          fmt.Sprintf("%s input tokens (μ=%s, σ=%s)", formatTokens(a.inputSum), formatTokens(int64(bl.InputMean)), formatTokens(int64(bl.InputStd))),
+			Detail:          fmt.Sprintf("%s input tokens (μ=%s, σ=%s, P90=%s)", FormatTokens(a.inputSum), FormatTokens(int64(bl.InputMean)), FormatTokens(int64(bl.InputStd)), FormatTokens(int64(bl.InputP90))),
 			Metric:          float64(a.inputSum),
 			Threshold:       threshold,
 			SessionCost:     a.cost,
@@ -331,7 +319,7 @@ func checkOutputExplosion(a *sessionAgg, bl Baseline, sigma float64) *WasteSigna
 			Project:         a.project,
 			Severity:        "medium",
 			Reason:          "output_explosion",
-			Detail:          fmt.Sprintf("%s output tokens (μ=%s, σ=%s)", formatTokens(a.outputSum), formatTokens(int64(bl.OutputMean)), formatTokens(int64(bl.OutputStd))),
+			Detail:          fmt.Sprintf("%s output tokens (μ=%s, σ=%s, P90=%s)", FormatTokens(a.outputSum), FormatTokens(int64(bl.OutputMean)), FormatTokens(int64(bl.OutputStd)), FormatTokens(int64(bl.OutputP90))),
 			Metric:          float64(a.outputSum),
 			Threshold:       threshold,
 			SessionCost:     a.cost,
@@ -370,8 +358,7 @@ func checkTokenEfficiency(a *sessionAgg, global Baseline) *WasteSignal {
 	return nil
 }
 
-func checkFragmentationIndex(agg map[string]*sessionAgg, baselines map[string]Baseline,
-	fragThreshold float64, minSessions int) []WasteSignal {
+func checkFragmentationIndex(agg map[string]*sessionAgg, fragThreshold float64, minSessions int) []WasteSignal {
 
 	type dayKey struct {
 		project string
@@ -427,7 +414,7 @@ func checkFragmentationIndex(agg map[string]*sessionAgg, baselines map[string]Ba
 	return signals
 }
 
-func formatTokens(n int64) string {
+func FormatTokens(n int64) string {
 	if n >= 1_000_000 {
 		return fmt.Sprintf("%.1fM", float64(n)/1_000_000)
 	}
