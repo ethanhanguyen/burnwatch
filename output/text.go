@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/ethanhanguyen/burnwatch/analyze"
+	"github.com/ethanhanguyen/burnwatch/config"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
@@ -40,6 +41,7 @@ func FormatText(
 	signals []analyze.WasteSignal,
 	recommendations []analyze.Recommendation,
 	verbose bool,
+	cfg config.Config,
 ) string {
 	if len(events) == 0 {
 		return "No data found.\n"
@@ -68,8 +70,29 @@ func FormatText(
 	}
 
 	b.WriteString("Waste signals:\n")
-	for _, s := range signals {
-		writeSignalBlock(&b, s, recBySignal[s])
+
+	// Group churn signals if enabled
+	var churnSignals []analyze.WasteSignal
+	var otherSignals []analyze.WasteSignal
+	if cfg.Output.GroupChurn {
+		for _, s := range signals {
+			if s.Reason == "session_churn" {
+				churnSignals = append(churnSignals, s)
+			} else {
+				otherSignals = append(otherSignals, s)
+			}
+		}
+		for _, s := range otherSignals {
+			writeSignalBlock(&b, s, recBySignal[s], baselines)
+		}
+		if len(churnSignals) > 0 {
+			b.WriteString("\n")
+			writeChurnGroups(&b, churnSignals, recBySignal)
+		}
+	} else {
+		for _, s := range signals {
+			writeSignalBlock(&b, s, recBySignal[s], baselines)
+		}
 	}
 
 	var totalSavings float64
@@ -229,7 +252,7 @@ func medianFromSorted(sorted []float64) float64 {
 	return sorted[mid]
 }
 
-func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Recommendation) {
+func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Recommendation, baselines map[string]analyze.Baseline) {
 	sev := strings.ToUpper(s.Severity)
 	if s.SessionID != "" {
 		fmt.Fprintf(b, "  %s %s (%s): $%.2f", sev, truncate(s.SessionID, 20), s.Project, s.SessionCost)
@@ -239,7 +262,13 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 
 	switch s.Reason {
 	case "cost_outlier":
-		fmt.Fprintf(b, " — %.1fx project baseline\n", s.Metric/s.Threshold)
+		bl := findBaselineForSignal(s, baselines)
+		if bl != nil && bl.CostMean > 0 {
+			mult := s.SessionCost / bl.CostMean
+			fmt.Fprintf(b, " — %.1fx project baseline (μ = $%.2f)\n", mult, bl.CostMean)
+		} else {
+			fmt.Fprintf(b, " — %.1fx outlier threshold\n", s.Metric/s.Threshold)
+		}
 	case "subagent_overhead":
 		fmt.Fprintf(b, " — %.1f%% subagent overhead ($%.2f / $%.2f)\n", s.Metric, s.Metric*s.SessionCost/100.0, s.SessionCost)
 	case "low_signal":
@@ -247,7 +276,7 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 	case "cache_underutilized":
 		fmt.Fprintf(b, " — cache hit rate %.1f%% (P10 = %.1f%%)\n", s.Metric*100, s.Threshold*100)
 	case "session_churn":
-		fmt.Fprintf(b, " — %.0f sessions below mean ratio\n", s.Metric)
+		fmt.Fprintf(b, " — %.0f sessions below mean ratio (%s)\n", s.Metric, extractDateFromDetail(s.Detail))
 	default:
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 	}
@@ -298,4 +327,65 @@ func RunPipeline(events []source.TokenEvent) (
 	recommendations = analyze.GenerateRecommendations(signals, baselines)
 	_ = analyze.BuildSubagentTree(events)
 	return
+}
+
+func findBaselineForSignal(s analyze.WasteSignal, baselines map[string]analyze.Baseline) *analyze.Baseline {
+	for k, bl := range baselines {
+		if k == "*" {
+			continue
+		}
+		if strings.HasPrefix(k, s.Project+":") {
+			return &bl
+		}
+	}
+	if gl, ok := baselines["*"]; ok {
+		return &gl
+	}
+	return nil
+}
+
+func extractDateFromDetail(detail string) string {
+	idx := strings.LastIndex(detail, " on ")
+	if idx == -1 {
+		return ""
+	}
+	rest := detail[idx+4:]
+	commaIdx := strings.Index(rest, ",")
+	if commaIdx == -1 {
+		return ""
+	}
+	return rest[:commaIdx]
+}
+
+func writeChurnGroups(b *strings.Builder, signals []analyze.WasteSignal,
+	recBySignal map[analyze.WasteSignal]analyze.Recommendation) {
+
+	type churnKey struct {
+		project string
+		date    string
+	}
+	groups := make(map[churnKey][]analyze.WasteSignal)
+
+	for _, s := range signals {
+		if s.Reason != "session_churn" {
+			continue
+		}
+		date := extractDateFromDetail(s.Detail)
+		key := churnKey{s.Project, date}
+		groups[key] = append(groups[key], s)
+	}
+
+	for key, sigs := range groups {
+		totalCost := 0.0
+		totalSavings := 0.0
+		for _, s := range sigs {
+			totalCost += s.SessionCost
+			if rec, ok := recBySignal[s]; ok {
+				totalSavings += rec.SavingsEst
+			}
+		}
+		fmt.Fprintf(b, "  MEDIUM %s on %s: %.0f sessions below mean ratio, $%.2f total\n",
+			key.project, key.date, float64(len(sigs)), totalCost)
+		fmt.Fprintf(b, "    → Consolidate fragmented sessions. Potential savings: $%.2f\n", totalSavings)
+	}
 }

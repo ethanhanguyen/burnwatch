@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/ethanhanguyen/burnwatch/analyze"
+	"github.com/ethanhanguyen/burnwatch/config"
 	"github.com/ethanhanguyen/burnwatch/output"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
@@ -49,7 +50,7 @@ func TestEndToEnd(t *testing.T) {
 
 	_ = analyze.GenerateRecommendations(signals, baselines)
 
-	text := output.FormatText(events, baselines, signals, nil, false)
+	text := output.FormatText(events, baselines, signals, nil, false, config.Config{})
 	if text == "" {
 		t.Error("expected non-empty text output")
 	}
