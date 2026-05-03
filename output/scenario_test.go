@@ -52,15 +52,18 @@ func loadScenarioJSONL(tb testing.TB, name string) []source.TokenEvent {
 }
 
 type scenarioEntry struct {
-	Type      string           `json:"type"`
-	SessionID string           `json:"sessionId"`
-	Message   scenarioMessage  `json:"message"`
-	Timestamp string           `json:"timestamp"`
+	Type            string                `json:"type"`
+	SessionID       string                `json:"sessionId"`
+	ParentSessionID string                `json:"parentSessionId"`
+	Message         scenarioMessage       `json:"message"`
+	Timestamp       string                `json:"timestamp"`
 }
 
 type scenarioMessage struct {
-	Model string         `json:"model"`
-	Usage *scenarioUsage `json:"usage"`
+	Model   string                 `json:"model"`
+	Role    string                 `json:"role"`
+	Usage   *scenarioUsage         `json:"usage"`
+	Content []scenarioContentBlock `json:"content"`
 }
 
 type scenarioUsage struct {
@@ -68,6 +71,12 @@ type scenarioUsage struct {
 	OutputTokens             int64 `json:"output_tokens"`
 	CacheCreationInputTokens int64 `json:"cache_creation_input_tokens"`
 	CacheReadInputTokens     int64 `json:"cache_read_input_tokens"`
+}
+
+type scenarioContentBlock struct {
+	Type  string          `json:"type"`
+	Name  string          `json:"name"`
+	Input json.RawMessage `json:"input"`
 }
 
 func parseScenarioLine(tb testing.TB, line string) source.TokenEvent {
@@ -83,6 +92,34 @@ func parseScenarioLine(tb testing.TB, line string) source.TokenEvent {
 	if ts.IsZero() {
 		ts = time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
 	}
+
+	var toolCalls []source.ToolCall
+	var fileOps []source.FileOp
+	for _, block := range entry.Message.Content {
+		if block.Type != "tool_use" {
+			continue
+		}
+		args := string(block.Input)
+		if len(args) > 1024 {
+			args = args[:1024]
+		}
+		toolCalls = append(toolCalls, source.ToolCall{
+			Name:      strings.ToLower(block.Name),
+			Arguments: args,
+		})
+		fo := scenarioFileOpFromTool(block.Name, block.Input)
+		if fo != nil {
+			fileOps = append(fileOps, *fo)
+		}
+	}
+
+	messageRole := entry.Message.Role
+	if messageRole == "" {
+		messageRole = "assistant"
+	}
+
+	isSubagent := entry.ParentSessionID != ""
+
 	cost, approx, _ := source.CostForModel(
 		entry.Message.Model,
 		entry.Message.Usage.InputTokens,
@@ -92,6 +129,7 @@ func parseScenarioLine(tb testing.TB, line string) source.TokenEvent {
 	)
 	return source.TokenEvent{
 		SessionID:       entry.SessionID,
+		ParentSessionID: entry.ParentSessionID,
 		Model:           entry.Message.Model,
 		Provider:        "test",
 		Timestamp:       ts,
@@ -103,7 +141,39 @@ func parseScenarioLine(tb testing.TB, line string) source.TokenEvent {
 		CostApproximate: approx,
 		Project:         "scenario-test",
 		Harness:         "claude-code",
-		IsSubagent:      false,
+		IsSubagent:      isSubagent,
+		ToolCalls:       toolCalls,
+		FileOps:         fileOps,
+		MessageRole:     messageRole,
+	}
+}
+
+type scenarioFileInput struct {
+	FilePath string `json:"file_path"`
+}
+
+func scenarioFileOpFromTool(toolName string, input json.RawMessage) *source.FileOp {
+	canon := strings.ToLower(toolName)
+	var op string
+	switch canon {
+	case "read":
+		op = "read"
+	case "write":
+		op = "write"
+	case "edit":
+		op = "edit"
+	default:
+		return nil
+	}
+
+	var fi scenarioFileInput
+	if err := json.Unmarshal(input, &fi); err != nil || fi.FilePath == "" {
+		return nil
+	}
+
+	return &source.FileOp{
+		Path:      source.NormalizePath(fi.FilePath, ""),
+		Operation: op,
 	}
 }
 

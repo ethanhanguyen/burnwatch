@@ -37,6 +37,10 @@ type Signals struct {
 	InputOverconsumption bool `toml:"input_overconsumption"`
 	OutputExplosion      bool `toml:"output_explosion"`
 	TokenEfficiency      bool `toml:"token_efficiency"`
+	ToolLoop             bool `toml:"tool_loop"`
+	FileReread           bool `toml:"file_reread"`
+	SubagentOverlap      bool `toml:"subagent_overlap"`
+	SessionRestart       bool `toml:"session_restart"`
 }
 
 type Filters struct {
@@ -195,6 +199,12 @@ fragmentation_index = true
 input_overconsumption = true
 output_explosion = true
 token_efficiency = true
+
+# v3 behavioral signals (default off — opt in)
+tool_loop = false
+file_reread = false
+subagent_overlap = false
+session_restart = false
 
 [filters]
 # Exclude sessions costing less than this (USD). 0 = include all.

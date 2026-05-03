@@ -71,6 +71,18 @@ func checkSignals(t *testing.T, s Signals) {
 	if !s.TokenEfficiency {
 		t.Error("TokenEfficiency should default to true")
 	}
+	if s.ToolLoop {
+		t.Error("ToolLoop should default to false")
+	}
+	if s.FileReread {
+		t.Error("FileReread should default to false")
+	}
+	if s.SubagentOverlap {
+		t.Error("SubagentOverlap should default to false")
+	}
+	if s.SessionRestart {
+		t.Error("SessionRestart should default to false")
+	}
 }
 
 func checkFilters(t *testing.T, f Filters) {

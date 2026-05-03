@@ -2,6 +2,16 @@ package source
 
 import "time"
 
+type ToolCall struct {
+	Name      string
+	Arguments string
+}
+
+type FileOp struct {
+	Path      string
+	Operation string
+}
+
 type TokenEvent struct {
 	SessionID       string
 	ParentSessionID string
@@ -20,4 +30,9 @@ type TokenEvent struct {
 	Project         string
 	Harness         string
 	IsSubagent      bool
+	ToolCalls       []ToolCall
+	FileOps         []FileOp
+	MessageRole     string
+	StopReason      string
+	EventIndex      int
 }

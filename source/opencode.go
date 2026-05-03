@@ -39,6 +39,27 @@ func (s *OpenCodeSource) Events() (<-chan TokenEvent, <-chan error) {
 		}
 		defer func() { _ = db.Close() }()
 
+		toolParts := make(map[string][]opencodeToolPart)
+		partRows, err := db.Query(`SELECT p.message_id, p.data FROM part p WHERE json_extract(p.data, '$.type') = 'tool' ORDER BY p.time_created`)
+		if err != nil {
+			errs <- fmt.Errorf("part query: %w", err)
+		} else {
+			for partRows.Next() {
+				var msgID, partData string
+				if err := partRows.Scan(&msgID, &partData); err != nil {
+					errs <- fmt.Errorf("part scan: %w", err)
+					continue
+				}
+				var tp opencodeToolPart
+				if err := json.Unmarshal([]byte(partData), &tp); err != nil {
+					errs <- fmt.Errorf("part unmarshal %s: %w", msgID, err)
+					continue
+				}
+				toolParts[msgID] = append(toolParts[msgID], tp)
+			}
+			_ = partRows.Close()
+		}
+
 		rows, err := db.Query(`
 			SELECT
 				s.id,
@@ -60,6 +81,8 @@ func (s *OpenCodeSource) Events() (<-chan TokenEvent, <-chan error) {
 			return
 		}
 		defer func() { _ = rows.Close() }()
+
+		eventIndex := make(map[string]int)
 
 		for rows.Next() {
 			var (
@@ -88,7 +111,9 @@ func (s *OpenCodeSource) Events() (<-chan TokenEvent, <-chan error) {
 				parent = parentID.String
 			}
 
-			event := s.tokenDataToEvent(td, sessionID.String, parent, project)
+			sid := sessionID.String
+			eventIndex[sid]++
+			event := s.tokenDataToEvent(td, sid, parent, project, eventIndex[sid], toolParts[messageID])
 			events <- event
 		}
 
@@ -126,6 +151,16 @@ type timeInfo struct {
 	Created int64 `json:"created"`
 }
 
+type opencodeToolPart struct {
+	Type  string         `json:"type"`
+	Tool  string         `json:"tool"`
+	State opencodeState  `json:"state"`
+}
+
+type opencodeState struct {
+	Input json.RawMessage `json:"input"`
+}
+
 func parseMessageJSON(data string, td *tokenData) error {
 	if err := json.Unmarshal([]byte(data), td); err != nil {
 		return fmt.Errorf("json unmarshal: %w", err)
@@ -133,7 +168,7 @@ func parseMessageJSON(data string, td *tokenData) error {
 	return nil
 }
 
-func (s *OpenCodeSource) tokenDataToEvent(td tokenData, sessionID, parentSessionID, project string) TokenEvent {
+func (s *OpenCodeSource) tokenDataToEvent(td tokenData, sessionID, parentSessionID, project string, eventIdx int, toolParts []opencodeToolPart) TokenEvent {
 	inputTokens := int64(0)
 	outputTokens := int64(0)
 	cacheRead := int64(0)
@@ -153,6 +188,29 @@ func (s *OpenCodeSource) tokenDataToEvent(td tokenData, sessionID, parentSession
 	ts := time.Time{}
 	if td.Time != nil {
 		ts = time.UnixMilli(td.Time.Created)
+	}
+
+	var toolCalls []ToolCall
+	var fileOps []FileOp
+	for _, tp := range toolParts {
+		if tp.Type != "tool" {
+			continue
+		}
+		args := truncateString(string(tp.State.Input), 1024)
+		normalizedName := canonicalizeToolName(tp.Tool)
+		toolCalls = append(toolCalls, ToolCall{
+			Name:      normalizedName,
+			Arguments: args,
+		})
+		fo := fileOpFromOpenCodeTool(tp.Tool, tp.State.Input)
+		if fo != nil {
+			fileOps = append(fileOps, *fo)
+		}
+	}
+
+	messageRole := td.Role
+	if messageRole == "" {
+		messageRole = "assistant"
 	}
 
 	cost, approx, costUnknown := CostForModel(
@@ -181,6 +239,39 @@ func (s *OpenCodeSource) tokenDataToEvent(td tokenData, sessionID, parentSession
 		Project:         project,
 		Harness:         "opencode",
 		IsSubagent:      parentSessionID != "",
+		ToolCalls:       toolCalls,
+		FileOps:         fileOps,
+		MessageRole:     messageRole,
+		EventIndex:      eventIdx,
+	}
+}
+
+type opencodeFileInput struct {
+	FilePath string `json:"filePath"`
+}
+
+func fileOpFromOpenCodeTool(toolName string, input json.RawMessage) *FileOp {
+	canon := canonicalizeToolName(toolName)
+	var op string
+	switch canon {
+	case "read":
+		op = "read"
+	case "write":
+		op = "write"
+	case "edit":
+		op = "edit"
+	default:
+		return nil
+	}
+
+	var fi opencodeFileInput
+	if err := json.Unmarshal(input, &fi); err != nil || fi.FilePath == "" {
+		return nil
+	}
+
+	return &FileOp{
+		Path:      NormalizePath(fi.FilePath, ""),
+		Operation: op,
 	}
 }
 
