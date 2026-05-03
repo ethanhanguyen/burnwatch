@@ -21,7 +21,6 @@ type Thresholds struct {
 	CachePercentile              float64 `toml:"cache_percentile"`
 	SubagentOverheadPct          float64 `toml:"subagent_overhead_pct"`
 	ChurnMinSessions             int     `toml:"churn_min_sessions"`
-	ChurnThreshold               float64 `toml:"churn_threshold"`
 	FragmentationIndexThreshold  float64 `toml:"fragmentation_index_threshold"`
 	InputOverconsumptionSigma    float64 `toml:"input_overconsumption_sigma"`
 	OutputExplosionSigma         float64 `toml:"output_explosion_sigma"`
@@ -57,7 +56,6 @@ func Defaults() Config {
 			CachePercentile:              10.0,
 			SubagentOverheadPct:          50.0,
 			ChurnMinSessions:             3,
-			ChurnThreshold:               2.0,
 			FragmentationIndexThreshold:  3.0,
 			InputOverconsumptionSigma:    2.0,
 			OutputExplosionSigma:         2.0,

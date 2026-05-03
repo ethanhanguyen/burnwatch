@@ -173,7 +173,7 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 			}
 		}
 
-		if toggles.TokenEfficiency && global.SessionCount >= 2 {
+		if toggles.TokenEfficiency {
 			if signal := checkTokenEfficiency(a, global); signal != nil {
 				signals = append(signals, *signal)
 			}
@@ -345,6 +345,9 @@ func checkOutputExplosion(a *sessionAgg, bl Baseline, sigma float64) *WasteSigna
 }
 
 func checkTokenEfficiency(a *sessionAgg, global Baseline) *WasteSignal {
+	if global.SessionCount < 2 {
+		return nil
+	}
 	if a.inputSum+a.cacheWrite == 0 {
 		return nil
 	}
