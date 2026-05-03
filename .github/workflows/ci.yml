@@ -13,13 +13,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: '1.25'
       - run: go list ./... | grep -v -x "$(go list -m)" | xargs go test -cover -coverprofile=coverage.out
       - run: go tool cover -func=coverage.out | tail -1
       - run: go vet ./...
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: latest
+          version: v2.6.0
       - run: go build -o burnwatch .
       - run: ./burnwatch --help
