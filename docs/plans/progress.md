@@ -2,13 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 0/4 started (v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 1/4 complete (v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
 v2.5  ████████████████████████████████████████ 3/3 merged
-v3    ········································ 0/4 (planned)
+v3    ███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 1/4
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -30,7 +30,7 @@ PR15 ██████████████████████ Fix Pric
 PR16 ██████████████████████ Output Quality Fixes
 PR17 ██████████████████████ Calibration Mode
 
-N1   ····················· Data Model Expansion
+N1   ██████████████████████ Data Model Expansion
 N2   ····················· Loop + Re-read (H10,H11)
 N3   ····················· Subagent Overlap + Restart (H12,H13)
 N4   ····················· Polish + Calibration
@@ -93,7 +93,7 @@ PR20 ····················· ML Pipeline (experimental)
 | PR18 | `pr18-anomaly-detection` | **deferred** | — | — | See ADR 2026-05-03 |
 | PR19 | `pr19-llm-verification` | **deferred** | — | — | Reschedule post-v3 |
 | PR20 | `pr20-ml-pipeline` | **deferred** | — | — | Replaced by behavioral detection |
-| N1 | `n1-data-model-expansion` | **planned** | — | — | ToolCall + FileOp in TokenEvent |
+| N1 | `n1-data-model-expansion` | **merged** | 2026-05-03 | 2026-05-03 | ToolCall + FileOp in TokenEvent |
 | N2 | `n2-loop-reread` | **planned** | — | — | H10, H11 — loop + file re-read detection |
 | N3 | `n3-overlap-restart` | **planned** | — | — | H12, H13 — subagent overlap + session restart |
 | N4 | `n4-polish` | **planned** | — | — | Performance, calibration, path normalization |
