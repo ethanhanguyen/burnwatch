@@ -341,12 +341,12 @@ func TestClaudeSource_ParseEntry(t *testing.T) {
 
 func TestCostForModel_FromPricingTable(t *testing.T) {
 	tests := []struct {
-		model       string
-		input       int64
-		output      int64
-		cacheRead   int64
-		cacheWrite  int64
-		wantCost    float64
+		model      string
+		input      int64
+		output     int64
+		cacheRead  int64
+		cacheWrite int64
+		wantCost   float64
 	}{
 		{"claude-sonnet-4-5-20250929", 1000, 0, 0, 0, 3.00},
 		{"claude-sonnet-4-5-20250929", 0, 1000, 0, 0, 15.00},
@@ -369,8 +369,8 @@ func TestCostForModel_FromPricingTable(t *testing.T) {
 
 func TestClaudeSource_Discover(t *testing.T) {
 	tmpDir := t.TempDir()
-	os.Setenv("BURNWATCH_CLAUDE_PROJECTS", tmpDir)
-	defer os.Unsetenv("BURNWATCH_CLAUDE_PROJECTS")
+	_ = os.Setenv("BURNWATCH_CLAUDE_PROJECTS", tmpDir)
+	defer func() { _ = os.Unsetenv("BURNWATCH_CLAUDE_PROJECTS") }()
 
 	projDir := filepath.Join(tmpDir, "-Users-hoang-test")
 	if err := os.MkdirAll(projDir, 0755); err != nil {
@@ -395,8 +395,8 @@ func TestClaudeSource_Discover(t *testing.T) {
 
 func TestClaudeSource_DiscoverEmpty(t *testing.T) {
 	tmpDir := t.TempDir()
-	os.Setenv("BURNWATCH_CLAUDE_PROJECTS", tmpDir + "/nonexistent")
-	defer os.Unsetenv("BURNWATCH_CLAUDE_PROJECTS")
+	_ = os.Setenv("BURNWATCH_CLAUDE_PROJECTS", tmpDir+"/nonexistent")
+	defer func() { _ = os.Unsetenv("BURNWATCH_CLAUDE_PROJECTS") }()
 
 	sources := Discover()
 	for _, s := range sources {
@@ -461,7 +461,7 @@ func TestClaudeSource_FileReadError(t *testing.T) {
 	if err := os.WriteFile(unreadableFile, nil, 0000); err != nil {
 		t.Fatal(err)
 	}
-	defer os.Chmod(unreadableFile, 0644)
+	defer func() { _ = os.Chmod(unreadableFile, 0644) }()
 
 	s := &ClaudeSource{projectsDir: tmpDir}
 	events, errs := s.Events()
@@ -484,4 +484,3 @@ func TestClaudeSource_ProjectNameNoLeadingDash(t *testing.T) {
 		t.Errorf("projectNameToDisplay = %q, want project/name", name)
 	}
 }
-

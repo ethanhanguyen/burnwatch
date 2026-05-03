@@ -317,12 +317,12 @@ func TestWriteSignalBlock_AllReasons(t *testing.T) {
 		{
 			name: "empty_session_id",
 			s: analyze.WasteSignal{
-				SessionID:   "",
-				Project:     "proj",
-				Severity:    "low",
-				Reason:      "cache_underutilized",
-				Metric:      0.12,
-				Threshold:   0.25,
+				SessionID: "",
+				Project:   "proj",
+				Severity:  "low",
+				Reason:    "cache_underutilized",
+				Metric:    0.12,
+				Threshold: 0.25,
 			},
 		},
 	}

@@ -172,7 +172,7 @@ func writeSummary(b *strings.Builder, events []source.TokenEvent, baselines map[
 	b.WriteString(strings.Join(parts, " | "))
 	b.WriteString("\n")
 
-	b.WriteString(fmt.Sprintf("Today: $%.2f (%d sessions) | This week: $%.2f (%d sessions)\n", todayCost, todaySessions, weekCost, weekSessions))
+	fmt.Fprintf(b, "Today: $%.2f (%d sessions) | This week: $%.2f (%d sessions)\n", todayCost, todaySessions, weekCost, weekSessions)
 }
 
 func harnessLabel(name string) string {

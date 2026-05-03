@@ -12,23 +12,23 @@ func TestDetectWasteCostOutlier(t *testing.T) {
 	events := make([]source.TokenEvent, 0, 6)
 	for i := 1; i <= 5; i++ {
 		events = append(events, source.TokenEvent{
-			SessionID:  "s" + string(rune('0'+i)),
-			Project:    "p",
-			Harness:    "h",
-			CostUSD:    float64(i),
-			InputTokens: 100,
+			SessionID:    "s" + string(rune('0'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      float64(i),
+			InputTokens:  100,
 			OutputTokens: 50,
-			Timestamp:  time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
+			Timestamp:    time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
 		})
 	}
 	events = append(events, source.TokenEvent{
-		SessionID:  "s-outlier",
-		Project:    "p",
-		Harness:    "h",
-		CostUSD:    50.0,
-		InputTokens: 100,
+		SessionID:    "s-outlier",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      50.0,
+		InputTokens:  100,
 		OutputTokens: 50,
-		Timestamp:  time.Date(2026, 5, 1, 16, 0, 0, 0, time.UTC),
+		Timestamp:    time.Date(2026, 5, 1, 16, 0, 0, 0, time.UTC),
 	})
 
 	baselines := ComputeBaselines(events)
@@ -52,23 +52,23 @@ func TestDetectWasteLowSignal(t *testing.T) {
 	events := make([]source.TokenEvent, 0, 4)
 	for i := 1; i <= 3; i++ {
 		events = append(events, source.TokenEvent{
-			SessionID:  "s" + string(rune('0'+i)),
-			Project:    "p",
-			Harness:    "h",
-			CostUSD:    1.0,
-			InputTokens: 100,
+			SessionID:    "s" + string(rune('0'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      1.0,
+			InputTokens:  100,
 			OutputTokens: 50,
-			Timestamp:  time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
+			Timestamp:    time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
 		})
 	}
 	events = append(events, source.TokenEvent{
-		SessionID:   "s-low",
-		Project:     "p",
-		Harness:     "h",
-		CostUSD:     1.0,
-		InputTokens: 100,
+		SessionID:    "s-low",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      1.0,
+		InputTokens:  100,
 		OutputTokens: 1,
-		Timestamp:   time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC),
+		Timestamp:    time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC),
 	})
 
 	baselines := ComputeBaselines(events)
@@ -115,27 +115,27 @@ func TestDetectWasteCacheUnderutilized(t *testing.T) {
 	events := make([]source.TokenEvent, 0, 4)
 	for i := 1; i <= 3; i++ {
 		events = append(events, source.TokenEvent{
-			SessionID:  "s" + string(rune('0'+i)),
-			Project:    "p",
-			Harness:    "h",
-			CostUSD:    1.0,
-			CacheRead:  50,
-			CacheWrite: 50,
-			InputTokens: 100,
+			SessionID:    "s" + string(rune('0'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      1.0,
+			CacheRead:    50,
+			CacheWrite:   50,
+			InputTokens:  100,
 			OutputTokens: 50,
-			Timestamp:  time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
+			Timestamp:    time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
 		})
 	}
 	events = append(events, source.TokenEvent{
-		SessionID:   "s-cold",
-		Project:     "p",
-		Harness:     "h",
-		CostUSD:     1.0,
-		CacheRead:   0,
-		CacheWrite:  100,
-		InputTokens: 100,
+		SessionID:    "s-cold",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      1.0,
+		CacheRead:    0,
+		CacheWrite:   100,
+		InputTokens:  100,
 		OutputTokens: 50,
-		Timestamp:   time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC),
+		Timestamp:    time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC),
 	})
 
 	baselines := ComputeBaselines(events)
@@ -236,23 +236,23 @@ func TestDetectWasteSignalFields(t *testing.T) {
 	now := time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
 	for i := 0; i < 5; i++ {
 		events = append(events, source.TokenEvent{
-			SessionID:   "s" + string(rune('a'+i)),
-			Project:     "p",
-			Harness:     "h",
-			CostUSD:     1.0,
-			InputTokens: 100,
+			SessionID:    "s" + string(rune('a'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      1.0,
+			InputTokens:  100,
 			OutputTokens: 50,
-			Timestamp:   now.Add(time.Duration(i) * time.Hour),
+			Timestamp:    now.Add(time.Duration(i) * time.Hour),
 		})
 	}
 	events = append(events, source.TokenEvent{
-		SessionID:   "s-outlier",
-		Project:     "p",
-		Harness:     "h",
-		CostUSD:     30.0,
-		InputTokens: 100,
+		SessionID:    "s-outlier",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      30.0,
+		InputTokens:  100,
 		OutputTokens: 50,
-		Timestamp:   now.Add(5 * time.Hour),
+		Timestamp:    now.Add(5 * time.Hour),
 	})
 
 	baselines := ComputeBaselines(events)
@@ -283,27 +283,27 @@ func TestDetectWasteSortOrder(t *testing.T) {
 	now := time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
 	for i := 0; i < 6; i++ {
 		events = append(events, source.TokenEvent{
-			SessionID:   "s" + string(rune('a'+i)),
-			Project:     "p",
-			Harness:     "h",
-			CostUSD:     1.0,
-			InputTokens: 100,
+			SessionID:    "s" + string(rune('a'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      1.0,
+			InputTokens:  100,
 			OutputTokens: 50,
-			CacheRead:   50 - int64(i*10),
-			CacheWrite:  50,
-			Timestamp:   now.Add(time.Duration(i) * time.Hour),
+			CacheRead:    50 - int64(i*10),
+			CacheWrite:   50,
+			Timestamp:    now.Add(time.Duration(i) * time.Hour),
 		})
 	}
 	events = append(events, source.TokenEvent{
-		SessionID:   "s-outlier",
-		Project:     "p",
-		Harness:     "h",
-		CostUSD:     30.0,
-		InputTokens: 100,
+		SessionID:    "s-outlier",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      30.0,
+		InputTokens:  100,
 		OutputTokens: 50,
-		CacheRead:   0,
-		CacheWrite:  0,
-		Timestamp:   now.Add(6 * time.Hour),
+		CacheRead:    0,
+		CacheWrite:   0,
+		Timestamp:    now.Add(6 * time.Hour),
 	})
 
 	baselines := ComputeBaselines(events)

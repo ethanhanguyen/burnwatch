@@ -30,7 +30,7 @@ func Execute() {
 	flag.Parse()
 
 	if flags.DBPath != "" {
-		os.Setenv("BURNWATCH_OPENCODE_DB", flags.DBPath)
+		_ = os.Setenv("BURNWATCH_OPENCODE_DB", flags.DBPath)
 	}
 
 	sources := source.Discover()

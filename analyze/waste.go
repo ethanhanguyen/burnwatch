@@ -45,10 +45,10 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline) []Wa
 		a, ok := agg[e.SessionID]
 		if !ok {
 			a = &sessionAgg{
-				sessionID: e.SessionID,
-				project:   e.Project,
-				harness:   e.Harness,
-				day:       e.Timestamp.Truncate(24 * time.Hour),
+				sessionID:  e.SessionID,
+				project:    e.Project,
+				harness:    e.Harness,
+				day:        e.Timestamp.Truncate(24 * time.Hour),
 				isSubagent: e.IsSubagent,
 			}
 			agg[e.SessionID] = a
@@ -93,7 +93,7 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline) []Wa
 		treeBySession[trees[i].SessionID] = &trees[i]
 	}
 
-	global, _ := baselines[globalKey]
+	global := baselines[globalKey]
 
 	var signals []WasteSignal
 
@@ -264,16 +264,16 @@ func checkSessionChurn(agg map[string]*sessionAgg, baselines map[string]Baseline
 					continue
 				}
 				seen[s.sessionID] = true
-			signals = append(signals, WasteSignal{
-				SessionID:   s.sessionID,
-				Project:     s.project,
-				Severity:    "medium",
-				Reason:      "session_churn",
-				Detail:      fmt.Sprintf("Project %s had %d sessions on %s, all below mean ratio (%.4f)", dk.project, len(sessions), dk.day.Format("2006-01-02"), bl.RatioMean),
-				Metric:      float64(len(sessions)),
-				Threshold:   2,
-				SessionCost: s.cost,
-			})
+				signals = append(signals, WasteSignal{
+					SessionID:   s.sessionID,
+					Project:     s.project,
+					Severity:    "medium",
+					Reason:      "session_churn",
+					Detail:      fmt.Sprintf("Project %s had %d sessions on %s, all below mean ratio (%.4f)", dk.project, len(sessions), dk.day.Format("2006-01-02"), bl.RatioMean),
+					Metric:      float64(len(sessions)),
+					Threshold:   2,
+					SessionCost: s.cost,
+				})
 			}
 		}
 	}
