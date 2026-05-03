@@ -26,10 +26,9 @@ Start here. This file stays short on purpose.
 - [decisions/2026-05-02-source-abstraction.md](./decisions/2026-05-02-source-abstraction.md) — why TokenEvent + Source interface over per-harness code
 - [decisions/2026-05-02-statistical-thresholds.md](./decisions/2026-05-02-statistical-thresholds.md) — why P95/P10/2σ over hardcoded constants
 
-## Plans
+## Progress
 
-- [plans/progress.md](./plans/progress.md) — **read this on session start** — PR status, blockers, next action
-- [plans/validation.md](./plans/validation.md) — test pyramid, golden files, smoke tests, CI gate
+- [plans/progress.md](./plans/progress.md) — **read this on session start** — PR status, dependency graph, quality snapshot
 
 ## Learnings
 
@@ -37,4 +36,4 @@ Start here. This file stays short on purpose.
 
 ## Archive
 
-- [archive/](./archive/) — archived PR prompts, implementation plan
+- [archive/](./archive/) — archived PR prompts (PR1–PR10), implementation plan, validation strategy
