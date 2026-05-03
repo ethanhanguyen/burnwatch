@@ -58,6 +58,16 @@ func FormatText(
 
 	writeProjects(&b, baselines)
 
+	if cfg.Output.ShowTrends {
+		if tr := analyze.ComputeTrends(events); tr != nil {
+			b.WriteString("\n")
+			b.WriteString(tr.Format())
+		} else {
+			b.WriteString("\n")
+			b.WriteString("Not enough data for trends (need >= 2 weeks).")
+		}
+	}
+
 	b.WriteString("\n")
 
 	if verbose {
@@ -269,6 +279,10 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 		} else {
 			fmt.Fprintf(b, " — %.1fx outlier threshold\n", s.Metric/s.Threshold)
 		}
+		if s.Model != "" {
+			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
+				s.Model, formatTokens(s.InputTokens), formatTokens(s.OutputTokens))
+		}
 	case "subagent_overhead":
 		fmt.Fprintf(b, " — %.1f%% subagent overhead ($%.2f / $%.2f)\n", s.Metric, s.Metric*s.SessionCost/100.0, s.SessionCost)
 	case "low_signal":
@@ -323,7 +337,14 @@ func RunPipeline(events []source.TokenEvent) (
 	recommendations []analyze.Recommendation,
 ) {
 	baselines = analyze.ComputeBaselines(events)
-	signals = analyze.DetectWaste(events, baselines, 2.0)
+	toggles := analyze.SignalToggles{
+		CostOutlier:        true,
+		LowSignal:          true,
+		SubagentOverhead:   true,
+		CacheUnderutilized: true,
+		SessionChurn:       true,
+	}
+	signals = analyze.DetectWaste(events, baselines, 2.0, toggles)
 	recommendations = analyze.GenerateRecommendations(signals, baselines)
 	_ = analyze.BuildSubagentTree(events)
 	return
@@ -342,6 +363,16 @@ func findBaselineForSignal(s analyze.WasteSignal, baselines map[string]analyze.B
 		return &gl
 	}
 	return nil
+}
+
+func formatTokens(n int64) string {
+	if n >= 1_000_000 {
+		return fmt.Sprintf("%.1fM", float64(n)/1_000_000)
+	}
+	if n >= 1_000 {
+		return fmt.Sprintf("%.1fK", float64(n)/1_000)
+	}
+	return fmt.Sprintf("%d", n)
 }
 
 func extractDateFromDetail(detail string) string {

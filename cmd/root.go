@@ -24,6 +24,13 @@ func Execute() {
 		ConfigPath  string
 		PrintConfig bool
 		MinCost     float64
+
+		NoCostOutlier       bool
+		NoLowSignal         bool
+		NoSubagentOverhead  bool
+		NoCacheUnderutil    bool
+		NoChurn             bool
+		ShowTrends          bool
 	}
 
 	flag.StringVar(&flags.DBPath, "db", "", "OpenCode database path")
@@ -35,6 +42,13 @@ func Execute() {
 	flag.StringVar(&flags.ConfigPath, "config", "", "Config file path (default: ./.burnwatch.toml, ~/.config/burnwatch/config.toml)")
 	flag.BoolVar(&flags.PrintConfig, "print-config", false, "Print effective config and exit")
 	flag.Float64Var(&flags.MinCost, "min-cost", 0, "Hide waste signals below this dollar amount")
+
+	flag.BoolVar(&flags.NoCostOutlier, "no-cost-outlier", false, "Disable cost outlier detection")
+	flag.BoolVar(&flags.NoLowSignal, "no-low-signal", false, "Disable low output/input ratio detection")
+	flag.BoolVar(&flags.NoSubagentOverhead, "no-subagent-overhead", false, "Disable subagent overhead detection")
+	flag.BoolVar(&flags.NoCacheUnderutil, "no-cache-underutil", false, "Disable cache underutilization detection")
+	flag.BoolVar(&flags.NoChurn, "no-churn", false, "Disable session churn detection")
+	flag.BoolVar(&flags.ShowTrends, "show-trends", false, "Show time-trend summary")
 	flag.Parse()
 
 	cfg, err := config.Load(flags.ConfigPath)
@@ -92,7 +106,32 @@ func Execute() {
 
 	baselines := analyze.ComputeBaselines(events)
 	costSigma := cfg.Thresholds.CostOutlierSigma
-	signals := analyze.DetectWaste(events, baselines, costSigma)
+	if flags.NoCostOutlier {
+		cfg.Signals.CostOutlier = false
+	}
+	if flags.NoLowSignal {
+		cfg.Signals.LowSignal = false
+	}
+	if flags.NoSubagentOverhead {
+		cfg.Signals.SubagentOverhead = false
+	}
+	if flags.NoCacheUnderutil {
+		cfg.Signals.CacheUnderutilized = false
+	}
+	if flags.NoChurn {
+		cfg.Signals.SessionChurn = false
+	}
+	if flags.ShowTrends {
+		cfg.Output.ShowTrends = true
+	}
+	toggles := analyze.SignalToggles{
+		CostOutlier:        cfg.Signals.CostOutlier,
+		LowSignal:          cfg.Signals.LowSignal,
+		SubagentOverhead:   cfg.Signals.SubagentOverhead,
+		CacheUnderutilized: cfg.Signals.CacheUnderutilized,
+		SessionChurn:       cfg.Signals.SessionChurn,
+	}
+	signals := analyze.DetectWaste(events, baselines, costSigma, toggles)
 
 	minCost := cfg.Filters.MinCost
 	if flags.MinCost > 0 {

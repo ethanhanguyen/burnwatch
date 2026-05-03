@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -42,7 +43,14 @@ func TestEndToEnd(t *testing.T) {
 	}
 
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0)
+	toggles := analyze.SignalToggles{
+		CostOutlier:        true,
+		LowSignal:          true,
+		SubagentOverhead:   true,
+		CacheUnderutilized: true,
+		SessionChurn:       true,
+	}
+	signals := analyze.DetectWaste(events, baselines, 2.0, toggles)
 
 	if len(signals) == 0 {
 		t.Log("no waste signals found from test data (may be expected for clean data)")
@@ -135,9 +143,85 @@ func TestFilterByDays(t *testing.T) {
 func TestZeroEvents(t *testing.T) {
 	events := []source.TokenEvent{}
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0)
+	toggles := analyze.SignalToggles{
+		CostOutlier:        true,
+		LowSignal:          true,
+		SubagentOverhead:   true,
+		CacheUnderutilized: true,
+		SessionChurn:       true,
+	}
+	signals := analyze.DetectWaste(events, baselines, 2.0, toggles)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty events, got %d", len(signals))
+	}
+}
+
+func TestTogglesSuppressOutput(t *testing.T) {
+	setupTestEnv(t)
+
+	sources := source.Discover()
+	if len(sources) == 0 {
+		t.Fatal("no sources discovered")
+	}
+
+	events := output.CollectEvents(sources)
+	baselines := analyze.ComputeBaselines(events)
+
+	allOff := analyze.SignalToggles{CostOutlier: false, LowSignal: false, SubagentOverhead: false, CacheUnderutilized: false, SessionChurn: false}
+	signals := analyze.DetectWaste(events, baselines, 2.0, allOff)
+	if len(signals) != 0 {
+		t.Errorf("expected 0 signals with all toggles off, got %d", len(signals))
+	}
+
+	noChurn := analyze.SignalToggles{CostOutlier: true, LowSignal: true, SubagentOverhead: true, CacheUnderutilized: true, SessionChurn: false}
+	signalsNoChurn := analyze.DetectWaste(events, baselines, 2.0, noChurn)
+	for _, s := range signalsNoChurn {
+		if s.Reason == "session_churn" {
+			t.Error("found session_churn signal with toggle off")
+		}
+	}
+
+	noCost := analyze.SignalToggles{CostOutlier: false, LowSignal: true, SubagentOverhead: true, CacheUnderutilized: true, SessionChurn: true}
+	signalsNoCost := analyze.DetectWaste(events, baselines, 2.0, noCost)
+	for _, s := range signalsNoCost {
+		if s.Reason == "cost_outlier" {
+			t.Error("found cost_outlier signal with toggle off")
+		}
+	}
+}
+
+func TestTrendsOutput(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", CostUSD: 100, InputTokens: 1000, OutputTokens: 100, Timestamp: time.Date(2026, 5, 4, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", CostUSD: 80, InputTokens: 800, OutputTokens: 80, Timestamp: time.Date(2026, 5, 11, 10, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := analyze.ComputeBaselines(events)
+	toggles := analyze.SignalToggles{
+		CostOutlier:        true,
+		LowSignal:          true,
+		SubagentOverhead:   true,
+		CacheUnderutilized: true,
+		SessionChurn:       true,
+	}
+	signals := analyze.DetectWaste(events, baselines, 2.0, toggles)
+	recommendations := analyze.GenerateRecommendations(signals, baselines)
+
+	cfg := config.Config{}
+	cfg.Output.ShowTrends = true
+	text := output.FormatText(events, baselines, signals, recommendations, false, cfg)
+
+	if !strings.Contains(text, "Trends:") {
+		t.Error("expected trends section, got none")
+	}
+	if !strings.Contains(text, "Cost:") {
+		t.Error("expected cost trend line")
+	}
+	if !strings.Contains(text, "Sessions:") {
+		t.Error("expected sessions trend line")
+	}
+	if !strings.Contains(text, "Output/input ratio:") {
+		t.Error("expected ratio trend line")
 	}
 }

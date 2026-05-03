@@ -8,6 +8,14 @@ import (
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
+var allToggles = SignalToggles{
+	CostOutlier:        true,
+	LowSignal:          true,
+	SubagentOverhead:   true,
+	CacheUnderutilized: true,
+	SessionChurn:       true,
+}
+
 func TestDetectWasteCostOutlier(t *testing.T) {
 	events := make([]source.TokenEvent, 0, 6)
 	for i := 1; i <= 5; i++ {
@@ -32,7 +40,7 @@ func TestDetectWasteCostOutlier(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -72,7 +80,7 @@ func TestDetectWasteLowSignal(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -95,7 +103,7 @@ func TestDetectWasteSubagentOverhead(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -139,7 +147,7 @@ func TestDetectWasteCacheUnderutilized(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -163,7 +171,7 @@ func TestDetectWasteSessionChurn(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -190,12 +198,12 @@ func TestDetectWasteSessionChurn(t *testing.T) {
 }
 
 func TestDetectWasteEmptyInput(t *testing.T) {
-	signals := DetectWaste(nil, nil, 2.0)
+	signals := DetectWaste(nil, nil, 2.0, allToggles)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for nil input, got %d", len(signals))
 	}
 
-	signals = DetectWaste([]source.TokenEvent{}, nil, 2.0)
+	signals = DetectWaste([]source.TokenEvent{}, nil, 2.0, allToggles)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty input, got %d", len(signals))
 	}
@@ -209,7 +217,7 @@ func TestDetectWasteAllNormal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for normal data, got %d", len(signals))
@@ -222,7 +230,7 @@ func TestDetectWasteNoSubagentsNoOverheadSignal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	for _, s := range signals {
 		if s.Reason == "subagent_overhead" {
@@ -256,7 +264,7 @@ func TestDetectWasteSignalFields(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	for _, s := range signals {
 		if s.Reason == "cost_outlier" {
@@ -307,7 +315,7 @@ func TestDetectWasteSortOrder(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	prev := ""
 	for i, s := range signals {
@@ -348,7 +356,7 @@ func TestCheckCostOutlier_Sigma3(t *testing.T) {
 
 	baselines := ComputeBaselines(events)
 	// sigma=3: threshold = mean + 3*stddev (much higher, harder to trigger)
-	signals := DetectWaste(events, baselines, 3.0)
+	signals := DetectWaste(events, baselines, 3.0, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -361,7 +369,7 @@ func TestCheckCostOutlier_Sigma3(t *testing.T) {
 	}
 
 	// sigma=2 should flag it (lower threshold)
-	signals2 := DetectWaste(events, baselines, 2.0)
+	signals2 := DetectWaste(events, baselines, 2.0, allToggles)
 	var found2 bool
 	for _, s := range signals2 {
 		if s.Reason == "cost_outlier" && s.SessionID == "s-outlier" {
@@ -397,7 +405,7 @@ func TestCheckCostOutlier_Sigma1(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 1.0)
+	signals := DetectWaste(events, baselines, 1.0, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -418,7 +426,7 @@ func TestCheckCostOutlier_ZeroSigma(t *testing.T) {
 			Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
 	}
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 0)
+	signals := DetectWaste(events, baselines, 0, allToggles)
 
 	for _, s := range signals {
 		if s.Reason == "cost_outlier" {
@@ -451,8 +459,8 @@ func TestDetectWaste_WithSigma(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals2 := DetectWaste(events, baselines, 2.0)
-	signals4 := DetectWaste(events, baselines, 4.0)
+	signals2 := DetectWaste(events, baselines, 2.0, allToggles)
+	signals4 := DetectWaste(events, baselines, 4.0, allToggles)
 
 	countOutlier := func(signals []WasteSignal) int {
 		c := 0
@@ -481,7 +489,7 @@ func TestCostConsistency(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
 
 	// All signals for "parent" session should have same SessionCost
 	var parentSignals []WasteSignal
@@ -502,5 +510,92 @@ func TestCostConsistency(t *testing.T) {
 		if s.SessionCost != firstCost {
 			t.Errorf("inconsistent cost at signal %d: %.2f != %.2f", i, s.SessionCost, firstCost)
 		}
+	}
+}
+
+func TestWasteSignalHasModel(t *testing.T) {
+	events := make([]source.TokenEvent, 0, 7)
+	for i := 1; i <= 5; i++ {
+		events = append(events, source.TokenEvent{
+			SessionID:    "s" + string(rune('0'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      float64(i),
+			InputTokens:  100,
+			OutputTokens: 50,
+			Model:        "claude-sonnet-4-20250514",
+			Timestamp:    time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
+		})
+	}
+	events = append(events, source.TokenEvent{
+		SessionID:    "s-outlier",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      50.0,
+		InputTokens:  5000,
+		OutputTokens: 500,
+		Model:        "claude-opus-4-20250514",
+		Timestamp:    time.Date(2026, 5, 1, 16, 0, 0, 0, time.UTC),
+	})
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, 2.0, allToggles)
+
+	var found bool
+	for _, s := range signals {
+		if s.Reason == "cost_outlier" {
+			found = true
+			if s.Model != "claude-opus-4-20250514" {
+				t.Errorf("expected model claude-opus-4-20250514, got %s", s.Model)
+			}
+			if s.InputTokens != 5000 {
+				t.Errorf("expected 5000 input tokens, got %d", s.InputTokens)
+			}
+			if s.OutputTokens != 500 {
+				t.Errorf("expected 500 output tokens, got %d", s.OutputTokens)
+			}
+		}
+	}
+	if !found {
+		t.Error("expected cost_outlier signal with model info")
+	}
+}
+
+func TestDetectWaste_ToggleOff(t *testing.T) {
+	events := make([]source.TokenEvent, 0, 7)
+	for i := 1; i <= 5; i++ {
+		events = append(events, source.TokenEvent{
+			SessionID:    "s" + string(rune('0'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      float64(i),
+			InputTokens:  100,
+			OutputTokens: 50,
+			Timestamp:    time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
+		})
+	}
+	events = append(events, source.TokenEvent{
+		SessionID:    "s-outlier",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      50.0,
+		InputTokens:  100,
+		OutputTokens: 50,
+		Timestamp:    time.Date(2026, 5, 1, 16, 0, 0, 0, time.UTC),
+	})
+
+	baselines := ComputeBaselines(events)
+
+	off := SignalToggles{
+		CostOutlier:        false,
+		LowSignal:          false,
+		SubagentOverhead:   false,
+		CacheUnderutilized: false,
+		SessionChurn:       false,
+	}
+	signals := DetectWaste(events, baselines, 2.0, off)
+
+	if len(signals) != 0 {
+		t.Errorf("expected 0 signals with all toggles off, got %d", len(signals))
 	}
 }

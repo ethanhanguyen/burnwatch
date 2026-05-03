@@ -24,6 +24,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 ## Gotchas
 
 - `golangci-lint` v2.x config format requires `version: "2"` at the top of `.golangci.yml`. The v1 format (no version field, `linters-settings` section) is silently rejected with "unsupported version of the configuration." Always check `golangci-lint version` before writing config. `.golangci.yml:1`
+- `go vet` flags `composite literal uses unkeyed fields` for structs with 5+ fields passed between packages. All cross-package struct literals must use keyed field initialization (`s := SignalToggles{CostOutlier: true, ...}`), not positional (`s := SignalToggles{true, true, ...}`). `analyze/waste.go:26-32`
 - `pricing.go` uses a `[]struct{...}` slice, not `map[string]priceEntry`, because model matching is substring-based (`strings.Contains`) and requires ordered iteration. A map would hide ambiguous matches silently — the slice ensures first-match-wins is explicit and testable. `source/pricing.go:12-22`
 - `modernc.org/sqlite` v1.50.0 was incompatible with Go 1.22. The latest pure-Go SQLite isn't always compatible — pin to a version that matches the project's Go toolchain. `go.mod:5`
 - Claude Code subagent entries: both `SessionID` and `ParentSessionID` of the resulting `TokenEvent` are the parent session UUID. The subagent's identity is in the `agentId` field, not a unique session ID. `source/claude.go:196-201`
@@ -53,6 +54,9 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - `projectNameToDisplay()` strips leading `-` and replaces `-` with `/` to convert directory paths to display names. `source/claude.go:220-223`
 - Waste signal sorting: severity descending (high → medium → low), then reason alphabetically, then SessionID. Ensures deterministic output ordering before CLI rendering. `analyze/waste.go:122-130`
 - Per-session metric aggregation: `map[string]*sessionAgg` groups events by SessionID, then ratios and cache rates are computed from summed token counts. Same pattern in `aggregateMetrics` and `DetectWaste`. `analyze/baseline.go:77`, `analyze/waste.go:50-87`
+- Model tracking for WasteSignals: use "last model wins" — assign `a.model = e.Model` whenever `e.Model != ""` during the event loop. Most sessions use a single model; this is an approximation good enough for v1. `analyze/waste.go:92-94`
+- Signal toggle pattern: define a `SignalToggles` struct in the analyze package, guard each `check*` call with the toggle, merge CLI `--no-*` flags into config toggles before passing to `DetectWaste`. Centralized gating, no scattered boolean checks. `analyze/waste.go:26-32,127-154`
+- Weekly trend aggregation: group events by Monday boundary using `weekStartOf()`, compute per-week totals, compare first vs last week. Use Unicode arrows (↑ ↓ →) for direction. Controlled by `config.Output.ShowTrends`. `analyze/trend.go:32-101`
 - Use a package-level `var NowFunc = time.Now` for testable time-dependent code. Override in tests to a fixed reference time so today/week/month calculations produce deterministic output. `output/json.go:223`, `output/output_test.go:21`
 - Golden file tests with `-update` flag: use `flag.Bool("update", ...)` and `os.WriteFile` to regenerate expected output when format changes. Run `go test ./pkg/... -update` to update, then re-run without flag to verify. `output/output_test.go:15,51-57`
 
@@ -60,6 +64,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 
 - `CostForModel` in `source/pricing.go:26` is the single pricing entry point. Every Source calls it. Changing its signature or the `priceEntry` struct breaks all Sources. When adding fields to `TokenEvent`, check if pricing needs them too.
 - Adding a Source touches 3 files: (1) the new `source/<name>.go`, (2) `source/interface.go` `Discover()`, (3) `README.md` Supported Harnesses. `source/interface.go:10-20`
+- Adding fields to `WasteSignal` requires updating: (1) struct definition, (2) every `check*` function that returns a `WasteSignal`, (3) `output/text.go` `writeSignalBlock` for display, (4) `output/json.go` `JSONWasteSignal` if fields should appear in JSON output. `analyze/waste.go:11-24`
+- Changing `DetectWaste` signature requires updating all call sites: `cmd/root.go`, `output/text.go`, and every test file (`waste_test.go`, `output_test.go`, `cmd/root_test.go`). Use package-level `allToggles` var in test files to reduce duplication. `analyze/waste_test.go:11`
 - Test in-memory SQLite DB schemas must match actual harness DB schemas exactly. If a harness changes its schema, tests break silently by failing to create matching tables. `source/opencode_test.go:361-365`
 - `Baseline.RatioMean` was added to support H5 (session churn) which needs per-project mean ratios. Not in the original PR4 spec but required — `CostStd` alone doesn't capture output/input behavior. `analyze/baseline.go:7`
 - All heuristics depend on `ComputeBaselines` producing a global baseline (key `"*"`). Removing or renaming this key breaks H2, H4, and cross-project percentile comparisons. `analyze/baseline.go:21,65`

@@ -11,76 +11,112 @@ Project project-c: $147.50 (median $147.50/session)
 
 Waste signals:
   HIGH 08f6e729-29ac-4473-b (Users/hoang/reka/travel): $22208.88 — 8.5x project baseline (μ = $2606.49)
+    Model: claude-haiku-4-5-20251001, 7.3K in / 112.0K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $19602.39
   HIGH 0ffdd08e-42db-4ff5-a (Users/hoang/lilysbeauty): $15229.61 — 5.4x project baseline (μ = $2844.49)
+    Model: claude-sonnet-4-6, 5.5K in / 46.0K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $12385.12
   HIGH 1d5ac8c6-c875-45be-9 (Users/hoang/reka/travel): $12571.52 — 4.8x project baseline (μ = $2606.49)
+    Model: claude-haiku-4-5-20251001, 858 in / 80.0K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $9965.03
   HIGH 1f766932-f7d1-4a04-8 (Users/hoang/lilysbeauty): $94510.79 — 33.2x project baseline (μ = $2844.49)
+    Model: claude-sonnet-4-6, 30.4K in / 306.2K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $91666.30
   HIGH 20834312-69fa-4496-8 (Users/hoang/lilysbeauty): $27582.55 — 9.7x project baseline (μ = $2844.49)
+    Model: claude-opus-4-6, 380 in / 103.0K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $24738.07
   HIGH 2ad7a59d-31a1-44b3-9 (Users/hoang/reka/travel): $14768.90 — 5.7x project baseline (μ = $2606.49)
+    Model: claude-haiku-4-5-20251001, 191 in / 76.7K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $12162.41
   HIGH 2e8f450b-811a-4588-8 (Users/hoang/reka/travel): $11544.53 — 4.4x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 2.3K in / 66.5K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $8938.04
   HIGH 327cb18e-fe6e-4018-a (Users/hoang/reka/travel): $21797.26 — 8.4x project baseline (μ = $2606.49)
+    Model: claude-sonnet-4-6, 2.3K in / 97.8K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $19190.77
   HIGH 33394beb-e67f-4e47-a (Users/hoang/reka/travel): $10584.25 — 4.1x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 148 in / 42.8K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $7977.76
   HIGH 38e4ad56-3682-444f-8 (Users/hoang/lilysbeauty): $19573.62 — 6.9x project baseline (μ = $2844.49)
+    Model: claude-haiku-4-5-20251001, 6.1K in / 65.2K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $16729.14
   HIGH 3b22407e-4da9-4216-8 (Users/hoang/reka/travel): $14334.98 — 5.5x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 1.6K in / 59.6K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $11728.49
   HIGH 4042e074-8321-4675-9 (Users/hoang/reka/travel): $10101.92 — 3.9x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 191 in / 47.6K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $7495.43
   HIGH 44d7a535-2a37-4e2b-8 (Users/hoang/lilysbeauty): $39757.15 — 14.0x project baseline (μ = $2844.49)
+    Model: claude-sonnet-4-6, 1.7K in / 146.9K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $36912.67
   HIGH 4785a17e-808f-4c9b-9 (Users/hoang/reka/travel): $20807.56 — 8.0x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 22.7K in / 114.1K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $18201.07
   HIGH 4c8a8d3d-f45a-49e0-b (Users/hoang/lilysbeauty): $12681.92 — 4.5x project baseline (μ = $2844.49)
+    Model: claude-haiku-4-5-20251001, 7.0K in / 68.2K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $9837.43
   HIGH 50b18c47-d85a-404d-9 (Users/hoang/reka/travel): $28320.60 — 10.9x project baseline (μ = $2606.49)
+    Model: claude-sonnet-4-6, 7.6K in / 80.0K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $25714.11
   HIGH 58b7fa75-a18b-4753-9 (Users/hoang/lilysbeauty): $16551.95 — 5.8x project baseline (μ = $2844.49)
+    Model: claude-haiku-4-5-20251001, 12.0K in / 82.6K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $13707.47
   HIGH 68bb8ddf-aad8-415c-9 (Users/hoang/lilysbeauty): $15182.69 — 5.3x project baseline (μ = $2844.49)
+    Model: claude-sonnet-4-6, 540 in / 70.4K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $12338.21
   HIGH 68fa0d19-cdac-4fe2-8 (Users/hoang/reka/travel): $9584.63 — 3.7x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 159 in / 45.7K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $6978.14
   HIGH 6f92b0fa-46ed-4303-8 (Users/hoang/reka/travel): $9109.56 — 3.5x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 607 in / 44.3K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $6503.07
   HIGH 70c668d8-a33c-4b44-8 (Users/hoang/reka/travel): $11764.04 — 4.5x project baseline (μ = $2606.49)
+    Model: claude-haiku-4-5-20251001, 7.8K in / 58.5K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $9157.55
   HIGH 79645d09-62ea-4b8f-a (Users/hoang/reka/ads): $28489.53 — 4.8x project baseline (μ = $5953.90)
+    Model: claude-haiku-4-5-20251001, 6.1K in / 220.3K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $22535.63
   HIGH 840038cd-f09b-48bd-8 (Users/hoang/lilysbeauty): $20859.85 — 7.3x project baseline (μ = $2844.49)
+    Model: claude-sonnet-4-6, 695 in / 100.3K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $18015.36
   HIGH 92b2750d-f72c-4ed7-b (Users/hoang/reka/travel): $9614.74 — 3.7x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 8.4K in / 63.9K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $7008.25
   HIGH 93c1fb84-305f-484b-b (Users/hoang): $732.72 — 2.2x project baseline (μ = $327.36)
+    Model: claude-sonnet-4-6, 11 in / 267 out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $405.35
   HIGH 99fc0590-e235-4363-8 (Users/hoang/reka/travel): $10427.59 — 4.0x project baseline (μ = $2606.49)
+    Model: claude-haiku-4-5-20251001, 1.1K in / 36.4K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $7821.10
   HIGH 9bb7a461-f536-42d1-8 (Users/hoang/reka/ads): $40228.67 — 6.8x project baseline (μ = $5953.90)
+    Model: claude-sonnet-4-6, 2.3K in / 102.7K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $34274.77
   HIGH a34c35e2-5072-45bc-9 (Users/hoang/lilysbeauty): $15276.44 — 5.4x project baseline (μ = $2844.49)
+    Model: claude-haiku-4-5-20251001, 626 in / 36.6K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $12431.96
   HIGH aa723c3f-86f9-4081-9 (Users/hoang/reka/travel): $15440.45 — 5.9x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 4.0K in / 72.4K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $12833.97
   HIGH bf48e097-e3a2-4678-8 (Users/hoang/lilysbeauty): $15412.17 — 5.4x project baseline (μ = $2844.49)
+    Model: claude-opus-4-6, 204 in / 52.0K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $12567.69
   HIGH c9d7da23-8e25-4e21-a (Users/hoang/lilysbeauty): $89194.53 — 31.4x project baseline (μ = $2844.49)
+    Model: claude-sonnet-4-6, 2.4K in / 303.2K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $86350.05
   HIGH e22c2d24-9da8-4a46-8 (Users/hoang/reka/ads): $39159.24 — 6.6x project baseline (μ = $5953.90)
+    Model: claude-sonnet-4-6, 63.1K in / 121.1K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $33205.34
   HIGH e8132be0-9bc0-4d2a-b (Users/hoang/reka/travel): $12961.80 — 5.0x project baseline (μ = $2606.49)
+    Model: claude-opus-4-6, 3.1K in / 48.4K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $10355.31
   HIGH ea459dc9-1bb7-432b-9 (Users/hoang/reka/travel): $10130.00 — 3.9x project baseline (μ = $2606.49)
+    Model: claude-sonnet-4-6, 173 in / 38.0K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $7523.51
   HIGH f49c015c-21dc-46f7-9 (Users/hoang/lilysbeauty): $12943.72 — 4.6x project baseline (μ = $2844.49)
+    Model: claude-opus-4-6, 2.5K in / 125.7K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $10099.23
   HIGH f6f2d0a7-c41a-4532-b (Users/hoang/reka/travel): $47576.21 — 18.3x project baseline (μ = $2606.49)
+    Model: claude-sonnet-4-6, 6.2K in / 148.8K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $44969.72
   MEDIUM 06a6e9eb-2f94-4927-b (Users/hoang/lilysbeauty): $1806.01 — output/input ratio 1.6355 (P10 = 1.6552)
     → Consider whether this task needed full agent interaction. Potential savings: $903.00
