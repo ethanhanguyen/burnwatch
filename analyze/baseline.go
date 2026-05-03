@@ -19,9 +19,21 @@ type Baseline struct {
 	RatioP90     float64
 	CacheP10     float64
 	CacheP50     float64
-	SessionCosts []float64
-	Ratios       []float64
-	CacheRates   []float64
+	InputMean    float64   `json:"input_mean"`
+	InputStd     float64   `json:"input_std"`
+	InputP50     float64   `json:"input_p50"`
+	InputP90     float64   `json:"input_p90"`
+	OutputMean   float64   `json:"output_mean"`
+	OutputStd    float64   `json:"output_std"`
+	OutputP50    float64   `json:"output_p50"`
+	OutputP90    float64   `json:"output_p90"`
+	TERP10       float64   `json:"ter_p10"`
+	SessionCosts []float64 `json:"session_costs,omitempty"`
+	Ratios       []float64 `json:"ratios,omitempty"`
+	CacheRates   []float64 `json:"cache_rates,omitempty"`
+	InputTokens  []float64 `json:"input_tokens,omitempty"`
+	OutputTokens []float64 `json:"output_tokens,omitempty"`
+	TERs         []float64 `json:"ters,omitempty"`
 }
 
 const globalKey = "*"
@@ -68,6 +80,7 @@ type sessionMetrics struct {
 	cost       float64
 	ratio      float64
 	cacheRate  float64
+	ter        float64
 	inputSum   int64
 	outputSum  int64
 	cacheRead  int64
@@ -109,6 +122,10 @@ func aggregateMetrics(sessionID string, events []source.TokenEvent) sessionMetri
 
 	if totalCache := m.cacheRead + m.cacheWrite; totalCache > 0 {
 		m.cacheRate = float64(m.cacheRead) / float64(totalCache)
+	}
+
+	if m.inputSum+m.cacheWrite > 0 {
+		m.ter = float64(m.outputSum+m.cacheRead) / float64(m.inputSum+m.cacheWrite)
 	}
 
 	return m
@@ -159,6 +176,37 @@ func buildBaseline(key string, metrics []sessionMetrics) Baseline {
 	b.RatioP90 = percentile(b.Ratios, 90)
 	b.CacheP10 = percentile(b.CacheRates, 10)
 	b.CacheP50 = percentile(b.CacheRates, 50)
+
+	b.InputTokens = make([]float64, n)
+	for i, m := range metrics {
+		b.InputTokens[i] = float64(m.inputSum)
+	}
+	sort.Float64s(b.InputTokens)
+	b.InputMean = mean(b.InputTokens)
+	if n > 1 {
+		b.InputStd = stddev(b.InputTokens, b.InputMean)
+	}
+	b.InputP50 = percentile(b.InputTokens, 50)
+	b.InputP90 = percentile(b.InputTokens, 90)
+
+	b.OutputTokens = make([]float64, n)
+	for i, m := range metrics {
+		b.OutputTokens[i] = float64(m.outputSum)
+	}
+	sort.Float64s(b.OutputTokens)
+	b.OutputMean = mean(b.OutputTokens)
+	if n > 1 {
+		b.OutputStd = stddev(b.OutputTokens, b.OutputMean)
+	}
+	b.OutputP50 = percentile(b.OutputTokens, 50)
+	b.OutputP90 = percentile(b.OutputTokens, 90)
+
+	b.TERs = make([]float64, n)
+	for i, m := range metrics {
+		b.TERs[i] = m.ter
+	}
+	sort.Float64s(b.TERs)
+	b.TERP10 = percentile(b.TERs, 10)
 
 	return b
 }

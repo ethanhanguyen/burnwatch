@@ -217,3 +217,119 @@ func TestComputeBaselinesSortsSessionCosts(t *testing.T) {
 		t.Errorf("SessionCosts[2] = %f, want 3.0", b.SessionCosts[2])
 	}
 }
+
+func TestComputeBaselinesTokenStats(t *testing.T) {
+	e1 := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 1000, OutputTokens: 300, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
+	}
+	e2 := []source.TokenEvent{
+		{SessionID: "s2", Project: "p", Harness: "h", InputTokens: 2000, OutputTokens: 600, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
+	}
+	e3 := []source.TokenEvent{
+		{SessionID: "s3", Project: "p", Harness: "h", InputTokens: 3000, OutputTokens: 900, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
+	}
+	e4 := []source.TokenEvent{
+		{SessionID: "s4", Project: "p", Harness: "h", InputTokens: 4000, OutputTokens: 1200, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
+	}
+	e5 := []source.TokenEvent{
+		{SessionID: "s5", Project: "p", Harness: "h", InputTokens: 5000, OutputTokens: 1500, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
+	}
+
+	events := append(append(append(append(e1, e2...), e3...), e4...), e5...)
+	result := ComputeBaselines(events)
+	b := result["p:h"]
+
+	if math.Abs(b.InputMean-3000) > 0.01 {
+		t.Errorf("InputMean = %f, want 3000", b.InputMean)
+	}
+	if math.Abs(b.InputStd-1414.21) > 0.1 {
+		t.Errorf("InputStd = %f, want ~1414.21", b.InputStd)
+	}
+	if math.Abs(b.InputP50-3000) > 0.01 {
+		t.Errorf("InputP50 = %f, want 3000", b.InputP50)
+	}
+	if math.Abs(b.InputP90-4600) > 0.01 {
+		t.Errorf("InputP90 = %f, want 4600", b.InputP90)
+	}
+
+	if math.Abs(b.OutputMean-900) > 0.01 {
+		t.Errorf("OutputMean = %f, want 900", b.OutputMean)
+	}
+	if math.Abs(b.OutputStd-424.26) > 0.1 {
+		t.Errorf("OutputStd = %f, want ~424.26", b.OutputStd)
+	}
+	if math.Abs(b.OutputP50-900) > 0.01 {
+		t.Errorf("OutputP50 = %f, want 900", b.OutputP50)
+	}
+	if math.Abs(b.OutputP90-1380) > 0.01 {
+		t.Errorf("OutputP90 = %f, want 1380", b.OutputP90)
+	}
+
+	if math.Abs(b.TERP10-0.3) > delta {
+		t.Errorf("TERP10 = %f, want 0.3", b.TERP10)
+	}
+}
+
+func TestComputeBaselinesTER(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 100000, OutputTokens: 50000, CacheRead: 10000, CacheWrite: 5000, CostUSD: 0, Timestamp: time.Now()},
+	}
+	result := ComputeBaselines(events)
+	b := result["p:h"]
+
+	expected := 60000.0 / 105000.0
+	if math.Abs(b.TERP10-expected) > delta {
+		t.Errorf("TERP10 = %f, want %f (TER = (out+cacheRead)/(in+cacheWrite))", b.TERP10, expected)
+	}
+}
+
+func TestComputeBaselinesTokenStatsZeroInput(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 0, OutputTokens: 0, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
+	}
+	result := ComputeBaselines(events)
+	b := result["p:h"]
+
+	if math.Abs(b.InputMean) > delta {
+		t.Errorf("InputMean = %f, want 0", b.InputMean)
+	}
+	if math.Abs(b.InputStd) > delta {
+		t.Errorf("InputStd = %f, want 0", b.InputStd)
+	}
+	if math.Abs(b.InputP50) > delta {
+		t.Errorf("InputP50 = %f, want 0", b.InputP50)
+	}
+	if math.Abs(b.InputP90) > delta {
+		t.Errorf("InputP90 = %f, want 0", b.InputP90)
+	}
+	if math.Abs(b.OutputMean) > delta {
+		t.Errorf("OutputMean = %f, want 0", b.OutputMean)
+	}
+	if math.Abs(b.OutputStd) > delta {
+		t.Errorf("OutputStd = %f, want 0", b.OutputStd)
+	}
+	if math.Abs(b.TERP10) > delta {
+		t.Errorf("TERP10 = %f, want 0", b.TERP10)
+	}
+}
+
+func TestComputeBaselinesTokenStatsSingleSession(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", InputTokens: 500, OutputTokens: 200, CacheRead: 0, CacheWrite: 0, CostUSD: 0, Timestamp: time.Now()},
+	}
+	result := ComputeBaselines(events)
+	b := result["p:h"]
+
+	if math.Abs(b.InputMean-500) > delta {
+		t.Errorf("InputMean = %f, want 500", b.InputMean)
+	}
+	if math.Abs(b.InputStd) > delta {
+		t.Errorf("InputStd = %f, want 0 (single session)", b.InputStd)
+	}
+	if math.Abs(b.OutputMean-200) > delta {
+		t.Errorf("OutputMean = %f, want 200", b.OutputMean)
+	}
+	if math.Abs(b.OutputStd) > delta {
+		t.Errorf("OutputStd = %f, want 0 (single session)", b.OutputStd)
+	}
+}
