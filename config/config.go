@@ -140,22 +140,53 @@ func WriteDefault(path string) error {
 }
 
 const defaultTOML = `# Burnwatch configuration
-# All thresholds can be overridden here.
-# See docs/quickstart.md for details.
+# All thresholds can be overridden here. See docs/quickstart.md for details.
 
 [thresholds]
+# Sensitivity for cost outlier detection (sigma from population mean).
+# Higher = fewer flagged sessions. Lower = more false positives.
+# Range: 1.0–4.0. Default 2.0.
 cost_outlier_sigma = 2.0
+
+# Low signal: flag sessions in bottom N% by total token volume.
+# Range: 5–25. Default 10.
 low_signal_percentile = 10.0
+
+# Cache underutilization: flag sessions in bottom N% by cache-hit ratio.
+# Range: 5–25. Default 10.
 cache_percentile = 10.0
+
+# Subagent overhead: flag if subagent cost exceeds N% of parent session.
+# Range: 20–80. Default 50.
 subagent_overhead_pct = 50.0
+
+# Churn: minimum sessions required before churn analysis triggers.
+# Range: 2–10. Default 3.
 churn_min_sessions = 3
+
+# Fragmentation index: flag sessions where subagent count / cost >= N.
+# Higher = only severe fragmentation. Lower = fine-grained detection.
+# Range: 0.5–10.0. Default 3.0.
 fragmentation_index_threshold = 3.0
+
+# Input overconsumption: flag sessions exceeding mean + N * stddev of input tokens.
+# Same semantics as cost_outlier_sigma. Default 2.0.
 input_overconsumption_sigma = 2.0
+
+# Output explosion: flag sessions exceeding mean + N * stddev of output tokens.
+# Default 2.0.
 output_explosion_sigma = 2.0
+
+# Token efficiency: flag sessions in bottom N% by TER (output/input ratio).
+# Range: 5–25. Default 10.
 token_efficiency_percentile = 10.0
+
+# Fragmentation minimum cost (USD). Excludes trivially cheap sessions.
+# Set to 0 to include all. Default 0.50.
 fragmentation_min_cost = 0.50
 
 [signals]
+# Enable/disable individual waste signals.
 cost_outlier = true
 low_signal = true
 subagent_overhead = true
@@ -166,11 +197,15 @@ output_explosion = true
 token_efficiency = true
 
 [filters]
+# Exclude sessions costing less than this (USD). 0 = include all.
 min_cost = 0
+# Merge duplicate sessions from multiple harness runs.
 deduplicate = false
 
 [output]
+# Group sessions by project/churn pattern in text output.
 group_churn = false
+# Show trend direction (↑↓→) in text output.
 show_trends = false
 `
 

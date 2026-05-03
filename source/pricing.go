@@ -8,23 +8,25 @@ import (
 	"time"
 )
 
+const tokensPerCostUnit = 1_000_000 // tokens per $ pricing unit (per 1M)
+
 type priceEntry struct {
-	input      float64
-	output     float64
-	cacheRead  float64
-	cacheWrite float64
+	input      float64 // $ per 1M input tokens
+	output     float64 // $ per 1M output tokens
+	cacheRead  float64 // $ per 1M cache-read tokens
+	cacheWrite float64 // $ per 1M cache-write tokens
 }
 
 var pricing = []struct {
 	key string
 	p   priceEntry
 }{
-	{"claude-sonnet-4-5", priceEntry{0.003, 0.015, 0.0003, 0.00375}},
-	{"claude-opus-4-5", priceEntry{0.015, 0.075, 0.0015, 0.01875}},
-	{"claude-haiku-4-5", priceEntry{0.0008, 0.004, 0.00008, 0.001}},
-	{"gemini-3-pro", priceEntry{0.00125, 0.005, 0, 0}},
-	{"gemini-2.5-pro", priceEntry{0.00125, 0.005, 0, 0}},
-	{"gemini-2.5-flash", priceEntry{0.00015, 0.0006, 0, 0}},
+	{"claude-sonnet-4-5", priceEntry{3.00, 15.00, 0.30, 3.75}},
+	{"claude-opus-4-5", priceEntry{15.00, 75.00, 1.50, 18.75}},
+	{"claude-haiku-4-5", priceEntry{0.80, 4.00, 0.08, 1.00}},
+	{"gemini-3-pro", priceEntry{1.25, 5.00, 0, 0}},
+	{"gemini-2.5-pro", priceEntry{1.25, 5.00, 0, 0}},
+	{"gemini-2.5-flash", priceEntry{0.15, 0.60, 0, 0}},
 }
 
 var fetchedPricing []PricingEntry
@@ -88,10 +90,11 @@ func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite
 		return 0, false, true
 	}
 
-	cost := float64(inputTokens)/1000.0*p.input +
-		float64(outputTokens)/1000.0*p.output +
-		float64(cacheRead)/1000.0*p.cacheRead +
-		float64(cacheWrite)/1000.0*p.cacheWrite
+	tcu := float64(tokensPerCostUnit)
+	cost := float64(inputTokens)/tcu*p.input +
+		float64(outputTokens)/tcu*p.output +
+		float64(cacheRead)/tcu*p.cacheRead +
+		float64(cacheWrite)/tcu*p.cacheWrite
 
 	return cost, approximate, false
 }

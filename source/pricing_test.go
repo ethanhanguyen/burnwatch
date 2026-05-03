@@ -9,6 +9,7 @@ import (
 
 func TestCostForModel(t *testing.T) {
 	const delta = 0.0001
+	tcu := float64(tokensPerCostUnit)
 
 	tests := []struct {
 		name        string
@@ -25,49 +26,49 @@ func TestCostForModel(t *testing.T) {
 			name:  "claude sonnet 4-5 exact",
 			model: "claude-sonnet-4-5-20250929",
 			input: 1000, output: 100, cacheRead: 500, cacheWrite: 200,
-			want:       (1000/1000.0)*0.003 + (100/1000.0)*0.015 + (500/1000.0)*0.0003 + (200/1000.0)*0.00375,
+			want:       (1000/tcu)*3.00 + (100/tcu)*15.00 + (500/tcu)*0.30 + (200/tcu)*3.75,
 			wantApprox: false,
 		},
 		{
 			name:  "claude sonnet 4-5 substring match",
 			model: "some/prefix-claude-sonnet-4-5-suffix",
 			input: 2000, output: 0, cacheRead: 0, cacheWrite: 0,
-			want:       (2000 / 1000.0) * 0.003,
+			want:       (2000 / tcu) * 3.00,
 			wantApprox: false,
 		},
 		{
 			name:  "claude opus 4-5",
 			model: "claude-opus-4-5-20250305",
 			input: 1000, output: 500, cacheRead: 100, cacheWrite: 50,
-			want:       (1000/1000.0)*0.015 + (500/1000.0)*0.075 + (100/1000.0)*0.0015 + (50/1000.0)*0.01875,
+			want:       (1000/tcu)*15.00 + (500/tcu)*75.00 + (100/tcu)*1.50 + (50/tcu)*18.75,
 			wantApprox: false,
 		},
 		{
 			name:  "claude haiku 4-5",
 			model: "claude-haiku-4-5-20251001",
 			input: 500, output: 200, cacheRead: 0, cacheWrite: 0,
-			want:       (500/1000.0)*0.0008 + (200/1000.0)*0.004,
+			want:       (500/tcu)*0.80 + (200/tcu)*4.00,
 			wantApprox: false,
 		},
 		{
 			name:  "gemini 3 pro",
 			model: "google/gemini-3-pro-preview",
 			input: 1000, output: 500, cacheRead: 0, cacheWrite: 0,
-			want:       (1000/1000.0)*0.00125 + (500/1000.0)*0.005,
+			want:       (1000/tcu)*1.25 + (500/tcu)*5.00,
 			wantApprox: false,
 		},
 		{
 			name:  "gemini 2.5 pro",
 			model: "google/gemini-2.5-pro",
 			input: 2000, output: 1000, cacheRead: 0, cacheWrite: 0,
-			want:       (2000/1000.0)*0.00125 + (1000/1000.0)*0.005,
+			want:       (2000/tcu)*1.25 + (1000/tcu)*5.00,
 			wantApprox: false,
 		},
 		{
 			name:  "gemini 2.5 flash",
 			model: "google/gemini-2.5-flash",
 			input: 10000, output: 1000, cacheRead: 0, cacheWrite: 0,
-			want:       (10000/1000.0)*0.00015 + (1000/1000.0)*0.0006,
+			want:       (10000/tcu)*0.15 + (1000/tcu)*0.60,
 			wantApprox: false,
 		},
 		{
@@ -89,7 +90,7 @@ func TestCostForModel(t *testing.T) {
 			name:  "very large token counts no overflow",
 			model: "claude-sonnet-4-5-20250929",
 			input: 1_000_000_000, output: 1_000_000_000, cacheRead: 500_000_000, cacheWrite: 200_000_000,
-			want:       (1_000_000_000/1000.0)*0.003 + (1_000_000_000/1000.0)*0.015 + (500_000_000/1000.0)*0.0003 + (200_000_000/1000.0)*0.00375,
+			want:       (1_000_000_000/tcu)*3.00 + (1_000_000_000/tcu)*15.00 + (500_000_000/tcu)*0.30 + (200_000_000/tcu)*3.75,
 			wantApprox: false,
 		},
 	}
@@ -126,7 +127,8 @@ func TestCostForModel_FetchedPricingMatch(t *testing.T) {
 	defer func() { fetchedPricing = nil; pricingInitialized = false }()
 
 	got, approx, _ := CostForModel("vercel/deepseek/deepseek-v4-pro", 1000, 1000, 0, 0)
-	want := (1000/1000.0)*0.435 + (1000/1000.0)*0.87
+	tcu := float64(tokensPerCostUnit)
+	want := (1000/tcu)*0.435 + (1000/tcu)*0.87
 	if math.Abs(got-want) > 0.0001 {
 		t.Errorf("CostForModel(deepseek) = %f, want %f", got, want)
 	}
@@ -137,8 +139,8 @@ func TestCostForModel_FetchedPricingMatch(t *testing.T) {
 
 func TestCostForModel_SubstringMatchLongestKey(t *testing.T) {
 	fetchedPricing = []PricingEntry{
-		{Key: "claude-sonnet-4", Input: 1.0, Output: 5.0, CacheRead: 0},
-		{Key: "claude-sonnet-4-5", Input: 3.0, Output: 15.0, CacheRead: 0},
+		{Key: "claude-sonnet-4", Input: 1000.0, Output: 5000.0, CacheRead: 0},
+		{Key: "claude-sonnet-4-5", Input: 3000.0, Output: 15000.0, CacheRead: 0},
 	}
 	pricingInitialized = true
 	defer func() { fetchedPricing = nil; pricingInitialized = false }()
@@ -164,7 +166,7 @@ func TestCostForModel_EmptyFetchedPricing(t *testing.T) {
 
 func TestCostForModel_ExactMatchPrecedence(t *testing.T) {
 	fetchedPricing = []PricingEntry{
-		{Key: "claude-sonnet-4-5", Input: 99.0, Output: 99.0, CacheRead: 0},
+		{Key: "claude-sonnet-4-5", Input: 99000.0, Output: 99000.0, CacheRead: 0},
 	}
 	pricingInitialized = true
 	defer func() { fetchedPricing = nil; pricingInitialized = false }()
@@ -206,7 +208,7 @@ func TestInitPricing_NoNetwork(t *testing.T) {
 
 func TestInitPricing_Idempotent(t *testing.T) {
 	pricingInitialized = true
-	fetchedPricing = []PricingEntry{{Key: "test", Input: 1.0}}
+	fetchedPricing = []PricingEntry{{Key: "test", Input: 1000.0}}
 	defer func() { pricingInitialized = false; fetchedPricing = nil }()
 
 	client := &http.Client{}
@@ -250,8 +252,9 @@ func TestCostForModel_DeepseekMatched(t *testing.T) {
 	}()
 
 	got, approx, _ := CostForModel("deepseek/deepseek-v4-pro", 1000, 500, 0, 0)
-	wantInput := 0.435
-	wantOutput := 0.87 * 0.5
+	tcu := float64(tokensPerCostUnit)
+	wantInput := 0.435 * (1000.0 / tcu)
+	wantOutput := 0.87 * (500.0 / tcu)
 	want := wantInput + wantOutput
 	if math.Abs(got-want) > 0.001 {
 		t.Errorf("deepseek cost = %f, want ~%f", got, want)

@@ -72,15 +72,15 @@ func TestFetchPricing_Mock(t *testing.T) {
 	if ds.Key != "deepseek-v4-pro" {
 		t.Errorf("deepseek key = %q, want deepseek-v4-pro", ds.Key)
 	}
-	if math.Abs(ds.Input-0.000435) > 0.000001 {
-		t.Errorf("deepseek input = %f, want 0.000435", ds.Input)
+	if math.Abs(ds.Input-0.435) > 0.0001 {
+		t.Errorf("deepseek input = %f, want 0.435", ds.Input)
 	}
-	if math.Abs(ds.Output-0.00087) > 0.000001 {
-		t.Errorf("deepseek output = %f, want 0.00087", ds.Output)
+	if math.Abs(ds.Output-0.87) > 0.0001 {
+		t.Errorf("deepseek output = %f, want 0.87", ds.Output)
 	}
 	cs := entries[1]
-	if math.Abs(cs.CacheRead-0.00030) > 0.000001 {
-		t.Errorf("sonnet cache_read = %f, want 0.00030", cs.CacheRead)
+	if math.Abs(cs.CacheRead-0.30) > 0.0001 {
+		t.Errorf("sonnet cache_read = %f, want 0.30", cs.CacheRead)
 	}
 }
 
@@ -336,8 +336,8 @@ func TestParsePricingFloat(t *testing.T) {
 
 func TestCachePath(t *testing.T) {
 	got := CachePath()
-	if !strings.HasSuffix(got, "burnwatch/pricing.json") {
-		t.Errorf("expected path to end with burnwatch/pricing.json, got %s", got)
+	if !strings.HasSuffix(got, "burnwatch/pricing_v2.json") {
+		t.Errorf("expected path to end with burnwatch/pricing_v2.json, got %s", got)
 	}
 }
 

@@ -132,7 +132,7 @@ func BenchmarkBuildSubagentTree(b *testing.B) {
 			Timestamp:  baseTime,
 			InputTokens: 1000,
 			OutputTokens: 200,
-			CostUSD:    3.0 + 3.0,
+			CostUSD:    0.003 + 0.015,
 			Project:    "bench",
 			Harness:    "claude-code",
 		})

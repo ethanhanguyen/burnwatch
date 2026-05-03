@@ -82,9 +82,9 @@ func fetchPricingFromURL(client *http.Client, url string) ([]PricingEntry, error
 		if key == "" {
 			continue
 		}
-		input := parsePricingFloat(m.Pricing.Prompt) * 1000
-		output := parsePricingFloat(m.Pricing.Completion) * 1000
-		cacheRead := parsePricingFloat(m.Pricing.CacheRead) * 1000
+		input := parsePricingFloat(m.Pricing.Prompt) * float64(tokensPerCostUnit)
+		output := parsePricingFloat(m.Pricing.Completion) * float64(tokensPerCostUnit)
+		cacheRead := parsePricingFloat(m.Pricing.CacheRead) * float64(tokensPerCostUnit)
 		entries = append(entries, PricingEntry{
 			Key:       key,
 			Input:     input,
@@ -115,9 +115,9 @@ func CachePath() string {
 	dir, err := os.UserCacheDir()
 	if err != nil {
 		home, _ := os.UserHomeDir()
-		return filepath.Join(home, ".cache", "burnwatch", "pricing.json")
+		return filepath.Join(home, ".cache", "burnwatch", "pricing_v2.json")
 	}
-	return filepath.Join(dir, "burnwatch", "pricing.json")
+	return filepath.Join(dir, "burnwatch", "pricing_v2.json")
 }
 
 func LoadCache(path string) (*CacheEntry, error) {
