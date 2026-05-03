@@ -35,7 +35,7 @@ Start here. This file stays short on purpose.
 | ~~PR14~~ | [plans/PR14-prompt.md](./plans/PR14-prompt.md) | ~~Config-Wired Thresholds~~ merged |
 | **PR15** | [plans/PR15-prompt.md](./plans/PR15-prompt.md) | **Fix Pricing + Uncosted — 1000x bug, cache validation, fallback removal** |
 | **PR16** | [plans/PR16-prompt.md](./plans/PR16-prompt.md) | **Output Quality — fragment noise, savings dedup, config init** |
-| PR17 | [plans/PR17-prompt.md](./plans/PR17-prompt.md) | Calibration Mode (was PR15) |
+| ~~PR17~~ | [plans/PR17-prompt.md](./plans/PR17-prompt.md) | ~~Calibration Mode (was PR15)~~ merged |
 | PR18 | [plans/PR18-prompt.md](./plans/PR18-prompt.md) | Unsupervised Anomaly Detection (was PR16) |
 | PR19 | [plans/PR19-prompt.md](./plans/PR19-prompt.md) | LLM Verification (was PR17) |
 | PR20 | [plans/PR20-prompt.md](./plans/PR20-prompt.md) | ML Pipeline — experimental (was PR18) |

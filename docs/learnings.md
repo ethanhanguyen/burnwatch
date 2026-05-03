@@ -34,6 +34,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Global baseline key `"*"` provides cross-project percentile thresholds for H2 (low signal) and H4 (cache underutilized). `splitKey` handles this sentinel by returning `"*"` as project and `""` as harness. `analyze/baseline.go:21,166-173`
 - Map iteration order in Go is non-deterministic. `BuildSubagentTree` iterates over `sessions` map, causing different output per run. Golden file tests must either sort output or avoid map-iteration-dependent sections. `output/json.go:113-115`
 - Unexported helper types must be declared at package level, not inside functions. Defining types inside functions is prohibited by the codebase convention and makes types invisible to other package-level functions. `output/text.go:12-29`
+- `--calibrate` mode skips config loading entirely. It works with zero-config — no `.burnwatch.toml` needed. Adding any config dependency to the calibration path would create a self-referential loop (can't calibrate thresholds until you have config, can't write config until you've calibrated). `cmd/root.go:107-167`
 
 ## Mistakes
 
