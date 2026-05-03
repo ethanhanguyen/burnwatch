@@ -1,0 +1,33 @@
+# Burnwatch configuration
+# Copy this file to .burnwatch.toml or ~/.config/burnwatch/config.toml
+# All thresholds can be overridden here.
+
+[thresholds]
+cost_outlier_sigma = 2.0
+low_signal_percentile = 10.0
+cache_percentile = 10.0
+subagent_overhead_pct = 50.0
+churn_min_sessions = 3
+fragmentation_index_threshold = 3.0
+input_overconsumption_sigma = 2.0
+output_explosion_sigma = 2.0
+token_efficiency_percentile = 10.0
+fragmentation_min_cost = 0.50
+
+[signals]
+cost_outlier = true
+low_signal = true
+subagent_overhead = true
+cache_underutilized = true
+fragmentation_index = true
+input_overconsumption = true
+output_explosion = true
+token_efficiency = true
+
+[filters]
+min_cost = 0
+deduplicate = false
+
+[output]
+group_churn = false
+show_trends = false

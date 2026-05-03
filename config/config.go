@@ -25,6 +25,7 @@ type Thresholds struct {
 	InputOverconsumptionSigma    float64 `toml:"input_overconsumption_sigma"`
 	OutputExplosionSigma         float64 `toml:"output_explosion_sigma"`
 	TokenEfficiencyPercentile    float64 `toml:"token_efficiency_percentile"`
+	FragmentationMinCost         float64 `toml:"fragmentation_min_cost"`
 }
 
 type Signals struct {
@@ -60,6 +61,7 @@ func Defaults() Config {
 			InputOverconsumptionSigma:    2.0,
 			OutputExplosionSigma:         2.0,
 			TokenEfficiencyPercentile:    10.0,
+			FragmentationMinCost:         0.50,
 		},
 		Signals: Signals{
 			CostOutlier:          true,
@@ -125,6 +127,52 @@ func Load(path string) (Config, error) {
 
 	return cfg, nil
 }
+
+func WriteDefault(path string) error {
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.WriteString(defaultTOML)
+	return err
+}
+
+const defaultTOML = `# Burnwatch configuration
+# All thresholds can be overridden here.
+# See docs/quickstart.md for details.
+
+[thresholds]
+cost_outlier_sigma = 2.0
+low_signal_percentile = 10.0
+cache_percentile = 10.0
+subagent_overhead_pct = 50.0
+churn_min_sessions = 3
+fragmentation_index_threshold = 3.0
+input_overconsumption_sigma = 2.0
+output_explosion_sigma = 2.0
+token_efficiency_percentile = 10.0
+fragmentation_min_cost = 0.50
+
+[signals]
+cost_outlier = true
+low_signal = true
+subagent_overhead = true
+cache_underutilized = true
+fragmentation_index = true
+input_overconsumption = true
+output_explosion = true
+token_efficiency = true
+
+[filters]
+min_cost = 0
+deduplicate = false
+
+[output]
+group_churn = false
+show_trends = false
+`
 
 func Validate(cfg Config) error {
 	if cfg.Thresholds.CostOutlierSigma <= 0 {

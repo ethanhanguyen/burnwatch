@@ -69,6 +69,7 @@ type JSONReport struct {
 	SubagentTrees    []JSONSubagentTree   `json:"subagent_trees"`
 	Recommendations  []JSONRecommendation `json:"recommendations"`
 	PotentialSavings float64              `json:"potential_savings"`
+	UniqueSavings    float64              `json:"unique_savings,omitempty"`
 }
 
 func FormatJSON(
@@ -126,6 +127,28 @@ func FormatJSON(
 			SavingsEst: r.SavingsEst,
 		})
 		report.PotentialSavings += r.SavingsEst
+	}
+
+	bySession := make(map[string]float64)
+	for _, s := range signals {
+		for _, r := range recommendations {
+			if r.Signal.SessionID == s.SessionID && r.SavingsEst > bySession[s.SessionID] {
+				if r.SavingsEst > s.SessionCost {
+					bySession[s.SessionID] = s.SessionCost
+				} else {
+					bySession[s.SessionID] = r.SavingsEst
+				}
+			}
+		}
+	}
+
+	sessionIDs := make([]string, 0, len(bySession))
+	for sid := range bySession {
+		sessionIDs = append(sessionIDs, sid)
+	}
+	sort.Strings(sessionIDs)
+	for _, sid := range sessionIDs {
+		report.UniqueSavings += bySession[sid]
 	}
 
 	return json.MarshalIndent(report, "", "  ")

@@ -36,6 +36,9 @@ func TestDefaults(t *testing.T) {
 	if cfg.Thresholds.TokenEfficiencyPercentile != 10.0 {
 		t.Errorf("TokenEfficiencyPercentile = %f, want 10.0", cfg.Thresholds.TokenEfficiencyPercentile)
 	}
+	if cfg.Thresholds.FragmentationMinCost != 0.50 {
+		t.Errorf("FragmentationMinCost = %f, want 0.50", cfg.Thresholds.FragmentationMinCost)
+	}
 
 	checkSignals(t, cfg.Signals)
 	checkFilters(t, cfg.Filters)

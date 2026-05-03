@@ -178,7 +178,7 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 	}
 
 	if cfg.Signals.FragmentationIndex {
-		signals = append(signals, checkFragmentationIndex(agg, cfg.Thresholds.FragmentationIndexThreshold, cfg.Thresholds.ChurnMinSessions)...)
+		signals = append(signals, checkFragmentationIndex(agg, cfg.Thresholds.FragmentationIndexThreshold, cfg.Thresholds.ChurnMinSessions, cfg.Thresholds.FragmentationMinCost)...)
 	}
 
 	sortSignals(signals)
@@ -373,7 +373,7 @@ func checkTokenEfficiency(a *sessionAgg, global Baseline) *WasteSignal {
 	return nil
 }
 
-func checkFragmentationIndex(agg map[string]*sessionAgg, fragThreshold float64, minSessions int) []WasteSignal {
+func checkFragmentationIndex(agg map[string]*sessionAgg, fragThreshold float64, minSessions int, minCost float64) []WasteSignal {
 
 	type dayKey struct {
 		project string
@@ -409,6 +409,9 @@ func checkFragmentationIndex(agg map[string]*sessionAgg, fragThreshold float64, 
 				continue
 			}
 			if s.costUnknown {
+				continue
+			}
+			if s.cost < minCost {
 				continue
 			}
 			seen[s.sessionID] = true

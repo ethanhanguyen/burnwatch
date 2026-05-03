@@ -334,4 +334,4 @@ Waste signals:
     Model: deepseek/deepseek-v4-pro, 35.2K in / 376 out
     → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $0.00
 
-Summary: 129 waste signals found. Potential savings: $12.89
+Summary: 129 waste signals found. Potential savings: $9.36

@@ -44,6 +44,7 @@ func Execute() {
 
 		RefreshPricing bool
 		NoFetchPricing bool
+		Init           bool
 
 		InputOverconsumptionSigma float64
 		OutputExplosionSigma      float64
@@ -73,6 +74,7 @@ func Execute() {
 	flag.BoolVar(&flags.ShowTrends, "show-trends", false, "Show time-trend summary")
 	flag.BoolVar(&flags.RefreshPricing, "refresh-pricing", false, "Force re-fetch pricing from OpenRouter")
 	flag.BoolVar(&flags.NoFetchPricing, "no-fetch-pricing", false, "Skip network fetch, use embedded pricing only")
+	flag.BoolVar(&flags.Init, "init", false, "Write default .burnwatch.toml and exit")
 
 	flag.Float64Var(&flags.InputOverconsumptionSigma, "input-sigma", 0, "Sigma for input overconsumption detection (0 = use config)")
 	flag.Float64Var(&flags.OutputExplosionSigma, "output-sigma", 0, "Sigma for output explosion detection (0 = use config)")
@@ -85,6 +87,19 @@ func Execute() {
 
 	if *versionFlag {
 		fmt.Printf("burnwatch %s (%s) built %s\n", version, commit, date)
+		return
+	}
+
+	if flags.Init {
+		if _, err := os.Stat(".burnwatch.toml"); err == nil {
+			fmt.Fprintln(os.Stderr, "Error: .burnwatch.toml already exists. Delete it first to regenerate.")
+			os.Exit(1)
+		}
+		if err := config.WriteDefault(".burnwatch.toml"); err != nil {
+			fmt.Fprintf(os.Stderr, "Error writing config: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Wrote .burnwatch.toml with default settings and comments.")
 		return
 	}
 

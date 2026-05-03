@@ -106,8 +106,24 @@ func FormatText(
 	}
 
 	var totalSavings float64
-	for _, r := range recommendations {
-		totalSavings += r.SavingsEst
+	bySession := make(map[string]float64)
+	for _, s := range signals {
+		sessionID := s.SessionID
+		if rec, ok := recBySignal[s]; ok {
+			saving := rec.SavingsEst
+			if saving > bySession[sessionID] {
+				bySession[sessionID] = saving
+			}
+		}
+	}
+
+	sessionIDs := make([]string, 0, len(bySession))
+	for sid := range bySession {
+		sessionIDs = append(sessionIDs, sid)
+	}
+	sort.Strings(sessionIDs)
+	for _, sid := range sessionIDs {
+		totalSavings += bySession[sid]
 	}
 	fmt.Fprintf(&b, "\nSummary: %d waste signals found. Potential savings: $%.2f\n", len(signals), totalSavings)
 
