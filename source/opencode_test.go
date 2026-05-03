@@ -216,8 +216,8 @@ func TestOpenCodeSource_ParseMessage(t *testing.T) {
 			},
 		},
 		{
-			name: "corrupt JSON",
-			data: `{not valid json`,
+			name:    "corrupt JSON",
+			data:    `{not valid json`,
 			wantErr: true,
 		},
 		{
@@ -234,12 +234,12 @@ func TestOpenCodeSource_ParseMessage(t *testing.T) {
 				"time": { "created": 1775925856369 }
 			}`,
 			want: TokenEvent{
-				Model:      "some-model",
-				Provider:   "some-provider",
-				Timestamp:  mustParseTime(t, 1775925856369),
+				Model:        "some-model",
+				Provider:     "some-provider",
+				Timestamp:    mustParseTime(t, 1775925856369),
 				InputTokens:  100,
 				OutputTokens: 50,
-				Harness:    "opencode",
+				Harness:      "opencode",
 			},
 		},
 	}

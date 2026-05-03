@@ -3,7 +3,7 @@
 ## Local setup
 
 ```bash
-git clone https://github.com/yourname/burnwatch
+git clone https://github.com/ethanhanguyen/burnwatch
 cd burnwatch
 go mod download
 ```
@@ -61,7 +61,7 @@ git tag vX.Y.Z
 git push --tags
 ```
 
-`go install github.com/yourname/burnwatch@vX.Y.Z` picks up the new version automatically.
+`go install github.com/ethanhanguyen/burnwatch@vX.Y.Z` picks up the new version automatically.
 
 ## Doc rules
 

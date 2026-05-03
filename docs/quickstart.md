@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-go install github.com/yourname/burnwatch@latest
+go install github.com/ethanhanguyen/burnwatch@latest
 ```
 
 ## First run

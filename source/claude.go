@@ -23,7 +23,7 @@ type claudeEntry struct {
 }
 
 type claudeMessage struct {
-	Model string      `json:"model"`
+	Model string       `json:"model"`
 	Usage *claudeUsage `json:"usage"`
 }
 
@@ -105,7 +105,7 @@ func (s *ClaudeSource) processProject(projDir, projName string, events chan<- To
 		if err := scanner.Err(); err != nil {
 			errs <- fmt.Errorf("scanner error in %s: %w", sf, err)
 		}
-		f.Close()
+		_ = f.Close()
 
 		for _, e := range parsedErrs {
 			errs <- e
@@ -151,7 +151,7 @@ func (s *ClaudeSource) processSubagents(subagentsPath, projectDisplay, parentSes
 		if err := scanner.Err(); err != nil {
 			errs <- fmt.Errorf("scanner error in %s: %w", saf, err)
 		}
-		f.Close()
+		_ = f.Close()
 
 		for _, e := range parsedErrs {
 			errs <- e

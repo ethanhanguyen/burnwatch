@@ -2,7 +2,7 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 5/6 PRs complete
+## Overall: 5/6 PRs complete (PR6 in progress)
 
 ```
 PR1 ██████████████████████ Foundation
@@ -10,7 +10,7 @@ PR2 ██████████████████████ OpenCode 
 PR3 ██████████████████████ Claude Code Source
 PR4 ██████████████████████ Analysis Engine
 PR5 ██████████████████████ CLI + Output + Wiring
-PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Release
+PR6 ███████████████████░░ Docs + CI + Release
 ```
 
 ## PR Status
@@ -22,7 +22,7 @@ PR6 ░░░░░░░░░░░░░░░░░░░░ Docs + CI + Rel
 | PR3 | `pr3-claude-source` | merged | 2026-05-02 | 2026-05-02 | JSONL reader + subagents |
 | PR4 | `pr4-analysis-engine` | merged | 2026-05-02 | 2026-05-02 | Baselines + 5 heuristics + recommendations |
 | PR5 | `pr5-cli-output` | **merged** | 2026-05-02 | 2026-05-02 | CLI + text/JSON + golden files + E2E |
-| PR6 | `pr6-docs-ci` | pending | — | — | Docs + README + CHANGELOG + CI |
+| PR6 | `pr6-docs-ci` | in progress | 2026-05-02 | — | Docs + README + CHANGELOG + CI |
 
 ## Blockers
 

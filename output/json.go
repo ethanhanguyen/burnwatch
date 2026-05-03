@@ -10,13 +10,13 @@ import (
 )
 
 type JSONSummary struct {
-	OpenCodeSessions        int     `json:"opencode_sessions"`
-	OpenCodeSubagentSessions int    `json:"opencode_subagent_sessions"`
-	ClaudeSessions          int     `json:"claude_sessions"`
-	TodayCost               float64 `json:"today_cost"`
-	TodaySessions           int     `json:"today_sessions"`
-	WeekCost                float64 `json:"week_cost"`
-	WeekSessions            int     `json:"week_sessions"`
+	OpenCodeSessions         int     `json:"opencode_sessions"`
+	OpenCodeSubagentSessions int     `json:"opencode_subagent_sessions"`
+	ClaudeSessions           int     `json:"claude_sessions"`
+	TodayCost                float64 `json:"today_cost"`
+	TodaySessions            int     `json:"today_sessions"`
+	WeekCost                 float64 `json:"week_cost"`
+	WeekSessions             int     `json:"week_sessions"`
 }
 
 type JSONProject struct {

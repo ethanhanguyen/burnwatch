@@ -23,6 +23,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 
 ## Gotchas
 
+- `golangci-lint` v2.x config format requires `version: "2"` at the top of `.golangci.yml`. The v1 format (no version field, `linters-settings` section) is silently rejected with "unsupported version of the configuration." Always check `golangci-lint version` before writing config. `.golangci.yml:1`
 - `pricing.go` uses a `[]struct{...}` slice, not `map[string]priceEntry`, because model matching is substring-based (`strings.Contains`) and requires ordered iteration. A map would hide ambiguous matches silently — the slice ensures first-match-wins is explicit and testable. `source/pricing.go:12-22`
 - `modernc.org/sqlite` v1.50.0 was incompatible with Go 1.22. The latest pure-Go SQLite isn't always compatible — pin to a version that matches the project's Go toolchain. `go.mod:5`
 - Claude Code subagent entries: both `SessionID` and `ParentSessionID` of the resulting `TokenEvent` are the parent session UUID. The subagent's identity is in the `agentId` field, not a unique session ID. `source/claude.go:196-201`
