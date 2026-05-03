@@ -317,7 +317,7 @@ Llm{
 - [ ] Commit: `feat: LLM verification for top-N waste signals`
 - [ ] Push to branch `pr17-llm-verification`
 - [ ] Open pull request
-- [ ] Perform code review
+- [ ] Dispatch CodeReviewer subagent against the PR diff
 - [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge

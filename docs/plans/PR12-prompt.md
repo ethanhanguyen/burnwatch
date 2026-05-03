@@ -220,7 +220,7 @@ TERs         []float64 `json:"ters,omitempty"`
 - [ ] Commit: `feat: token baselines — input/output mean, std, percentiles, TER`
 - [ ] Push to branch `pr12-token-baselines`
 - [ ] Open pull request
-- [ ] Perform code review
+- [ ] Dispatch CodeReviewer subagent against the PR diff
 - [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge

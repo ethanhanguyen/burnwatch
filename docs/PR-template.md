@@ -130,7 +130,7 @@ Scenario tests verify each feature in isolation against crafted test data. Every
 - [ ] Commit: `<type>: <description>`
 - [ ] Push to branch `<branch>`
 - [ ] Open pull request with description
-- [ ] Perform code review
+- [ ] Dispatch CodeReviewer subagent against the PR diff
 - [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge

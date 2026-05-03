@@ -327,7 +327,7 @@ Model saved to ~/.cache/burnwatch/classifier.json
 - [ ] Commit: `feat: supervised ML pipeline for waste classification`
 - [ ] Push to branch `pr18-ml-pipeline`
 - [ ] Open pull request
-- [ ] Perform code review
+- [ ] Dispatch CodeReviewer subagent against the PR diff
 - [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge

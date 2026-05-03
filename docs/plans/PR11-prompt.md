@@ -269,7 +269,7 @@ In `sessionAgg`, track `costApproximate` (OR of all events in the session).
 - [ ] Commit: `feat: dynamic pricing from OpenRouter API with cache`
 - [ ] Push to branch `pr11-dynamic-pricing`
 - [ ] Open pull request
-- [ ] Perform code review
+- [ ] Dispatch CodeReviewer subagent against the PR diff
 - [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge

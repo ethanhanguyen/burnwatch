@@ -344,7 +344,7 @@ Use `seed` for `rand.NewSource(seed)` — ensures same data → same anomaly sco
 - [ ] Commit: `feat: isolation forest anomaly detection on session features`
 - [ ] Push to branch `pr16-anomaly-detection`
 - [ ] Open pull request
-- [ ] Perform code review
+- [ ] Dispatch CodeReviewer subagent against the PR diff
 - [ ] Update `docs/plans/progress.md` to reflect merge
 - [ ] Merge to main
 - [ ] Delete feature branch after merge
