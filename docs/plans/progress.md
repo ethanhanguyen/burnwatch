@@ -2,7 +2,7 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 9/10 PRs complete
+## Overall: 10/10 PRs complete
 
 ```
 PR1 ██████████████████████ Foundation
@@ -14,7 +14,7 @@ PR6 ██████████████████████ Docs + CI
 PR7 ██████████████████████ Config File
 PR8 ██████████████████████ Phase A — Display Fixes
 PR9 ██████████████████████ Phase B — Noise Reduction
-PR10 ░░░░░░░░░░░░░░░░░░░░░░ Phase C — Deeper Insights
+PR10 ██████████████████████ Phase C — Deeper Insights
 ```
 
 ## PR Status
@@ -30,7 +30,7 @@ PR10 ░░░░░░░░░░░░░░░░░░░░░░ Phase C 
 | PR7 | `pr7-config` | merged | 2026-05-02 | 2026-05-02 | Config file: TOML, thresholds, filters, toggles |
 | PR8 | `pr8-display-fixes` | merged | 2026-05-02 | 2026-05-02 | A1 label fix, A2 churn grouping, A3 dates |
 | PR9 | `pr9-noise-reduction` | merged | 2026-05-02 | 2026-05-02 | B1 min-cost, B2 dedup, B3 sigma, B4 cost fix |
-| PR10 | `pr10-deeper-insights` | planned | — | — | C1 model/tokens, C2 signal toggles, C3 trends |
+| PR10 | `pr10-deeper-insights` | merged | 2026-05-02 | 2026-05-02 | C1 model/tokens, C2 signal toggles, C3 trends |
 
 ## Blockers
 
@@ -46,9 +46,7 @@ PR7 (config) ──┬── PR8 (display)     [parallel after PR7]
 
 ## Next action
 
-Execute PR10 (Phase C — Deeper Insights).
-
-PR prompt: `docs/plans/PR10-prompt.md`.
+All PRs complete. Implementation phase done.
 
 ## Execution log
 
@@ -64,6 +62,7 @@ PR prompt: `docs/plans/PR10-prompt.md`.
 | 2026-05-02 | PR7 | Config file implemented, reviewed, merged |
 | 2026-05-02 | PR8 | Display fixes implemented, reviewed, merged |
 | 2026-05-02 | PR9 | Noise reduction implemented, reviewed, merged |
+| 2026-05-02 | PR10 | Deeper insights implemented, reviewed, merged |
 
 ## Quality snapshot
 
