@@ -37,10 +37,14 @@ func Execute() {
 		NoSubagentOverhead     bool
 		NoCacheUnderutil       bool
 		NoFragmentationIndex   bool
-		NoInputOverconsumption bool
-		NoOutputExplosion      bool
-		NoTokenEfficiency      bool
-		ShowTrends             bool
+		NoInputOverconsumption   bool
+		NoOutputExplosion        bool
+		NoTokenEfficiency        bool
+		NoToolLoop               bool
+		NoFileReread             bool
+		NoSubagentOverlap        bool
+		NoSessionRestart         bool
+		ShowTrends               bool
 
 		RefreshPricing bool
 		NoFetchPricing bool
@@ -72,6 +76,10 @@ func Execute() {
 	flag.BoolVar(&flags.NoInputOverconsumption, "no-input-overconsumption", false, "Disable input overconsumption detection")
 	flag.BoolVar(&flags.NoOutputExplosion, "no-output-explosion", false, "Disable output explosion detection")
 	flag.BoolVar(&flags.NoTokenEfficiency, "no-token-efficiency", false, "Disable token efficiency detection")
+	flag.BoolVar(&flags.NoToolLoop, "no-tool-loop", false, "Disable tool loop detection")
+	flag.BoolVar(&flags.NoFileReread, "no-file-reread", false, "Disable file re-read detection")
+	flag.BoolVar(&flags.NoSubagentOverlap, "no-subagent-overlap", false, "Disable subagent overlap detection")
+	flag.BoolVar(&flags.NoSessionRestart, "no-session-restart", false, "Disable session restart detection")
 	flag.BoolVar(&flags.ShowTrends, "show-trends", false, "Show time-trend summary")
 	flag.BoolVar(&flags.RefreshPricing, "refresh-pricing", false, "Force re-fetch pricing from OpenRouter")
 	flag.BoolVar(&flags.NoFetchPricing, "no-fetch-pricing", false, "Skip network fetch, use embedded pricing only")
@@ -250,6 +258,18 @@ func Execute() {
 	}
 	if flags.NoTokenEfficiency {
 		cfg.Signals.TokenEfficiency = false
+	}
+	if flags.NoToolLoop {
+		cfg.Signals.ToolLoop = false
+	}
+	if flags.NoFileReread {
+		cfg.Signals.FileReread = false
+	}
+	if flags.NoSubagentOverlap {
+		cfg.Signals.SubagentOverlap = false
+	}
+	if flags.NoSessionRestart {
+		cfg.Signals.SessionRestart = false
 	}
 	if flags.ShowTrends {
 		cfg.Output.ShowTrends = true

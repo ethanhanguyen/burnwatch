@@ -66,6 +66,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 ## Hidden Couplings
 
 - **Adding a new field to TokenEvent, WasteSignal, and sessionAgg requires touching: (1) all source implementations that create TokenEvent (claude.go, opencode.go), (2) all test helpers that construct events (scenario_test.go, bench_test.go, waste_test.go), (3) all aggregation structs (sessionAgg in waste.go), (4) all output structs (WasteSignal, JSONWasteSignal). Propagation of a single field touches 8+ files. `source/event.go:21`
+- Claude Code tool input uses `file_path` key; OpenCode tool input uses `filePath`. The `fileOpFromClaudeTool` and `fileOpFromOpenCodeTool` functions differ only in their JSON unmarshal struct key. `source/claude.go:318-340`, `source/opencode.go:253-275`
+- **Graceful degradation for optional DB tables:** When the `part` table doesn't exist in OpenCode, `part` query fails → log to errs channel, continue with messages only. Don't fail the entire source. Same pattern applies to any optional harness SQL tables. `source/opencode.go:40-54`
 - **Golden file determinism:** JSON output with float accumulation over map iteration is non-deterministic (IEEE 754 addition is not associative at the epsilon level). Sort map keys before accumulating to produce deterministic golden files. `output/json.go:85-93`, `output/text.go:62-70`
 - **Sort stability:** `sort.Slice` in Go is not stable. When sorting by a primary key (e.g. cost), add a secondary key (e.g. name) to ensure deterministic ordering. Zero-cost projects due to unpriced models made this visible. `output/text.go:240-245`, `output/json.go:215-220`
 

@@ -23,8 +23,16 @@ type claudeEntry struct {
 }
 
 type claudeMessage struct {
-	Model string       `json:"model"`
-	Usage *claudeUsage `json:"usage"`
+	Model   string               `json:"model"`
+	Role    string               `json:"role"`
+	Usage   *claudeUsage         `json:"usage"`
+	Content []claudeContentBlock `json:"content"`
+}
+
+type claudeContentBlock struct {
+	Type  string          `json:"type"`
+	Name  string          `json:"name"`
+	Input json.RawMessage `json:"input"`
 }
 
 type claudeUsage struct {
@@ -73,6 +81,7 @@ func (s *ClaudeSource) Events() (<-chan TokenEvent, <-chan error) {
 
 func (s *ClaudeSource) processProject(projDir, projName string, events chan<- TokenEvent, errs chan<- error) {
 	projectDisplay := projectNameToDisplay(projName)
+	projectRoot := claudeProjectRoot(projName)
 
 	sessionFiles, err := filepath.Glob(filepath.Join(projDir, "*.jsonl"))
 	if err != nil {
@@ -89,6 +98,7 @@ func (s *ClaudeSource) processProject(projDir, projName string, events chan<- To
 			continue
 		}
 
+		eventIndex := 0
 		scanner := bufio.NewScanner(f)
 		scanner.Buffer(make([]byte, 0, 1024*1024), 10*1024*1024)
 		var parsedErrs []error
@@ -97,7 +107,7 @@ func (s *ClaudeSource) processProject(projDir, projName string, events chan<- To
 			if line == "" {
 				continue
 			}
-			ev, ok := s.parseLine(line, projectDisplay, sessionID, "", false, &parsedErrs)
+			ev, ok := s.parseLine(line, projectDisplay, sessionID, "", false, &parsedErrs, projectRoot, &eventIndex)
 			if ok {
 				events <- ev
 			}
@@ -113,12 +123,12 @@ func (s *ClaudeSource) processProject(projDir, projName string, events chan<- To
 
 		subagentsPath := filepath.Join(projDir, sessionID, "subagents")
 		if fi, err := os.Stat(subagentsPath); err == nil && fi.IsDir() {
-			s.processSubagents(subagentsPath, projectDisplay, sessionID, events, errs)
+			s.processSubagents(subagentsPath, projectDisplay, sessionID, events, errs, projectRoot)
 		}
 	}
 }
 
-func (s *ClaudeSource) processSubagents(subagentsPath, projectDisplay, parentSessionID string, events chan<- TokenEvent, errs chan<- error) {
+func (s *ClaudeSource) processSubagents(subagentsPath, projectDisplay, parentSessionID string, events chan<- TokenEvent, errs chan<- error, projectRoot string) {
 	subagentFiles, err := filepath.Glob(filepath.Join(subagentsPath, "agent-*.jsonl"))
 	if err != nil {
 		errs <- fmt.Errorf("glob subagent files: %w", err)
@@ -135,6 +145,7 @@ func (s *ClaudeSource) processSubagents(subagentsPath, projectDisplay, parentSes
 			continue
 		}
 
+		eventIndex := 0
 		scanner := bufio.NewScanner(f)
 		scanner.Buffer(make([]byte, 0, 1024*1024), 10*1024*1024)
 		var parsedErrs []error
@@ -143,7 +154,7 @@ func (s *ClaudeSource) processSubagents(subagentsPath, projectDisplay, parentSes
 			if line == "" {
 				continue
 			}
-			ev, ok := s.parseLine(line, projectDisplay, parentSessionID, agentID, true, &parsedErrs)
+			ev, ok := s.parseLine(line, projectDisplay, parentSessionID, agentID, true, &parsedErrs, projectRoot, &eventIndex)
 			if ok {
 				events <- ev
 			}
@@ -159,7 +170,7 @@ func (s *ClaudeSource) processSubagents(subagentsPath, projectDisplay, parentSes
 	}
 }
 
-func (s *ClaudeSource) parseLine(line, project, sessionID, agentID string, isSubagent bool, errs *[]error) (TokenEvent, bool) {
+func (s *ClaudeSource) parseLine(line, project, sessionID, agentID string, isSubagent bool, errs *[]error, projectRoot string, eventIndex *int) (TokenEvent, bool) {
 	var entry claudeEntry
 	if err := json.Unmarshal([]byte(line), &entry); err != nil {
 		*errs = append(*errs, fmt.Errorf("json unmarshal: %w", err))
@@ -198,6 +209,32 @@ func (s *ClaudeSource) parseLine(line, project, sessionID, agentID string, isSub
 		}
 	}
 
+	var toolCalls []ToolCall
+	var fileOps []FileOp
+	for _, block := range entry.Message.Content {
+		if block.Type != "tool_use" {
+			continue
+		}
+		args := truncateString(string(block.Input), 1024)
+		normalizedName := canonicalizeToolName(block.Name)
+		toolCalls = append(toolCalls, ToolCall{
+			Name:      normalizedName,
+			Arguments: args,
+		})
+		fo := fileOpFromClaudeTool(block.Name, block.Input, projectRoot)
+		if fo != nil {
+			fileOps = append(fileOps, *fo)
+		}
+	}
+
+	messageRole := entry.Message.Role
+	if messageRole == "" {
+		messageRole = "assistant"
+	}
+
+	*eventIndex++
+	idx := *eventIndex
+
 	cost, approx, costUnknown := CostForModel(
 		entry.Message.Model,
 		entry.Message.Usage.InputTokens,
@@ -224,6 +261,10 @@ func (s *ClaudeSource) parseLine(line, project, sessionID, agentID string, isSub
 		Project:         project,
 		Harness:         "claude-code",
 		IsSubagent:      isSubagent,
+		ToolCalls:       toolCalls,
+		FileOps:         fileOps,
+		MessageRole:     messageRole,
+		EventIndex:      idx,
 	}, true
 }
 
@@ -246,4 +287,65 @@ func parseTimestamp(ts string) (time.Time, error) {
 		}
 	}
 	return time.Time{}, fmt.Errorf("unrecognized timestamp format: %q", ts)
+}
+
+func canonicalizeToolName(name string) string {
+	return strings.ToLower(name)
+}
+
+func truncateString(s string, maxLen int) string {
+	if len(s) <= maxLen {
+		return s
+	}
+	return s[:maxLen]
+}
+
+func claudeProjectRoot(projName string) string {
+	s := strings.TrimPrefix(projName, "-")
+	s = strings.ReplaceAll(s, "-", "/")
+	return "/" + s
+}
+
+func NormalizePath(path, projectRoot string) string {
+	path = strings.ReplaceAll(path, "\\", "/")
+	if projectRoot != "" {
+		path = strings.TrimPrefix(path, projectRoot)
+		path = strings.TrimPrefix(path, "/")
+	}
+	path = strings.TrimPrefix(path, "./")
+	path = strings.TrimPrefix(path, "/")
+	path = filepath.Clean(path)
+	if path == "." {
+		return ""
+	}
+	return path
+}
+
+type claudeFileInput struct {
+	FilePath string `json:"file_path"`
+}
+
+func fileOpFromClaudeTool(toolName string, input json.RawMessage, projectRoot string) *FileOp {
+	canon := canonicalizeToolName(toolName)
+	var op string
+	switch canon {
+	case "read":
+		op = "read"
+	case "write":
+		op = "write"
+	case "edit":
+		op = "edit"
+	default:
+		return nil
+	}
+
+	var fi claudeFileInput
+	if err := json.Unmarshal(input, &fi); err != nil || fi.FilePath == "" {
+		return nil
+	}
+
+	return &FileOp{
+		Path:      NormalizePath(fi.FilePath, projectRoot),
+		Operation: op,
+	}
 }
