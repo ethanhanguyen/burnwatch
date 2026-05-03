@@ -2,13 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 2/6 complete (v2.5→v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/6 complete (v2.5→v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
 v2.5  ████████████████████████████████████████ 2/2 (critical fixes)
-v3    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0/4 (features)
+v3    █████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 1/4 (features)
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -29,7 +29,7 @@ PR14 ██████████████████████ Config-W
 PR15 ██████████████████████ Fix Pricing + Uncosted
 PR16 ██████████████████████ Output Quality Fixes
 
-PR17 ····················· Calibration Mode
+PR17 ██████████████████████ Calibration Mode
 PR18 ····················· Unsupervised Anomaly Detection
 PR19 ····················· LLM Verification
 PR20 ····················· ML Pipeline (experimental)
@@ -55,7 +55,7 @@ PR20 ····················· ML Pipeline (experimental)
 | PR14 | `pr14-config-wiring` | merged | 2026-05-03 | 2026-05-03 | Wire all thresholds to config, new CLI flags, complete PR7 work |
 | PR15 | `pr15-pricing-fix` | **merged** | 2026-05-03 | 2026-05-03 | 1000x embedded bug, cache validation, uncosted fallback |
 | PR16 | `pr15-pricing-fix` | **merged** | 2026-05-03 | 2026-05-03 | Fragment min-cost gating, savings dedup, --init |
-| PR17 | `pr17-calibrate` | **not started** | — | — | --calibrate mode, distribution, suggestions |
+| PR17 | `pr17-calibrate` | **merged** | 2026-05-03 | 2026-05-03 | --calibrate mode, distribution, suggestions |
 | PR18 | `pr18-anomaly-detection` | **not started** | — | — | Isolation forest on session feature vectors |
 | PR19 | `pr19-llm-verification` | **not started** | — | — | LLM review of top-N waste signals |
 | PR20 | `pr20-ml-pipeline` | **not started** | — | — | Supervised logistic regression (experimental) |
@@ -99,8 +99,8 @@ Each milestone requires a gate check before the next PR can start.
 
 ### Gate P17 (after PR17 merge)
 
-- [ ] **P17.1 — Output compact:** `burnwatch --calibrate` prints <80 lines, readable on a terminal.
-- [ ] **P17.2 — Suggestions valid:** Copy suggested thresholds to `.burnwatch.toml`. Re-run `burnwatch`. Verify same metrics produce same signals (no breakage).
+- [x] **P17.1 — Output compact:** `burnwatch --calibrate` prints <80 lines, readable on a terminal.
+- [x] **P17.2 — Suggestions valid:** Copy suggested thresholds to `.burnwatch.toml`. Re-run `burnwatch`. Verify same metrics produce same signals (no breakage).
 
 ### Gate P18 (after PR18 merge)
 
@@ -119,7 +119,7 @@ Each milestone requires a gate check before the next PR can start.
 
 ## Next action
 
-Start PR15: Fix Pricing + Uncosted Fallback. See `docs/plans/PR15-prompt.md`.
+Start PR18: Unsupervised Anomaly Detection. See `docs/plans/PR18-prompt.md`.
 
 ## Execution log
 
@@ -146,6 +146,7 @@ Start PR15: Fix Pricing + Uncosted Fallback. See `docs/plans/PR15-prompt.md`.
 | 2026-05-03 | — | v2.5 plan drafted: PR15 (pricing fix), PR16 (output quality). Original PR15-18 renumbered to PR17-20. Validation gates added at each milestone. |
 | 2026-05-03 | PR15 | Fix embedded pricing 1000x, remove fallback, add CostUnknown, gate cost heuristics |
 | 2026-05-03 | PR16 | Fragment min-cost gating, savings dedup, --init flag, config.example.toml |
+| 2026-05-03 | PR17 | Calibration mode: distribution analysis, threshold suggestions, text+JSON output |
 
 ## Quality snapshot
 

@@ -245,6 +245,27 @@ func TestExecute_PrintConfig(t *testing.T) {
 	}
 }
 
+func TestExecute_Calibrate(t *testing.T) {
+	setupTestEnv(t)
+
+	stdout, _ := runExecute([]string{"--calibrate", "--no-fetch-pricing"})
+	if !strings.Contains(stdout, "Session costs ($):") {
+		t.Errorf("expected calibration cost section, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "Suggested thresholds") {
+		t.Errorf("expected suggested thresholds section, got: %s", stdout)
+	}
+}
+
+func TestExecute_CalibrateJSON(t *testing.T) {
+	setupTestEnv(t)
+
+	stdout, _ := runExecute([]string{"--calibrate", "--json", "--no-fetch-pricing"})
+	if !strings.Contains(stdout, `"total_sessions"`) {
+		t.Errorf("expected JSON calibration output, got: %s", stdout)
+	}
+}
+
 func TestTrendsOutput(t *testing.T) {
 	events := []source.TokenEvent{
 		{SessionID: "s1", CostUSD: 100, InputTokens: 1000, OutputTokens: 100, Timestamp: time.Date(2026, 5, 4, 10, 0, 0, 0, time.UTC)},

@@ -45,6 +45,7 @@ func Execute() {
 		RefreshPricing bool
 		NoFetchPricing bool
 		Init           bool
+		Calibrate      bool
 
 		InputOverconsumptionSigma float64
 		OutputExplosionSigma      float64
@@ -75,6 +76,7 @@ func Execute() {
 	flag.BoolVar(&flags.RefreshPricing, "refresh-pricing", false, "Force re-fetch pricing from OpenRouter")
 	flag.BoolVar(&flags.NoFetchPricing, "no-fetch-pricing", false, "Skip network fetch, use embedded pricing only")
 	flag.BoolVar(&flags.Init, "init", false, "Write default .burnwatch.toml and exit")
+	flag.BoolVar(&flags.Calibrate, "calibrate", false, "Show data distribution and suggest thresholds")
 
 	flag.Float64Var(&flags.InputOverconsumptionSigma, "input-sigma", 0, "Sigma for input overconsumption detection (0 = use config)")
 	flag.Float64Var(&flags.OutputExplosionSigma, "output-sigma", 0, "Sigma for output explosion detection (0 = use config)")
@@ -100,6 +102,65 @@ func Execute() {
 			os.Exit(1)
 		}
 		fmt.Println("Wrote .burnwatch.toml with default settings and comments.")
+		return
+	}
+
+	if flags.Calibrate {
+		if flags.DBPath != "" {
+			_ = os.Setenv("BURNWATCH_OPENCODE_DB", flags.DBPath)
+		}
+
+		if !flags.NoFetchPricing {
+			httpClient := &http.Client{Timeout: 10 * time.Second}
+			if flags.RefreshPricing {
+				_ = source.RefreshPricing(httpClient)
+			} else {
+				_ = source.InitPricing(httpClient)
+			}
+		}
+
+		sources := source.Discover()
+		if len(sources) == 0 {
+			fmt.Fprintln(os.Stderr, "No data sources found.")
+			os.Exit(1)
+		}
+
+		events := output.CollectEvents(sources)
+		if len(events) == 0 {
+			fmt.Fprintln(os.Stderr, "No data found.")
+			os.Exit(1)
+		}
+
+		if flags.Harness != "" && flags.Harness != "all" {
+			events = filterByHarness(events, flags.Harness)
+		}
+
+		if flags.Project != "" {
+			events = filterByProject(events, flags.Project)
+		}
+
+		if flags.Days > 0 {
+			events = filterByDays(events, flags.Days)
+		}
+
+		if len(events) == 0 {
+			fmt.Fprintln(os.Stderr, "No events after filtering.")
+			os.Exit(1)
+		}
+
+		report := analyze.ComputeCalibration(events)
+
+		if flags.JSON {
+			jsonBytes, err := output.FormatCalibrationJSON(report)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error formatting JSON: %v\n", err)
+				os.Exit(1)
+			}
+			fmt.Println(string(jsonBytes))
+		} else {
+			text := output.FormatCalibrationText(report)
+			fmt.Print(text)
+		}
 		return
 	}
 

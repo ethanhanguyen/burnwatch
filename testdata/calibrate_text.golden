@@ -1,0 +1,39 @@
+Your data: 5 main sessions across 2 projects
+Period: 2026-05-01 to 2026-05-01
+
+Session costs ($):
+  n=5  μ=0.82  σ=0.64
+  P10=0.30  P25=0.30  P50=0.50  P75=1.00  P90=1.60  P95=1.80  P99=1.96
+  min=0.30  max=2.00
+
+Input tokens:
+  n=5  μ=820  σ=643
+  P10=300  P25=300  P50=500  P75=1000  P90=1600  P95=1800  P99=1960
+  min=300  max=2000
+
+Output tokens:
+  n=5  μ=590  σ=719
+  P10=120  P25=150  P50=200  P75=500  P90=1400  P95=1700  P99=1940
+  min=100  max=2000
+
+Output/input ratio:
+  n=5  μ=0.57
+  P10=0.32  P25=0.50  P50=0.50  P75=0.67  P90=0.87  P95=0.93  P99=0.99
+  min=0.20  max=1.00
+
+Cache hit rate (%):
+  n=0  (no data)
+
+Token efficiency ratio:
+  n=5  μ=0.57
+  P10=0.32  P25=0.50  P50=0.50  P75=0.67  P90=0.87  P95=0.93  P99=0.99
+  min=0.20  max=1.00
+
+
+Suggested thresholds (for .burnwatch.toml):
+  [thresholds]
+  cost_outlier_sigma = 1.7  # flags ~20% of sessions as cost outliers
+  input_overconsumption_sigma = 1.7  # flags ~20% of sessions as input over-consumers
+  output_explosion_sigma = 1.8  # flags ~20% of sessions as output explosion
+  low_signal_percentile = 5.0  # stricter than default P10 — only flags bottom 5% of ratios
+  token_efficiency_percentile = 5.0  # flags bottom 5% of token efficiency ratios
