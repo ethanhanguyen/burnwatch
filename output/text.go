@@ -81,13 +81,13 @@ func FormatText(
 
 	b.WriteString("Waste signals:\n")
 
-	// Group churn signals if enabled
-	var churnSignals []analyze.WasteSignal
+	// Group fragmentation signals if enabled
+	var fragSignals []analyze.WasteSignal
 	var otherSignals []analyze.WasteSignal
 	if cfg.Output.GroupChurn {
 		for _, s := range signals {
-			if s.Reason == "session_churn" {
-				churnSignals = append(churnSignals, s)
+			if s.Reason == "fragmentation_index" {
+				fragSignals = append(fragSignals, s)
 			} else {
 				otherSignals = append(otherSignals, s)
 			}
@@ -95,9 +95,9 @@ func FormatText(
 		for _, s := range otherSignals {
 			writeSignalBlock(&b, s, recBySignal[s], baselines)
 		}
-		if len(churnSignals) > 0 {
+		if len(fragSignals) > 0 {
 			b.WriteString("\n")
-			writeChurnGroups(&b, churnSignals, recBySignal)
+			writeChurnGroups(&b, fragSignals, recBySignal)
 		}
 	} else {
 		for _, s := range signals {
@@ -293,8 +293,26 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 		fmt.Fprintf(b, " — output/input ratio %.4f (P10 = %.4f)\n", s.Metric, s.Threshold)
 	case "cache_underutilized":
 		fmt.Fprintf(b, " — cache hit rate %.1f%% (P10 = %.1f%%)\n", s.Metric*100, s.Threshold*100)
-	case "session_churn":
-		fmt.Fprintf(b, " — %.0f sessions below mean ratio (%s)\n", s.Metric, extractDateFromDetail(s.Detail))
+	case "input_overconsumption":
+		fmt.Fprintf(b, " — %s\n", s.Detail)
+		if s.Model != "" {
+			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
+				s.Model, formatTokens(s.InputTokens), formatTokens(s.OutputTokens))
+		}
+	case "output_explosion":
+		fmt.Fprintf(b, " — %s\n", s.Detail)
+		if s.Model != "" {
+			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
+				s.Model, formatTokens(s.InputTokens), formatTokens(s.OutputTokens))
+		}
+	case "low_token_efficiency":
+		fmt.Fprintf(b, " — %s\n", s.Detail)
+		if s.Model != "" {
+			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
+				s.Model, formatTokens(s.InputTokens), formatTokens(s.OutputTokens))
+		}
+	case "fragmentation_index":
+		fmt.Fprintf(b, " — %s\n", s.Detail)
 	default:
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 	}
@@ -342,13 +360,16 @@ func RunPipeline(events []source.TokenEvent) (
 ) {
 	baselines = analyze.ComputeBaselines(events)
 	toggles := analyze.SignalToggles{
-		CostOutlier:        true,
-		LowSignal:          true,
-		SubagentOverhead:   true,
-		CacheUnderutilized: true,
-		SessionChurn:       true,
+		CostOutlier:          true,
+		LowSignal:            true,
+		SubagentOverhead:     true,
+		CacheUnderutilized:   true,
+		FragmentationIndex:   true,
+		InputOverconsumption: true,
+		OutputExplosion:      true,
+		TokenEfficiency:      true,
 	}
-	signals = analyze.DetectWaste(events, baselines, 2.0, toggles)
+	signals = analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
 	recommendations = analyze.GenerateRecommendations(signals, baselines)
 	_ = analyze.BuildSubagentTree(events)
 	return
@@ -417,8 +438,8 @@ func writeChurnGroups(b *strings.Builder, signals []analyze.WasteSignal,
 				totalSavings += rec.SavingsEst
 			}
 		}
-		fmt.Fprintf(b, "  %s %s on %s: %.0f sessions below mean ratio, $%.2f total\n",
-			strings.ToUpper(sigs[0].Severity), key.project, key.date, float64(len(sigs)), totalCost)
+		fmt.Fprintf(b, "  %s %s on %s: %.0f sessions, fragmentation index %.1f, $%.2f total\n",
+			strings.ToUpper(sigs[0].Severity), key.project, key.date, float64(len(sigs)), sigs[0].Metric, totalCost)
 		fmt.Fprintf(b, "    → Consolidate fragmented sessions. Potential savings: $%.2f\n", totalSavings)
 	}
 }

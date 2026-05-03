@@ -18,11 +18,14 @@ var updateGolden = flag.Bool("update", false, "update golden files")
 var fixedTime = time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
 
 var allToggles = analyze.SignalToggles{
-	CostOutlier:        true,
-	LowSignal:          true,
-	SubagentOverhead:   true,
-	CacheUnderutilized: true,
-	SessionChurn:       true,
+	CostOutlier:          true,
+	LowSignal:            true,
+	SubagentOverhead:     true,
+	CacheUnderutilized:   true,
+	FragmentationIndex:   true,
+	InputOverconsumption: true,
+	OutputExplosion:      true,
+	TokenEfficiency:      true,
 }
 
 func setupTestEnv(t *testing.T) {
@@ -52,7 +55,7 @@ func TestGoldenText(t *testing.T) {
 
 	events := collectTestEvents(t)
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	got := FormatText(events, baselines, signals, recommendations, false, config.Config{})
@@ -81,7 +84,7 @@ func TestGoldenJSON(t *testing.T) {
 
 	events := collectTestEvents(t)
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 	trees := analyze.BuildSubagentTree(events)
 
@@ -126,7 +129,7 @@ func TestFormatText_NoSignals(t *testing.T) {
 		},
 	}
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 	got := FormatText(events, baselines, signals, recommendations, false, config.Config{})
 
@@ -299,16 +302,16 @@ func TestWriteSignalBlock_AllReasons(t *testing.T) {
 		s    analyze.WasteSignal
 	}{
 		{
-			name: "session_churn",
+			name: "fragmentation_index",
 			s: analyze.WasteSignal{
 				SessionID:   "ses_x",
 				Project:     "proj",
 				Severity:    "medium",
-				Reason:      "session_churn",
-				Metric:      5,
-				Threshold:   2,
+				Reason:      "fragmentation_index",
+				Metric:      4.5,
+				Threshold:   3.0,
 				SessionCost: 10.0,
-				Detail:      "Project proj had 5 sessions on 2026-01-01, all below mean ratio (0.5000)",
+				Detail:      "Project proj had 5 sessions on 2026-01-01, fragmentation index = 4.5",
 			},
 		},
 		{
@@ -366,7 +369,7 @@ func TestFormatText_NoSignalsWithVerbose(t *testing.T) {
 		{SessionID: "s1", Harness: "opencode", Project: "p1", CostUSD: 1.0, Timestamp: fixedTime},
 	}
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	got := FormatText(events, baselines, signals, recommendations, true, config.Config{})
@@ -405,7 +408,7 @@ func TestFormatText_Verbose(t *testing.T) {
 		{SessionID: "s2", Harness: "opencode", Project: "p1", InputTokens: 200, OutputTokens: 50, CostUSD: 2.0, Timestamp: fixedTime},
 	}
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	got := FormatText(events, baselines, signals, recommendations, true, config.Config{})
@@ -487,21 +490,21 @@ func TestWriteChurnGroups(t *testing.T) {
 			SessionID:   "s1",
 			Project:     "proj1",
 			Severity:    "medium",
-			Reason:      "session_churn",
-			Metric:      5,
-			Threshold:   2,
+			Reason:      "fragmentation_index",
+			Metric:      4.5,
+			Threshold:   3.0,
 			SessionCost: 10.0,
-			Detail:      "Project proj1 had 5 sessions on 2026-01-15, all below mean ratio (0.5000)",
+			Detail:      "Project proj1 had 5 sessions on 2026-01-15, fragmentation index = 4.5",
 		},
 		{
 			SessionID:   "s2",
 			Project:     "proj1",
 			Severity:    "medium",
-			Reason:      "session_churn",
-			Metric:      5,
-			Threshold:   2,
+			Reason:      "fragmentation_index",
+			Metric:      4.5,
+			Threshold:   3.0,
 			SessionCost: 10.0,
-			Detail:      "Project proj1 had 5 sessions on 2026-01-15, all below mean ratio (0.5000)",
+			Detail:      "Project proj1 had 5 sessions on 2026-01-15, fragmentation index = 4.5",
 		},
 	}
 
@@ -519,7 +522,7 @@ func TestWriteChurnGroups(t *testing.T) {
 	got := b.String()
 
 	if !strings.Contains(got, "proj1 on 2026-01-15") {
-		t.Errorf("expected grouped churn, got: %s", got)
+		t.Errorf("expected grouped frag, got: %s", got)
 	}
 	if !strings.Contains(got, "$20.00 total") {
 		t.Errorf("expected total cost, got: %s", got)
@@ -532,31 +535,32 @@ func TestWriteChurnGroups(t *testing.T) {
 func TestFormatText_GroupChurn(t *testing.T) {
 	baseTime := time.Date(2026, 4, 15, 10, 0, 0, 0, time.UTC)
 	events := []source.TokenEvent{
-		{SessionID: "sa", Harness: "opencode", Project: "proj", InputTokens: 1000, OutputTokens: 50, CostUSD: 1.0, Timestamp: baseTime},
-		{SessionID: "sb", Harness: "opencode", Project: "proj", InputTokens: 1000, OutputTokens: 30, CostUSD: 1.0, Timestamp: baseTime},
-		{SessionID: "sc", Harness: "opencode", Project: "proj", InputTokens: 1000, OutputTokens: 80, CostUSD: 1.0, Timestamp: baseTime},
-		{SessionID: "sd", Harness: "opencode", Project: "proj", InputTokens: 1000, OutputTokens: 500, CostUSD: 2.0, Timestamp: baseTime.AddDate(0, 0, 1)},
+		{SessionID: "sa", Harness: "opencode", Project: "proj", InputTokens: 10000, OutputTokens: 50, CostUSD: 1.0, Timestamp: baseTime},
+		{SessionID: "sb", Harness: "opencode", Project: "proj", InputTokens: 10000, OutputTokens: 30, CostUSD: 1.0, Timestamp: baseTime},
+		{SessionID: "sc", Harness: "opencode", Project: "proj", InputTokens: 10000, OutputTokens: 80, CostUSD: 1.0, Timestamp: baseTime},
+		{SessionID: "se", Harness: "opencode", Project: "proj", InputTokens: 10000, OutputTokens: 40, CostUSD: 1.0, Timestamp: baseTime},
+		{SessionID: "sd", Harness: "opencode", Project: "proj", InputTokens: 10000, OutputTokens: 500, CostUSD: 2.0, Timestamp: baseTime.AddDate(0, 0, 1)},
 	}
 
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
-	hasChurn := false
+	hasFrag := false
 	for _, s := range signals {
-		if s.Reason == "session_churn" {
-			hasChurn = true
+		if s.Reason == "fragmentation_index" {
+			hasFrag = true
 			break
 		}
 	}
-	if !hasChurn {
-		t.Skip("test data did not generate session_churn signals")
+	if !hasFrag {
+		t.Skip("test data did not generate fragmentation_index signals")
 	}
 
 	// Test GroupChurn=false (default) — individual lines with date
 	gotUngrouped := FormatText(events, baselines, signals, recommendations, false, config.Config{})
-	if !strings.Contains(gotUngrouped, "sessions below mean ratio") {
-		t.Error("ungrouped output should show churn lines")
+	if !strings.Contains(gotUngrouped, "fragmentation index") {
+		t.Error("ungrouped output should show fragmentation lines")
 	}
 
 	// Test GroupChurn=true — one grouped line
@@ -570,8 +574,8 @@ func TestFormatText_GroupChurn(t *testing.T) {
 	if !strings.Contains(gotGrouped, "total") {
 		t.Errorf("grouped output should show total, got: %s", gotGrouped)
 	}
-	// In grouped mode, "sessions below mean ratio" should appear exactly once (in the group header)
-	if strings.Count(gotGrouped, "sessions below mean ratio") != 1 {
-		t.Errorf("grouped output should have exactly 1 'sessions below mean ratio' line, got: %s", gotGrouped)
+	// In grouped mode, "fragmentation index" should appear exactly once (in the group header)
+	if strings.Count(gotGrouped, "fragmentation index") != 1 {
+		t.Errorf("grouped output should have exactly 1 'fragmentation index' line, got: %s", gotGrouped)
 	}
 }

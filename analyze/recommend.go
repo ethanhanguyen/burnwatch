@@ -54,10 +54,29 @@ func recommendForSignal(s WasteSignal, baselines map[string]Baseline) Recommenda
 		r.Detail = fmt.Sprintf("Cache hit rate %.4f is below P10 (%.4f). Optimize instruction files to improve cache reuse.", s.Metric, s.Threshold)
 		r.SavingsEst = s.SessionCost * 0.2
 
-	case "session_churn":
+	case "input_overconsumption":
+		r.Action = "Reduce input context bloat — check for repeated file reads or tool-call loops"
+		r.Detail = fmt.Sprintf("Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.")
+		if bl := findBaseline(s.Project, baselines); bl != nil && s.InputTokens > 0 {
+			r.SavingsEst = s.SessionCost * (1 - bl.InputMean/float64(s.InputTokens))
+		}
+
+	case "output_explosion":
+		r.Action = "Check for runaway generation loops or repeated corrections"
+		r.Detail = fmt.Sprintf("Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.")
+		if bl := findBaseline(s.Project, baselines); bl != nil && s.OutputTokens > 0 {
+			r.SavingsEst = s.SessionCost * (1 - bl.OutputMean/float64(s.OutputTokens))
+		}
+
+	case "low_token_efficiency":
+		r.Action = "Low useful output per token consumed. Consider consolidating or using a cheaper model"
+		r.Detail = fmt.Sprintf("TER = %.2f is below P10 (%.2f). Session produced very little output relative to context consumed.", s.Metric, s.Threshold)
+		r.SavingsEst = s.SessionCost * 0.2
+
+	case "fragmentation_index":
 		r.Action = "Consolidate fragmented sessions — fewer, longer sessions cache better"
-		r.Detail = fmt.Sprintf("%.0f sessions in one project on the same day, all below the mean output/input ratio.", s.Metric)
-		r.SavingsEst = s.SessionCost
+		r.Detail = fmt.Sprintf("%.0f sessions in one project on the same day with high fragmentation (index = %.1f).", s.Metric, s.Metric)
+		r.SavingsEst = s.SessionCost * 0.7
 
 	default:
 		r.Action = "Review this session for optimization opportunities"

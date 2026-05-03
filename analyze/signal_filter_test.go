@@ -104,9 +104,9 @@ func TestDeduplicate_MediumBeatsLow(t *testing.T) {
 	}
 }
 
-func TestDeduplicate_CostBeatsChurn(t *testing.T) {
+func TestDeduplicate_CostBeatsFrag(t *testing.T) {
 	signals := []WasteSignal{
-		makeSignal("s1", "medium", "session_churn", 3),
+		makeSignal("s1", "medium", "fragmentation_index", 3),
 		makeSignal("s1", "medium", "cost_outlier", 10),
 	}
 	got := Deduplicate(signals)
@@ -114,7 +114,7 @@ func TestDeduplicate_CostBeatsChurn(t *testing.T) {
 		t.Fatalf("expected 1 signal after dedup, got %d", len(got))
 	}
 	if got[0].Reason != "cost_outlier" {
-		t.Errorf("expected cost_outlier to beat session_churn, got %s", got[0].Reason)
+		t.Errorf("expected cost_outlier to beat fragmentation_index, got %s", got[0].Reason)
 	}
 }
 

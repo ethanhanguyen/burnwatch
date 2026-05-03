@@ -118,6 +118,85 @@ Waste signals:
   HIGH f6f2d0a7-c41a-4532-b (Users/hoang/reka/travel): ≈ $47576.21 — 18.3x project baseline (μ = $2606.49)
     Model: claude-sonnet-4-6, 6.2K in / 148.8K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $44969.72
+  HIGH 06bc9d57-d9a1-46cb-8 (Users/hoang): $143.07 — 20 input tokens (μ=9, σ=4)
+    Model: claude-haiku-4-5-20251001, 20 in / 1.9K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $73.58
+  HIGH 1ce914b8-26e8-4bf0-9 (Users/hoang/reka/travel): ≈ $6309.79 — 9.7K input tokens (μ=1.8K, σ=3.8K)
+    Model: claude-haiku-4-5-20251001, 9.7K in / 29.7K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $5130.60
+  HIGH 1f766932-f7d1-4a04-8 (Users/hoang/lilysbeauty): ≈ $94510.79 — 30.4K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-sonnet-4-6, 30.4K in / 306.2K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $84343.46
+  HIGH 4785a17e-808f-4c9b-9 (Users/hoang/reka/travel): ≈ $20807.56 — 22.7K input tokens (μ=1.8K, σ=3.8K)
+    Model: claude-opus-4-6, 22.7K in / 114.1K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $19137.15
+  HIGH 5e741d83-cc03-4fe9-8 (Users/hoang/lilysbeauty): ≈ $5832.80 — 31.6K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-haiku-4-5-20251001, 31.6K in / 21.5K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $5230.27
+  HIGH 67624aa0-c689-48aa-a (Users/hoang/lilysbeauty): ≈ $4871.76 — 39.9K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-haiku-4-5-20251001, 39.9K in / 20.1K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $4472.64
+  HIGH 6ee281a5-c1a0-41bf-9 (Users/hoang/reka/travel): ≈ $1937.66 — 12.5K input tokens (μ=1.8K, σ=3.8K)
+    Model: claude-sonnet-4-6, 12.5K in / 22.9K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $1655.49
+  HIGH 7571f13b-5be9-4299-8 (Users/hoang/lilysbeauty): ≈ $9721.77 — 32.1K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-opus-4-6, 32.1K in / 45.8K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $8731.53
+  HIGH 9423c77b-3f51-43ea-9 (Users/hoang/lilysbeauty): ≈ $5944.81 — 35.4K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-haiku-4-5-20251001, 35.4K in / 12.1K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $5395.93
+  HIGH a06ade04-07f1-4fb4-9 (Users/hoang/lilysbeauty): ≈ $835.18 — 21.1K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-sonnet-4-6, 21.1K in / 2.1K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $705.90
+  HIGH a1720f4f-0039-4656-a (Users/hoang/reka/travel): ≈ $6328.66 — 19.3K input tokens (μ=1.8K, σ=3.8K)
+    Model: claude-haiku-4-5-20251001, 19.3K in / 17.0K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $5733.63
+  HIGH a309aed3-58d9-4acc-8 (Users/hoang/lilysbeauty): ≈ $12031.89 — 35.9K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-haiku-4-5-20251001, 35.9K in / 26.1K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $10937.55
+  HIGH a5349bf5-ef33-4ce4-8 (Users/hoang/lilysbeauty): ≈ $3120.58 — 21.7K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-haiku-4-5-20251001, 21.7K in / 8.3K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $2651.47
+  HIGH ad94fd96-8c9c-42ec-b (Users/hoang/lilysbeauty): ≈ $6984.40 — 24.2K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-opus-4-6, 24.2K in / 30.8K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $6042.58
+  HIGH bb21e559-c110-4bc7-8 (Users/hoang/lilysbeauty): ≈ $1714.14 — 29.1K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-haiku-4-5-20251001, 29.1K in / 13.1K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $1521.94
+  HIGH c59e875e-5f7c-4898-b (Users/hoang/reka/travel): ≈ $8303.33 — 15.7K input tokens (μ=1.8K, σ=3.8K)
+    Model: claude-opus-4-6, 15.7K in / 44.5K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $7341.73
+  HIGH c7bdcf17-fa79-48ed-8 (Users/hoang/lilysbeauty): ≈ $5073.28 — 31.7K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-haiku-4-5-20251001, 31.7K in / 16.4K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $4550.00
+  HIGH d30ea534-6f65-4ce7-a (Users/hoang/lilysbeauty): ≈ $5336.45 — 31.7K input tokens (μ=3.3K, σ=7.4K)
+    Model: claude-opus-4-6, 31.7K in / 30.9K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $4786.24
+  HIGH e22c2d24-9da8-4a46-8 (Users/hoang/reka/ads): ≈ $39159.24 — 63.1K input tokens (μ=5.1K, σ=14.7K)
+    Model: claude-sonnet-4-6, 63.1K in / 121.1K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $36000.12
+  HIGH f286ccc8-dbb3-415b-a (Users/hoang/reka/travel): ≈ $5767.46 — 12.1K input tokens (μ=1.8K, σ=3.8K)
+    Model: claude-sonnet-4-6, 12.1K in / 39.3K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $4900.44
+  HIGH fbc4166c-a5f4-4405-b (Users/hoang/reka/travel): ≈ $2939.17 — 10.3K input tokens (μ=1.8K, σ=3.8K)
+    Model: claude-sonnet-4-6, 10.3K in / 15.9K out
+    → Reduce input context bloat — check for repeated file reads or tool-call loops. Potential savings: $2421.74
+  MEDIUM ses_2160cb748ffeT2ys (project-a): $5.00 — Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $3.50
+  MEDIUM ses_21610e477ffeUfpa (project-a): $67.50 — Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $47.25
+  MEDIUM ses_2163602ddffeCM8K (project-a): $87.50 — Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $61.25
+  MEDIUM ses_21644a56effeG9LM (project-a): $400.00 — Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $280.00
+  MEDIUM ses_21a27e8c8ffehXZT (project-b): $405.00 — Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $283.50
+  MEDIUM ses_21a7b82c3ffeV787 (project-b): $47.50 — Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $33.25
+  MEDIUM ses_21a7ba13dffeTlqH (project-b): $32.50 — Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $22.75
+  MEDIUM ses_21a7c9142ffezkLH (project-b): $32.50 — Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $22.75
   MEDIUM 06a6e9eb-2f94-4927-b (Users/hoang/lilysbeauty): ≈ $1806.01 — output/input ratio 1.6355 (P10 = 1.6552)
     → Consider whether this task needed full agent interaction. Potential savings: $903.00
   MEDIUM 1eff5092-7bf3-4d35-9 (Users/hoang/lilysbeauty): ≈ $6975.49 — output/input ratio 0.9384 (P10 = 1.6552)
@@ -182,80 +261,39 @@ Waste signals:
     → Consider whether this task needed full agent interaction. Potential savings: $16.25
   MEDIUM ses_21a7c9142ffezkLH (project-b): $32.50 — output/input ratio 0.1372 (P10 = 1.6552)
     → Consider whether this task needed full agent interaction. Potential savings: $16.25
-  MEDIUM 043c97db-4b38-4ce6-b (Users/hoang/lilysbeauty): ≈ $257.83 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $257.83
-  MEDIUM 0aabc4e4-edc8-4be4-a (Users/hoang/lilysbeauty): ≈ $9773.89 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $9773.89
-  MEDIUM 0ffdd08e-42db-4ff5-a (Users/hoang/lilysbeauty): ≈ $15229.61 — 8 sessions below mean ratio (2026-04-10)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $15229.61
-  MEDIUM 192f7180-83b1-4eb3-b (Users/hoang/lilysbeauty): ≈ $136.75 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $136.75
-  MEDIUM 1e07909e-38bf-40f2-9 (Users/hoang/lilysbeauty): ≈ $1445.37 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1445.37
-  MEDIUM 1e525cdb-1a84-4115-8 (Users/hoang/lilysbeauty): ≈ $10446.10 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $10446.10
-  MEDIUM 201f7630-32f4-4e76-b (Users/hoang/lilysbeauty): ≈ $254.93 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $254.93
-  MEDIUM 24c51ee8-8144-4c90-a (Users/hoang/lilysbeauty): ≈ $253.58 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $253.58
-  MEDIUM 2d3300ca-911f-4a7d-a (Users/hoang/lilysbeauty): ≈ $263.13 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $263.13
-  MEDIUM 32ab81f2-91b8-4cc5-b (Users/hoang/lilysbeauty): ≈ $1532.63 — 8 sessions below mean ratio (2026-04-10)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1532.63
-  MEDIUM 34fee292-8021-4695-8 (Users/hoang/lilysbeauty): ≈ $6253.20 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $6253.20
-  MEDIUM 422b9440-271e-4407-8 (Users/hoang/lilysbeauty): ≈ $136.81 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $136.81
-  MEDIUM 46ab494f-50ff-4332-b (Users/hoang/lilysbeauty): ≈ $267.37 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $267.37
-  MEDIUM 49caf039-de8e-4039-8 (Users/hoang/lilysbeauty): ≈ $1442.46 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1442.46
-  MEDIUM 4de5e937-9ba3-4144-9 (Users/hoang/lilysbeauty): ≈ $258.00 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $258.00
-  MEDIUM 4e099894-7249-4d8b-9 (Users/hoang/lilysbeauty): ≈ $4951.11 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $4951.11
-  MEDIUM 529972ce-9233-45a3-a (Users/hoang/lilysbeauty): ≈ $2801.16 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $2801.16
-  MEDIUM 535cdc6f-c88d-4471-9 (Users/hoang/lilysbeauty): ≈ $1904.90 — 8 sessions below mean ratio (2026-04-10)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1904.90
-  MEDIUM 554c73f1-a1aa-459f-b (Users/hoang/lilysbeauty): ≈ $357.15 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $357.15
-  MEDIUM 73c5bc34-02b5-48ce-b (Users/hoang/lilysbeauty): ≈ $153.40 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $153.40
-  MEDIUM 7d88e28a-61d3-450e-b (Users/hoang/lilysbeauty): ≈ $3031.91 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $3031.91
-  MEDIUM 8604b62e-fae4-4967-a (Users/hoang/lilysbeauty): ≈ $3160.00 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $3160.00
-  MEDIUM a16f7849-fa52-4629-a (Users/hoang/lilysbeauty): ≈ $1631.50 — 8 sessions below mean ratio (2026-04-10)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1631.50
-  MEDIUM aae8041b-5b97-4b98-b (Users/hoang/lilysbeauty): ≈ $5427.56 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $5427.56
-  MEDIUM ac903ff2-a27a-4c86-9 (Users/hoang/lilysbeauty): ≈ $133.76 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $133.76
-  MEDIUM bd2af046-2b5b-49fb-8 (Users/hoang/lilysbeauty): ≈ $10274.70 — 8 sessions below mean ratio (2026-04-10)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $10274.70
-  MEDIUM bddb200a-b959-4085-9 (Users/hoang/lilysbeauty): ≈ $2690.95 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $2690.95
-  MEDIUM c8495667-14a9-4daf-a (Users/hoang/lilysbeauty): ≈ $4808.70 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $4808.70
-  MEDIUM c9f81af2-5497-42d6-a (Users/hoang/lilysbeauty): ≈ $7447.67 — 8 sessions below mean ratio (2026-04-10)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $7447.67
-  MEDIUM cb720934-844d-4347-b (Users/hoang/lilysbeauty): ≈ $3057.80 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $3057.80
-  MEDIUM d5e1e64f-d370-483e-8 (Users/hoang/lilysbeauty): ≈ $3002.05 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $3002.05
-  MEDIUM de254f17-910c-4829-a (Users/hoang/lilysbeauty): ≈ $136.81 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $136.81
-  MEDIUM e7196433-c550-44f6-8 (Users/hoang/lilysbeauty): ≈ $740.66 — 8 sessions below mean ratio (2026-04-10)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $740.66
-  MEDIUM ec5a462b-ef4d-4606-8 (Users/hoang/lilysbeauty): ≈ $869.26 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $869.26
-  MEDIUM efb2f02c-ca22-4022-b (Users/hoang/lilysbeauty): ≈ $10742.38 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $10742.38
-  MEDIUM f6907b96-a566-4756-a (Users/hoang/lilysbeauty): ≈ $369.64 — 29 sessions below mean ratio (2026-04-07)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $369.64
-  MEDIUM fd45656f-02b4-4654-a (Users/hoang/lilysbeauty): ≈ $2734.16 — 8 sessions below mean ratio (2026-04-10)
-    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $2734.16
+  MEDIUM 08f6e729-29ac-4473-b (Users/hoang/reka/travel): ≈ $22208.88 — 112.0K output tokens (μ=26.0K, σ=38.6K)
+    Model: claude-haiku-4-5-20251001, 7.3K in / 112.0K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $17047.57
+  MEDIUM 1f766932-f7d1-4a04-8 (Users/hoang/lilysbeauty): ≈ $94510.79 — 306.2K output tokens (μ=24.7K, σ=35.7K)
+    Model: claude-sonnet-4-6, 30.4K in / 306.2K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $86878.74
+  MEDIUM 20834312-69fa-4496-8 (Users/hoang/lilysbeauty): ≈ $27582.55 — 103.0K output tokens (μ=24.7K, σ=35.7K)
+    Model: claude-opus-4-6, 380 in / 103.0K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $20962.28
+  MEDIUM 2abda035-bb37-4205-9 (Users/hoang/reka/travel): ≈ $7296.68 — 345.8K output tokens (μ=26.0K, σ=38.6K)
+    Model: claude-sonnet-4-6, 119 in / 345.8K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $6747.54
+  MEDIUM 44d7a535-2a37-4e2b-8 (Users/hoang/lilysbeauty): ≈ $39757.15 — 146.9K output tokens (μ=24.7K, σ=35.7K)
+    Model: claude-sonnet-4-6, 1.7K in / 146.9K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $33064.09
+  MEDIUM 4785a17e-808f-4c9b-9 (Users/hoang/reka/travel): ≈ $20807.56 — 114.1K output tokens (μ=26.0K, σ=38.6K)
+    Model: claude-opus-4-6, 22.7K in / 114.1K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $16061.23
+  MEDIUM 79645d09-62ea-4b8f-a (Users/hoang/reka/ads): ≈ $28489.53 — 220.3K output tokens (μ=48.1K, σ=54.5K)
+    Model: claude-haiku-4-5-20251001, 6.1K in / 220.3K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $22268.36
+  MEDIUM 840038cd-f09b-48bd-8 (Users/hoang/lilysbeauty): ≈ $20859.85 — 100.3K output tokens (μ=24.7K, σ=35.7K)
+    Model: claude-sonnet-4-6, 695 in / 100.3K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $15716.64
+  MEDIUM c9d7da23-8e25-4e21-a (Users/hoang/lilysbeauty): ≈ $89194.53 — 303.2K output tokens (μ=24.7K, σ=35.7K)
+    Model: claude-sonnet-4-6, 2.4K in / 303.2K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $81921.46
+  MEDIUM f49c015c-21dc-46f7-9 (Users/hoang/lilysbeauty): ≈ $12943.72 — 125.7K output tokens (μ=24.7K, σ=35.7K)
+    Model: claude-opus-4-6, 2.5K in / 125.7K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $10396.94
+  MEDIUM f6f2d0a7-c41a-4532-b (Users/hoang/reka/travel): ≈ $47576.21 — 148.8K output tokens (μ=26.0K, σ=38.6K)
+    Model: claude-sonnet-4-6, 6.2K in / 148.8K out
+    → Check for runaway generation loops or repeated corrections. Potential savings: $39257.00
   LOW 0091f8f8-6d91-46ad-9 (Users/hoang/lilysbeauty): ≈ $1135.53 — cache hit rate 47.6% (P10 = 56.7%)
     → Consider CLAUDE.md / skills optimization for better caching. Potential savings: $227.11
   LOW 043c97db-4b38-4ce6-b (Users/hoang/lilysbeauty): ≈ $257.83 — cache hit rate 56.2% (P10 = 56.7%)
@@ -320,5 +358,101 @@ Waste signals:
     → Consider CLAUDE.md / skills optimization for better caching. Potential savings: $55.14
   LOW f6907b96-a566-4756-a (Users/hoang/lilysbeauty): ≈ $369.64 — cache hit rate 33.3% (P10 = 56.7%)
     → Consider CLAUDE.md / skills optimization for better caching. Potential savings: $73.93
+  LOW 0091f8f8-6d91-46ad-9 (Users/hoang/lilysbeauty): ≈ $1135.53 — TER = 1.17 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 8 in / 36.9K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $227.11
+  LOW 043c97db-4b38-4ce6-b (Users/hoang/lilysbeauty): ≈ $257.83 — TER = 1.29 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 124 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $51.57
+  LOW 06bc9d57-d9a1-46cb-8 (Users/hoang): $143.07 — TER = 0.01 (P10 = 1.30)
+    Model: claude-haiku-4-5-20251001, 20 in / 1.9K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $28.61
+  LOW 072197fb-899d-440b-9 (Users/hoang/reka/travel): ≈ $175.65 — TER = 0.00 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 3 in / 8 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $35.13
+  LOW 1c9d0b66-284d-42e0-a (Users/hoang/reka/travel): ≈ $444.45 — TER = 0.00 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 6 in / 12 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $88.89
+  LOW 1fbe4fc2-cff3-4d7c-9 (Users/hoang/lilysbeauty): ≈ $357.41 — TER = 0.00 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 6 in / 41 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $71.48
+  LOW 201f7630-32f4-4e76-b (Users/hoang/lilysbeauty): ≈ $254.93 — TER = 1.30 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 137 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $50.99
+  LOW 24c51ee8-8144-4c90-a (Users/hoang/lilysbeauty): ≈ $253.58 — TER = 1.30 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 102 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $50.72
+  LOW 2d3300ca-911f-4a7d-a (Users/hoang/lilysbeauty): ≈ $263.13 — TER = 1.27 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 137 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $52.63
+  LOW 32013b84-6b5e-4e04-b (Users/hoang): ≈ $352.49 — TER = 0.01 (P10 = 1.30)
+    Model: claude-opus-4-6, 6 in / 768 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $70.50
+  LOW 344c98f5-e7d0-4a8f-9 (Users/hoang/lilysbeauty): ≈ $371.74 — TER = 0.55 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 6 in / 639 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $74.35
+  LOW 46ab494f-50ff-4332-b (Users/hoang/lilysbeauty): ≈ $267.37 — TER = 1.25 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 246 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $53.47
+  LOW 49effeda-d768-4353-a (Users/hoang/reka/travel): ≈ $385.80 — TER = 1.03 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 425 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $77.16
+  LOW 4de5e937-9ba3-4144-9 (Users/hoang/lilysbeauty): ≈ $258.00 — TER = 1.29 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 128 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $51.60
+  LOW 4e749183-6430-4406-8 (Users/hoang/reka/travel): ≈ $310.35 — TER = 0.00 (P10 = 1.30)
+    Model: claude-opus-4-7, 6 in / 8 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $62.07
+  LOW 611dec0c-3baa-4bf1-9 (Users/hoang/reka/travel): ≈ $478.32 — TER = 0.88 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 271 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $95.66
+  LOW 642aec52-96c1-45d8-8 (Users/hoang/reka/travel): ≈ $869.69 — TER = 0.74 (P10 = 1.30)
+    Model: claude-haiku-4-5-20251001, 46 in / 3.2K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $173.94
+  LOW 6d92a6a5-1ab6-4ace-9 (Users/hoang): ≈ $356.29 — TER = 1.00 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 8 in / 273 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $71.26
+  LOW 705dccf4-4f38-40c9-9 (Users/hoang/reka/travel): ≈ $1640.11 — TER = 0.86 (P10 = 1.30)
+    Model: claude-opus-4-6, 32 in / 8.8K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $328.02
+  LOW 7bcf966e-3f8b-41c8-a (Users/hoang/reka/travel): ≈ $1296.13 — TER = 0.43 (P10 = 1.30)
+    Model: claude-opus-4-6, 13 in / 8.8K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $259.23
+  LOW 93c1fb84-305f-484b-b (Users/hoang): ≈ $732.72 — TER = 0.24 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 11 in / 267 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $146.54
+  LOW 951b436e-aac2-4e5c-8 (Users/hoang/lilysbeauty): ≈ $2935.73 — TER = 1.02 (P10 = 1.30)
+    Model: claude-opus-4-6, 44 in / 3.0K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $587.15
+  LOW d28107ab-6dfc-47d9-a (Users/hoang/lilysbeauty): ≈ $197.86 — TER = 0.47 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 6 in / 379 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $39.57
+  LOW dbbcb1ca-d8a6-4896-a (Users/hoang/reka/travel): ≈ $462.67 — TER = 1.12 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 7.8K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $92.53
+  LOW dc707dfa-bc8d-475e-a (Users/hoang/reka/ads): ≈ $307.25 — TER = 1.16 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 5 in / 198 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $61.45
+  LOW e81a2d03-8807-48a3-8 (Users/hoang/lilysbeauty): ≈ $294.87 — TER = 1.19 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 1.0K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $58.97
+  LOW ec57a273-543d-476a-a (Users/hoang): ≈ $392.16 — TER = 0.99 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 10 in / 1.1K out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $78.43
+  LOW ecb14e58-6fb3-436f-9 (Users/hoang/reka/travel): ≈ $261.98 — TER = 0.50 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 4 in / 378 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $52.40
+  LOW ed2fd2ac-62e1-4c3f-8 (Users/hoang): ≈ $83.77 — TER = 1.16 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 6 in / 146 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $16.75
+  LOW f1cde1aa-e8ba-4dbf-a (Users/hoang/reka/travel): ≈ $275.72 — TER = 1.22 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 514 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $55.14
+  LOW f6907b96-a566-4756-a (Users/hoang/lilysbeauty): ≈ $369.64 — TER = 0.50 (P10 = 1.30)
+    Model: claude-sonnet-4-6, 7 in / 111 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $73.93
+  LOW ses_2160cb748ffeT2ys (project-a): $5.00 — TER = 0.29 (P10 = 1.30)
+    Model: deepseek/deepseek-v4-pro, 35.2K in / 376 out
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $1.00
 
-Summary: 137 waste signals found. Potential savings: $874120.46
+Summary: 172 waste signals found. Potential savings: $1331819.95

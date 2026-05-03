@@ -87,9 +87,9 @@ func TestGenerateRecommendationsCacheUnderutilized(t *testing.T) {
 	}
 }
 
-func TestGenerateRecommendationsSessionChurn(t *testing.T) {
+func TestGenerateRecommendationsFragmentationIndex(t *testing.T) {
 	signals := []WasteSignal{
-		{SessionID: "s1", Project: "p", Severity: "medium", Reason: "session_churn", Detail: "churn detail", Metric: 4, Threshold: 2, SessionCost: 3.0},
+		{SessionID: "s1", Project: "p", Severity: "medium", Reason: "fragmentation_index", Detail: "frag detail", Metric: 4, Threshold: 3, SessionCost: 3.0},
 	}
 	baselines := map[string]Baseline{}
 	recs := GenerateRecommendations(signals, baselines)
@@ -100,8 +100,10 @@ func TestGenerateRecommendationsSessionChurn(t *testing.T) {
 	if !strings.Contains(recs[0].Action, "Consolidate") {
 		t.Errorf("unexpected action: %s", recs[0].Action)
 	}
-	if recs[0].SavingsEst != 3.0 {
-		t.Errorf("SavingsEst = %f, want 3.0", recs[0].SavingsEst)
+	expectedSavings := 3.0 * 0.7
+	delta := 0.0001
+	if recs[0].SavingsEst-expectedSavings > delta || expectedSavings-recs[0].SavingsEst > delta {
+		t.Errorf("SavingsEst = %f, want %f", recs[0].SavingsEst, expectedSavings)
 	}
 }
 

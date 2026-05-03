@@ -457,6 +457,316 @@
       "cost_approximate": true
     },
     {
+      "session_id": "06bc9d57-d9a1-46cb-8bcf-0040dbe395d8",
+      "project": "Users/hoang",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "20 input tokens (μ=9, σ=4)",
+      "metric": 20,
+      "threshold": 18.830317790596467,
+      "session_cost": 143.06799999999998
+    },
+    {
+      "session_id": "1ce914b8-26e8-4bf0-990a-1c8cb6823aaa",
+      "project": "Users/hoang/reka/travel",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "9.7K input tokens (μ=1.8K, σ=3.8K)",
+      "metric": 9731,
+      "threshold": 9486.965320298737,
+      "session_cost": 6309.787840000005,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "1f766932-f7d1-4a04-850f-449ae001e3dc",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "30.4K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 30379,
+      "threshold": 18104.96358810063,
+      "session_cost": 94510.78545999993,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "4785a17e-808f-4c9b-94b1-1afb21499df9",
+      "project": "Users/hoang/reka/travel",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "22.7K input tokens (μ=1.8K, σ=3.8K)",
+      "metric": 22653,
+      "threshold": 9486.965320298737,
+      "session_cost": 20807.55660000001,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "5e741d83-cc03-4fe9-8771-47b3a8d9fd7a",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "31.6K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 31637,
+      "threshold": 18104.96358810063,
+      "session_cost": 5832.804460000001,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "67624aa0-c689-48aa-aba3-c1ac2cd0ea06",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "39.9K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 39892,
+      "threshold": 18104.96358810063,
+      "session_cost": 4871.7568599999995,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "6ee281a5-c1a0-41bf-9fd7-9e9079dbf718",
+      "project": "Users/hoang/reka/travel",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "12.5K input tokens (μ=1.8K, σ=3.8K)",
+      "metric": 12488,
+      "threshold": 9486.965320298737,
+      "session_cost": 1937.65905,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "7571f13b-5be9-4299-845d-31dcfb9927e3",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "32.1K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 32085,
+      "threshold": 18104.96358810063,
+      "session_cost": 9721.769400000005,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "9423c77b-3f51-43ea-98fd-7f43866d9f0a",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "35.4K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 35396,
+      "threshold": 18104.96358810063,
+      "session_cost": 5944.814940000002,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "a06ade04-07f1-4fb4-93db-cc3a175c99ca",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "21.1K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 21112,
+      "threshold": 18104.96358810063,
+      "session_cost": 835.1835000000001,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "a1720f4f-0039-4656-a96e-bef66e1ee1c4",
+      "project": "Users/hoang/reka/travel",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "19.3K input tokens (μ=1.8K, σ=3.8K)",
+      "metric": 19342,
+      "threshold": 9486.965320298737,
+      "session_cost": 6328.656479999999,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "a309aed3-58d9-4acc-8ca8-7b0a2baeded9",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "35.9K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 35932,
+      "threshold": 18104.96358810063,
+      "session_cost": 12031.88696,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "a5349bf5-ef33-4ce4-8bae-4f988b55057f",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "21.7K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 21740,
+      "threshold": 18104.96358810063,
+      "session_cost": 3120.5771400000003,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "ad94fd96-8c9c-42ec-b747-1ab65d0578fd",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "24.2K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 24236,
+      "threshold": 18104.96358810063,
+      "session_cost": 6984.398399999998,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "bb21e559-c110-4bc7-815b-6600a92bab6e",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "29.1K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 29148,
+      "threshold": 18104.96358810063,
+      "session_cost": 1714.1353400000005,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "c59e875e-5f7c-4898-b99b-659f816b2381",
+      "project": "Users/hoang/reka/travel",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "15.7K input tokens (μ=1.8K, σ=3.8K)",
+      "metric": 15703,
+      "threshold": 9486.965320298737,
+      "session_cost": 8303.3334,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "c7bdcf17-fa79-48ed-8501-fe0b8dbf9dce",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "31.7K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 31685,
+      "threshold": 18104.96358810063,
+      "session_cost": 5073.279960000001,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "d30ea534-6f65-4ce7-a0de-ab56f718def5",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "31.7K input tokens (μ=3.3K, σ=7.4K)",
+      "metric": 31697,
+      "threshold": 18104.96358810063,
+      "session_cost": 5336.454900000001,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "e22c2d24-9da8-4a46-8d7a-484584e0f00a",
+      "project": "Users/hoang/reka/ads",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "63.1K input tokens (μ=5.1K, σ=14.7K)",
+      "metric": 63058,
+      "threshold": 34408.3898599068,
+      "session_cost": 39159.23859999997,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "f286ccc8-dbb3-415b-a6d6-c84bbe0aed21",
+      "project": "Users/hoang/reka/travel",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "12.1K input tokens (μ=1.8K, σ=3.8K)",
+      "metric": 12097,
+      "threshold": 9486.965320298737,
+      "session_cost": 5767.463999999999,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "fbc4166c-a5f4-4405-b09f-f170ca6f6f1f",
+      "project": "Users/hoang/reka/travel",
+      "severity": "high",
+      "reason": "input_overconsumption",
+      "detail": "10.3K input tokens (μ=1.8K, σ=3.8K)",
+      "metric": 10330,
+      "threshold": 9486.965320298737,
+      "session_cost": 2939.1712499999994,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "ses_2160cb748ffeT2ysB2AwrOJ8VN",
+      "project": "project-a",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4",
+      "metric": 3.426931951943193,
+      "threshold": 3,
+      "session_cost": 5
+    },
+    {
+      "session_id": "ses_21610e477ffeUfpaHqZg55fCaZ",
+      "project": "project-a",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4",
+      "metric": 3.426931951943193,
+      "threshold": 3,
+      "session_cost": 67.5
+    },
+    {
+      "session_id": "ses_2163602ddffeCM8KK2Jy77DleX",
+      "project": "project-a",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4",
+      "metric": 3.426931951943193,
+      "threshold": 3,
+      "session_cost": 87.5
+    },
+    {
+      "session_id": "ses_21644a56effeG9LMru0WbS4dPQ",
+      "project": "project-a",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4",
+      "metric": 3.426931951943193,
+      "threshold": 3,
+      "session_cost": 400
+    },
+    {
+      "session_id": "ses_21a27e8c8ffehXZT2LL6U1Uo4J",
+      "project": "project-b",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6",
+      "metric": 3.564804525939533,
+      "threshold": 3,
+      "session_cost": 405
+    },
+    {
+      "session_id": "ses_21a7b82c3ffeV787gAwsr4mM1w",
+      "project": "project-b",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6",
+      "metric": 3.564804525939533,
+      "threshold": 3,
+      "session_cost": 47.5
+    },
+    {
+      "session_id": "ses_21a7ba13dffeTlqH5XX8DVmMRG",
+      "project": "project-b",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6",
+      "metric": 3.564804525939533,
+      "threshold": 3,
+      "session_cost": 32.5
+    },
+    {
+      "session_id": "ses_21a7c9142ffezkLHtS4eBMmO43",
+      "project": "project-b",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6",
+      "metric": 3.564804525939533,
+      "threshold": 3,
+      "session_cost": 32.5
+    },
+    {
       "session_id": "06a6e9eb-2f94-4927-b419-2d48818320b9",
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
@@ -799,410 +1109,124 @@
       "session_cost": 32.5
     },
     {
-      "session_id": "043c97db-4b38-4ce6-bf57-131df322f180",
-      "project": "Users/hoang/lilysbeauty",
+      "session_id": "08f6e729-29ac-4473-b468-b3cae7e379f6",
+      "project": "Users/hoang/reka/travel",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 257.8341,
+      "reason": "output_explosion",
+      "detail": "112.0K output tokens (μ=26.0K, σ=38.6K)",
+      "metric": 111968,
+      "threshold": 103175.19985108031,
+      "session_cost": 22208.881820000017,
       "cost_approximate": true
     },
     {
-      "session_id": "0aabc4e4-edc8-4be4-a265-758827cb646a",
+      "session_id": "1f766932-f7d1-4a04-850f-449ae001e3dc",
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 9773.885000000004,
+      "reason": "output_explosion",
+      "detail": "306.2K output tokens (μ=24.7K, σ=35.7K)",
+      "metric": 306199,
+      "threshold": 96077.06433267014,
+      "session_cost": 94510.78545999993,
       "cost_approximate": true
     },
     {
-      "session_id": "0ffdd08e-42db-4ff5-a9b2-b47c72f63f58",
+      "session_id": "20834312-69fa-4496-8627-64c1865e9bcf",
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
-      "metric": 8,
-      "threshold": 2,
-      "session_cost": 15229.6062,
+      "reason": "output_explosion",
+      "detail": "103.0K output tokens (μ=24.7K, σ=35.7K)",
+      "metric": 103020,
+      "threshold": 96077.06433267014,
+      "session_cost": 27582.55290000002,
       "cost_approximate": true
     },
     {
-      "session_id": "192f7180-83b1-4eb3-b9a8-6b290cb482db",
-      "project": "Users/hoang/lilysbeauty",
+      "session_id": "2abda035-bb37-4205-9060-21f96f2647ee",
+      "project": "Users/hoang/reka/travel",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 136.74705,
+      "reason": "output_explosion",
+      "detail": "345.8K output tokens (μ=26.0K, σ=38.6K)",
+      "metric": 345757,
+      "threshold": 103175.19985108031,
+      "session_cost": 7296.680400000002,
       "cost_approximate": true
     },
     {
-      "session_id": "1e07909e-38bf-40f2-9967-fbf50f442414",
+      "session_id": "44d7a535-2a37-4e2b-8472-7755e80f44a7",
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 1445.36835,
+      "reason": "output_explosion",
+      "detail": "146.9K output tokens (μ=24.7K, σ=35.7K)",
+      "metric": 146877,
+      "threshold": 96077.06433267014,
+      "session_cost": 39757.15139999999,
       "cost_approximate": true
     },
     {
-      "session_id": "1e525cdb-1a84-4115-8437-b1d85d8e3aa6",
-      "project": "Users/hoang/lilysbeauty",
+      "session_id": "4785a17e-808f-4c9b-94b1-1afb21499df9",
+      "project": "Users/hoang/reka/travel",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 10446.095260000002,
+      "reason": "output_explosion",
+      "detail": "114.1K output tokens (μ=26.0K, σ=38.6K)",
+      "metric": 114075,
+      "threshold": 103175.19985108031,
+      "session_cost": 20807.55660000001,
       "cost_approximate": true
     },
     {
-      "session_id": "201f7630-32f4-4e76-b63d-a53512b3b3c3",
-      "project": "Users/hoang/lilysbeauty",
+      "session_id": "79645d09-62ea-4b8f-ad92-99cfa4d5687a",
+      "project": "Users/hoang/reka/ads",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 254.92815000000002,
+      "reason": "output_explosion",
+      "detail": "220.3K output tokens (μ=48.1K, σ=54.5K)",
+      "metric": 220323,
+      "threshold": 157109.3385383364,
+      "session_cost": 28489.52644,
       "cost_approximate": true
     },
     {
-      "session_id": "24c51ee8-8144-4c90-a0ed-224ae4c024d8",
+      "session_id": "840038cd-f09b-48bd-85c2-9b8242df4bdc",
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 253.58339999999998,
+      "reason": "output_explosion",
+      "detail": "100.3K output tokens (μ=24.7K, σ=35.7K)",
+      "metric": 100286,
+      "threshold": 96077.06433267014,
+      "session_cost": 20859.849479999986,
       "cost_approximate": true
     },
     {
-      "session_id": "2d3300ca-911f-4a7d-a3dc-dd0055b78a33",
+      "session_id": "c9d7da23-8e25-4e21-ad97-e45219004566",
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 263.12595,
+      "reason": "output_explosion",
+      "detail": "303.2K output tokens (μ=24.7K, σ=35.7K)",
+      "metric": 303238,
+      "threshold": 96077.06433267014,
+      "session_cost": 89194.53307999998,
       "cost_approximate": true
     },
     {
-      "session_id": "32ab81f2-91b8-4cc5-bd47-97629f23f6a5",
+      "session_id": "f49c015c-21dc-46f7-9739-db7baa62c7f9",
       "project": "Users/hoang/lilysbeauty",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
-      "metric": 8,
-      "threshold": 2,
-      "session_cost": 1532.62905,
+      "reason": "output_explosion",
+      "detail": "125.7K output tokens (μ=24.7K, σ=35.7K)",
+      "metric": 125670,
+      "threshold": 96077.06433267014,
+      "session_cost": 12943.7157,
       "cost_approximate": true
     },
     {
-      "session_id": "34fee292-8021-4695-812c-ffe030f4cba1",
-      "project": "Users/hoang/lilysbeauty",
+      "session_id": "f6f2d0a7-c41a-4532-b2b4-9ed65bc71ce6",
+      "project": "Users/hoang/reka/travel",
       "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 6253.204200000003,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "422b9440-271e-4407-8278-e3368c439352",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 136.80705,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "46ab494f-50ff-4332-b7b3-cc52b9ca3310",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 267.37185,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "49caf039-de8e-4039-8e66-1653a11a8e74",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 1442.4625599999995,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "4de5e937-9ba3-4144-9b99-d9beda362279",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 257.99895,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "4e099894-7249-4d8b-93b9-63fa4f939253",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 4951.106850000001,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "529972ce-9233-45a3-ac93-532f6901ca32",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 2801.155199999999,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "535cdc6f-c88d-4471-9bd8-97584900e33d",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
-      "metric": 8,
-      "threshold": 2,
-      "session_cost": 1904.8997999999997,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "554c73f1-a1aa-459f-b5d1-2c1d22e82344",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 357.1458,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "73c5bc34-02b5-48ce-b7e0-4081743943e9",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 153.39780000000002,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "7d88e28a-61d3-450e-bb71-342ef032cf5b",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 3031.90836,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "8604b62e-fae4-4967-a56e-e54e61130c90",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 3160.0042499999977,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "a16f7849-fa52-4629-a44c-e39b002a75a7",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
-      "metric": 8,
-      "threshold": 2,
-      "session_cost": 1631.4995999999999,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "aae8041b-5b97-4b98-b1ca-1e13deccd62c",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 5427.557100000001,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "ac903ff2-a27a-4c86-92df-e84edff2b85a",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 133.7568,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "bd2af046-2b5b-49fb-8537-64d20fa740dc",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
-      "metric": 8,
-      "threshold": 2,
-      "session_cost": 10274.695500000002,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "bddb200a-b959-4085-9fe8-8074c78143d4",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 2690.9496,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "c8495667-14a9-4daf-acdb-4e3b68833062",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 4808.698049999999,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "c9f81af2-5497-42d6-aa1f-466e5cd7e0f2",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
-      "metric": 8,
-      "threshold": 2,
-      "session_cost": 7447.667700000001,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "cb720934-844d-4347-b177-c9c30f353313",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 3057.795740000001,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "d5e1e64f-d370-483e-8b50-6db1366f4562",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 3002.0469399999984,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "de254f17-910c-4829-a666-44963a155d4b",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 136.80705,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "e7196433-c550-44f6-8a4b-0769365e4c2c",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
-      "metric": 8,
-      "threshold": 2,
-      "session_cost": 740.6600999999999,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "ec5a462b-ef4d-4606-888b-60bc1e56fa1f",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 869.25915,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "efb2f02c-ca22-4022-b260-6d74eb81f4ea",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 10742.383620000004,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "f6907b96-a566-4756-a9e1-4425f2f0f2d2",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
-      "metric": 29,
-      "threshold": 2,
-      "session_cost": 369.64425000000006,
-      "cost_approximate": true
-    },
-    {
-      "session_id": "fd45656f-02b4-4654-a32a-e6e6db0876f2",
-      "project": "Users/hoang/lilysbeauty",
-      "severity": "medium",
-      "reason": "session_churn",
-      "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
-      "metric": 8,
-      "threshold": 2,
-      "session_cost": 2734.155750000001,
+      "reason": "output_explosion",
+      "detail": "148.8K output tokens (μ=26.0K, σ=38.6K)",
+      "metric": 148811,
+      "threshold": 103175.19985108031,
+      "session_cost": 47576.21240000001,
       "cost_approximate": true
     },
     {
@@ -1555,6 +1579,356 @@
       "threshold": 0.5665426156395104,
       "session_cost": 369.64425000000006,
       "cost_approximate": true
+    },
+    {
+      "session_id": "0091f8f8-6d91-46ad-9dfe-977b1e38e352",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.17 (P10 = 1.30)",
+      "metric": 1.1650564665039178,
+      "threshold": 1.3003730904880242,
+      "session_cost": 1135.53345,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "043c97db-4b38-4ce6-bf57-131df322f180",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.29 (P10 = 1.30)",
+      "metric": 1.2872352456500316,
+      "threshold": 1.3003730904880242,
+      "session_cost": 257.8341,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "06bc9d57-d9a1-46cb-8bcf-0040dbe395d8",
+      "project": "Users/hoang",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.01 (P10 = 1.30)",
+      "metric": 0.013659147869674185,
+      "threshold": 1.3003730904880242,
+      "session_cost": 143.06799999999998
+    },
+    {
+      "session_id": "072197fb-899d-440b-9f1f-fd79b1740de0",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.00 (P10 = 1.30)",
+      "metric": 0.00017090730415091114,
+      "threshold": 1.3003730904880242,
+      "session_cost": 175.6515,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "1c9d0b66-284d-42e0-aa07-6ed4645e7d22",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.00 (P10 = 1.30)",
+      "metric": 0.00010128975622932001,
+      "threshold": 1.3003730904880242,
+      "session_cost": 444.4455,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "1fbe4fc2-cff3-4d7c-972e-2be9011ae925",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.00 (P10 = 1.30)",
+      "metric": 0.00043091669644546276,
+      "threshold": 1.3003730904880242,
+      "session_cost": 357.408,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "201f7630-32f4-4e76-b63d-a53512b3b3c3",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.30 (P10 = 1.30)",
+      "metric": 1.29766619750581,
+      "threshold": 1.3003730904880242,
+      "session_cost": 254.92815000000002,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "24c51ee8-8144-4c90-a0ed-224ae4c024d8",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.30 (P10 = 1.30)",
+      "metric": 1.3000279187400436,
+      "threshold": 1.3003730904880242,
+      "session_cost": 253.58339999999998,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "2d3300ca-911f-4a7d-a3dc-dd0055b78a33",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.27 (P10 = 1.30)",
+      "metric": 1.2711379026643883,
+      "threshold": 1.3003730904880242,
+      "session_cost": 263.12595,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "32013b84-6b5e-4e04-b372-b8caa5b56957",
+      "project": "Users/hoang",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.01 (P10 = 1.30)",
+      "metric": 0.008446428964212657,
+      "threshold": 1.3003730904880242,
+      "session_cost": 352.488,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "344c98f5-e7d0-4a8f-9c53-590aa7b4a5eb",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.55 (P10 = 1.30)",
+      "metric": 0.5511685954163831,
+      "threshold": 1.3003730904880242,
+      "session_cost": 371.74275,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "46ab494f-50ff-4332-b7b3-cc52b9ca3310",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.25 (P10 = 1.30)",
+      "metric": 1.253019021399074,
+      "threshold": 1.3003730904880242,
+      "session_cost": 267.37185,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "49effeda-d768-4353-aece-b635d7eb54d9",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.03 (P10 = 1.30)",
+      "metric": 1.0307146065493122,
+      "threshold": 1.3003730904880242,
+      "session_cost": 385.80315,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "4de5e937-9ba3-4144-9b99-d9beda362279",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.29 (P10 = 1.30)",
+      "metric": 1.2869323687100316,
+      "threshold": 1.3003730904880242,
+      "session_cost": 257.99895,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "4e749183-6430-4406-890f-2722fb2016d1",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.00 (P10 = 1.30)",
+      "metric": 0.00009670244657189827,
+      "threshold": 1.3003730904880242,
+      "session_cost": 310.34549999999996,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "611dec0c-3baa-4bf1-907e-e6b08c845501",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.88 (P10 = 1.30)",
+      "metric": 0.8812383104408392,
+      "threshold": 1.3003730904880242,
+      "session_cost": 478.3206,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "642aec52-96c1-45d8-8e98-38cdb089a989",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.74 (P10 = 1.30)",
+      "metric": 0.7449293445144067,
+      "threshold": 1.3003730904880242,
+      "session_cost": 869.6930799999999,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "6d92a6a5-1ab6-4ace-9f1f-c94e769beab7",
+      "project": "Users/hoang",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.00 (P10 = 1.30)",
+      "metric": 1.0017592070920192,
+      "threshold": 1.3003730904880242,
+      "session_cost": 356.28555000000006,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "705dccf4-4f38-40c9-9412-fb1facd4a170",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.86 (P10 = 1.30)",
+      "metric": 0.8560429670489186,
+      "threshold": 1.3003730904880242,
+      "session_cost": 1640.1123,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "7bcf966e-3f8b-41c8-ad69-e334fcaab522",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.43 (P10 = 1.30)",
+      "metric": 0.42895289955345456,
+      "threshold": 1.3003730904880242,
+      "session_cost": 1296.1302,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "93c1fb84-305f-484b-b787-d48e78aee3ba",
+      "project": "Users/hoang",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.24 (P10 = 1.30)",
+      "metric": 0.2393023450937618,
+      "threshold": 1.3003730904880242,
+      "session_cost": 732.7168499999999,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "951b436e-aac2-4e5c-8211-75c3ef62e13b",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.02 (P10 = 1.30)",
+      "metric": 1.0190399425811156,
+      "threshold": 1.3003730904880242,
+      "session_cost": 2935.7346,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "d28107ab-6dfc-47d9-aaea-dceaee190788",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.47 (P10 = 1.30)",
+      "metric": 0.4723537745395669,
+      "threshold": 1.3003730904880242,
+      "session_cost": 197.856,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "dbbcb1ca-d8a6-4896-ab00-c37a26c593c1",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.12 (P10 = 1.30)",
+      "metric": 1.1171129957419854,
+      "threshold": 1.3003730904880242,
+      "session_cost": 462.6666,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "dc707dfa-bc8d-475e-a790-675e870660c6",
+      "project": "Users/hoang/reka/ads",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.16 (P10 = 1.30)",
+      "metric": 1.1566668910277984,
+      "threshold": 1.3003730904880242,
+      "session_cost": 307.25249999999994,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "e81a2d03-8807-48a3-858f-214aad2c54de",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.19 (P10 = 1.30)",
+      "metric": 1.1865443873807777,
+      "threshold": 1.3003730904880242,
+      "session_cost": 294.86895000000004,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "ec57a273-543d-476a-a6f1-b8d00eda810a",
+      "project": "Users/hoang",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.99 (P10 = 1.30)",
+      "metric": 0.9896958330638729,
+      "threshold": 1.3003730904880242,
+      "session_cost": 392.15580000000006,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "ecb14e58-6fb3-436f-976f-c912570cb310",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.50 (P10 = 1.30)",
+      "metric": 0.5003346109387358,
+      "threshold": 1.3003730904880242,
+      "session_cost": 261.9774,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "ed2fd2ac-62e1-4c3f-8205-25abe4b3567f",
+      "project": "Users/hoang",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.16 (P10 = 1.30)",
+      "metric": 1.1593373493975903,
+      "threshold": 1.3003730904880242,
+      "session_cost": 83.7699,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "f1cde1aa-e8ba-4dbf-aedf-8c803bee925e",
+      "project": "Users/hoang/reka/travel",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 1.22 (P10 = 1.30)",
+      "metric": 1.2237779415377057,
+      "threshold": 1.3003730904880242,
+      "session_cost": 275.72415,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "f6907b96-a566-4756-a9e1-4425f2f0f2d2",
+      "project": "Users/hoang/lilysbeauty",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.50 (P10 = 1.30)",
+      "metric": 0.5002119497255251,
+      "threshold": 1.3003730904880242,
+      "session_cost": 369.64425000000006,
+      "cost_approximate": true
+    },
+    {
+      "session_id": "ses_2160cb748ffeT2ysB2AwrOJ8VN",
+      "project": "project-a",
+      "severity": "low",
+      "reason": "low_token_efficiency",
+      "detail": "TER = 0.29 (P10 = 1.30)",
+      "metric": 0.28742106161461,
+      "threshold": 1.3003730904880242,
+      "session_cost": 5
     }
   ],
   "subagent_trees": [
@@ -5168,6 +5542,180 @@
       "savings_est": 44969.72414333334
     },
     {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 73.57782857142857
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 5130.599288258024
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 84343.46393093503
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 19137.15333737997
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 5230.271537288066
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 4472.64148879556
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 1655.4893080820314
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 8731.526058239837
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 5395.928107426053
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 705.8975926516911
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 5733.630245926433
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 10937.55014125487
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 2651.4678407514953
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 6042.580978767122
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 1521.9434723577094
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 7341.730386805938
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 4550.000393350955
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 4786.238738531644
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 36000.12074457406
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 4900.435882750794
+    },
+    {
+      "signal": "input_overconsumption",
+      "action": "Reduce input context bloat — check for repeated file reads or tool-call loops",
+      "detail": "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.",
+      "savings_est": 2421.7425197708567
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "3 sessions in one project on the same day with high fragmentation (index = 3.4).",
+      "savings_est": 3.5
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "3 sessions in one project on the same day with high fragmentation (index = 3.4).",
+      "savings_est": 47.25
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "3 sessions in one project on the same day with high fragmentation (index = 3.4).",
+      "savings_est": 61.24999999999999
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "3 sessions in one project on the same day with high fragmentation (index = 3.4).",
+      "savings_est": 280
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "4 sessions in one project on the same day with high fragmentation (index = 3.6).",
+      "savings_est": 283.5
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "4 sessions in one project on the same day with high fragmentation (index = 3.6).",
+      "savings_est": 33.25
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "4 sessions in one project on the same day with high fragmentation (index = 3.6).",
+      "savings_est": 22.75
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "4 sessions in one project on the same day with high fragmentation (index = 3.6).",
+      "savings_est": 22.75
+    },
+    {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 1.6355 is below P10 (1.6552). The agent consumed context without producing meaningful output.",
@@ -5360,226 +5908,70 @@
       "savings_est": 16.25
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 257.8341
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 17047.569154202225
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 9773.885000000004
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 86878.74081884777
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "8 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 15229.6062
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 20962.27513007298
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 136.74705
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 6747.542094221061
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 1445.36835
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 33064.090699010805
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 10446.095260000002
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 16061.22579675896
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 254.92815000000002
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 22268.358836196378
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 253.58339999999998
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 15716.640649712235
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 263.12595
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 81921.46068899408
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "8 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 1532.62905
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 10396.940290968985
     },
     {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 6253.204200000003
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 136.80705
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 267.37185
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 1442.4625599999995
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 257.99895
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 4951.106850000001
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 2801.155199999999
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "8 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 1904.8997999999997
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 357.1458
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 153.39780000000002
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 3031.90836
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 3160.0042499999977
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "8 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 1631.4995999999999
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 5427.557100000001
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 133.7568
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "8 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 10274.695500000002
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 2690.9496
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 4808.698049999999
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "8 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 7447.667700000001
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 3057.795740000001
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 3002.0469399999984
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 136.80705
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "8 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 740.6600999999999
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 869.25915
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 10742.383620000004
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "29 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 369.64425000000006
-    },
-    {
-      "signal": "session_churn",
-      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
-      "detail": "8 sessions in one project on the same day, all below the mean output/input ratio.",
-      "savings_est": 2734.155750000001
+      "signal": "output_explosion",
+      "action": "Check for runaway generation loops or repeated corrections",
+      "detail": "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.",
+      "savings_est": 39256.99974530116
     },
     {
       "signal": "cache_underutilized",
@@ -5772,7 +6164,199 @@
       "action": "Consider CLAUDE.md / skills optimization for better caching",
       "detail": "Cache hit rate 0.3329 is below P10 (0.5665). Optimize instruction files to improve cache reuse.",
       "savings_est": 73.92885000000001
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.17 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 227.10669
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.29 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 51.56682
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.01 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 28.613599999999998
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.00 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 35.1303
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.00 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 88.8891
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.00 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 71.4816
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.30 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 50.98563000000001
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.30 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 50.71668
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.27 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 52.62519
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.01 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 70.4976
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.55 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 74.34855
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.25 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 53.47437
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.03 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 77.16063000000001
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.29 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 51.59979
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.00 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 62.06909999999999
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.88 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 95.66412000000001
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.74 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 173.938616
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.00 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 71.25711000000001
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.86 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 328.02246
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.43 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 259.22604
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.24 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 146.54336999999998
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.02 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 587.14692
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.47 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 39.571200000000005
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.12 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 92.53332
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.16 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 61.45049999999999
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.19 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 58.97379000000001
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.99 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 78.43116000000002
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.50 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 52.39548
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.16 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 16.753980000000002
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 1.22 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 55.144830000000006
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.50 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 73.92885000000001
+    },
+    {
+      "signal": "low_token_efficiency",
+      "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
+      "detail": "TER = 0.29 is below P10 (1.30). Session produced very little output relative to context consumed.",
+      "savings_est": 1
     }
   ],
-  "potential_savings": 874120.4621940854
+  "potential_savings": 1331819.951186841
 }

@@ -28,8 +28,17 @@ func TestDefaults(t *testing.T) {
 	if !cfg.Signals.CacheUnderutilized {
 		t.Error("CacheUnderutilized should default to true")
 	}
-	if !cfg.Signals.SessionChurn {
-		t.Error("SessionChurn should default to true")
+	if !cfg.Signals.FragmentationIndex {
+		t.Error("FragmentationIndex should default to true")
+	}
+	if !cfg.Signals.InputOverconsumption {
+		t.Error("InputOverconsumption should default to true")
+	}
+	if !cfg.Signals.OutputExplosion {
+		t.Error("OutputExplosion should default to true")
+	}
+	if !cfg.Signals.TokenEfficiency {
+		t.Error("TokenEfficiency should default to true")
 	}
 
 	if cfg.Filters.MinCost != 0 {

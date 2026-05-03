@@ -21,11 +21,14 @@ type Thresholds struct {
 }
 
 type Signals struct {
-	CostOutlier        bool `toml:"cost_outlier"`
-	LowSignal          bool `toml:"low_signal"`
-	SubagentOverhead   bool `toml:"subagent_overhead"`
-	CacheUnderutilized bool `toml:"cache_underutilized"`
-	SessionChurn       bool `toml:"session_churn"`
+	CostOutlier          bool `toml:"cost_outlier"`
+	LowSignal            bool `toml:"low_signal"`
+	SubagentOverhead     bool `toml:"subagent_overhead"`
+	CacheUnderutilized   bool `toml:"cache_underutilized"`
+	FragmentationIndex   bool `toml:"fragmentation_index"`
+	InputOverconsumption bool `toml:"input_overconsumption"`
+	OutputExplosion      bool `toml:"output_explosion"`
+	TokenEfficiency      bool `toml:"token_efficiency"`
 }
 
 type Filters struct {
@@ -45,11 +48,14 @@ func Defaults() Config {
 			LowSignalPercentile: 10.0,
 		},
 		Signals: Signals{
-			CostOutlier:        true,
-			LowSignal:          true,
-			SubagentOverhead:   true,
-			CacheUnderutilized: true,
-			SessionChurn:       true,
+			CostOutlier:          true,
+			LowSignal:            true,
+			SubagentOverhead:     true,
+			CacheUnderutilized:   true,
+			FragmentationIndex:   true,
+			InputOverconsumption: true,
+			OutputExplosion:      true,
+			TokenEfficiency:      true,
 		},
 		Filters: Filters{
 			MinCost:     0,

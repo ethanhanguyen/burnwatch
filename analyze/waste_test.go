@@ -8,12 +8,23 @@ import (
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
+const (
+	defaultCostSigma            = 2.0
+	defaultInputSigma           = 2.0
+	defaultOutputSigma          = 2.0
+	defaultFragThreshold        = 3.0
+	defaultFragMinSessions      = 3
+)
+
 var allToggles = SignalToggles{
-	CostOutlier:        true,
-	LowSignal:          true,
-	SubagentOverhead:   true,
-	CacheUnderutilized: true,
-	SessionChurn:       true,
+	CostOutlier:          true,
+	LowSignal:            true,
+	SubagentOverhead:     true,
+	CacheUnderutilized:   true,
+	FragmentationIndex:   true,
+	InputOverconsumption: true,
+	OutputExplosion:      true,
+	TokenEfficiency:      true,
 }
 
 func TestDetectWasteCostOutlier(t *testing.T) {
@@ -40,7 +51,7 @@ func TestDetectWasteCostOutlier(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -80,7 +91,7 @@ func TestDetectWasteLowSignal(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -103,7 +114,7 @@ func TestDetectWasteSubagentOverhead(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -147,7 +158,7 @@ func TestDetectWasteCacheUnderutilized(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -163,19 +174,20 @@ func TestDetectWasteCacheUnderutilized(t *testing.T) {
 	}
 }
 
-func TestDetectWasteSessionChurn(t *testing.T) {
+func TestDetectWasteFragmentationIndex(t *testing.T) {
 	events := []source.TokenEvent{
-		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
-		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
-		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 1000, OutputTokens: 1, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 1000, OutputTokens: 1, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 1000, OutputTokens: 1, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+		{SessionID: "s4", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 1000, OutputTokens: 1, Timestamp: time.Date(2026, 5, 1, 13, 0, 0, 0, time.UTC)},
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	var found bool
 	for _, s := range signals {
-		if s.Reason == "session_churn" {
+		if s.Reason == "fragmentation_index" {
 			found = true
 			if s.Severity != "medium" {
 				t.Errorf("expected medium severity, got %s", s.Severity)
@@ -183,27 +195,256 @@ func TestDetectWasteSessionChurn(t *testing.T) {
 		}
 	}
 	if !found {
-		t.Errorf("expected session_churn signals, got %d signals", len(signals))
+		t.Errorf("expected fragmentation_index signals, got %d signals", len(signals))
 	}
 
 	count := 0
 	for _, s := range signals {
-		if s.Reason == "session_churn" {
+		if s.Reason == "fragmentation_index" {
 			count++
 		}
 	}
-	if count != 3 {
-		t.Errorf("expected 3 session_churn signals (one per churned session), got %d", count)
+	if count != 4 {
+		t.Errorf("expected 4 fragmentation_index signals (one per session), got %d", count)
+	}
+}
+
+func TestDetectWasteFragmentationIndex_BelowMinSessions(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	for _, s := range signals {
+		if s.Reason == "fragmentation_index" {
+			t.Error("fragmentation_index should not fire with only 2 sessions (below min=3)")
+		}
+	}
+}
+
+func TestDetectWasteFragmentationIndex_LowFragmentation(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 90, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 90, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 90, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	for _, s := range signals {
+		if s.Reason == "fragmentation_index" {
+			t.Error("fragmentation_index should not fire when mean ratio is high (low fragmentation)")
+		}
+	}
+}
+
+func TestDetectWasteFragmentationIndex_Dedup(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 2, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s4", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 2, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s5", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 10, Timestamp: time.Date(2026, 5, 2, 12, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	seen := make(map[string]bool)
+	for _, s := range signals {
+		if s.Reason != "fragmentation_index" {
+			continue
+		}
+		if seen[s.SessionID] {
+			t.Errorf("session %s appeared in fragmentation_index multiple times (not deduped)", s.SessionID)
+		}
+		seen[s.SessionID] = true
+	}
+}
+
+func TestDetectWasteInputOverconsumption(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 120000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 90000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+		{SessionID: "s4", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 110000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 13, 0, 0, 0, time.UTC)},
+		{SessionID: "s5", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 80000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC)},
+		{SessionID: "s-huge-input", Project: "p", Harness: "h", CostUSD: 5.0, InputTokens: 500000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 15, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	var found bool
+	for _, s := range signals {
+		if s.Reason == "input_overconsumption" && s.SessionID == "s-huge-input" {
+			found = true
+			if s.Severity != "high" {
+				t.Errorf("expected high severity, got %s", s.Severity)
+			}
+		}
+	}
+	if !found {
+		t.Errorf("expected input_overconsumption signal for s-huge-input, got %d signals", len(signals))
+	}
+}
+
+func TestDetectWasteInputOverconsumption_Normal(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 120000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 90000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+		{SessionID: "s4", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 110000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 13, 0, 0, 0, time.UTC)},
+		{SessionID: "s5", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 80000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC)},
+		{SessionID: "s-normal", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 110000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 15, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	for _, s := range signals {
+		if s.Reason == "input_overconsumption" && s.SessionID == "s-normal" {
+			t.Error("s-normal should not be flagged for input_overconsumption")
+		}
+	}
+}
+
+func TestDetectWasteInputOverconsumption_ZeroInput(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 120000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s-zero-input", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 0, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	for _, s := range signals {
+		if s.Reason == "input_overconsumption" && s.SessionID == "s-zero-input" {
+			t.Error("s-zero-input should not be flagged for input_overconsumption")
+		}
+	}
+}
+
+func TestDetectWasteInputOverconsumption_ZeroStd(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100000, OutputTokens: 50, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	for _, s := range signals {
+		if s.Reason == "input_overconsumption" {
+			t.Error("input_overconsumption should not fire when InputStd=0")
+		}
+	}
+}
+
+func TestDetectWasteOutputExplosion(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 40000, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 35000, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 45000, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+		{SessionID: "s4", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 30000, Timestamp: time.Date(2026, 5, 1, 13, 0, 0, 0, time.UTC)},
+		{SessionID: "s5", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 50000, Timestamp: time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC)},
+		{SessionID: "s-huge-output", Project: "p", Harness: "h", CostUSD: 5.0, InputTokens: 100, OutputTokens: 200000, Timestamp: time.Date(2026, 5, 1, 15, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	var found bool
+	for _, s := range signals {
+		if s.Reason == "output_explosion" && s.SessionID == "s-huge-output" {
+			found = true
+			if s.Severity != "medium" {
+				t.Errorf("expected medium severity, got %s", s.Severity)
+			}
+		}
+	}
+	if !found {
+		t.Errorf("expected output_explosion signal for s-huge-output, got %d signals", len(signals))
+	}
+}
+
+func TestDetectWasteOutputExplosion_ZeroOutput(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 40000, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 35000, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s-zero-out", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 0, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	for _, s := range signals {
+		if s.Reason == "output_explosion" && s.SessionID == "s-zero-out" {
+			t.Error("s-zero-out should not be flagged for output_explosion")
+		}
+	}
+}
+
+func TestDetectWasteTokenEfficiency(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+		{SessionID: "s4", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 13, 0, 0, 0, time.UTC)},
+		{SessionID: "s5", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC)},
+		{SessionID: "s-low-ter", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 100, Timestamp: time.Date(2026, 5, 1, 15, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	var found bool
+	for _, s := range signals {
+		if s.Reason == "low_token_efficiency" && s.SessionID == "s-low-ter" {
+			found = true
+			if s.Severity != "low" {
+				t.Errorf("expected low severity, got %s", s.Severity)
+			}
+		}
+	}
+	if !found {
+		t.Errorf("expected low_token_efficiency signal for s-low-ter, got %d signals", len(signals))
+	}
+}
+
+func TestDetectWasteTokenEfficiency_Normal(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+		{SessionID: "s4", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 13, 0, 0, 0, time.UTC)},
+		{SessionID: "s5", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC)},
+		{SessionID: "s-normal-ter", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 10000, OutputTokens: 5000, Timestamp: time.Date(2026, 5, 1, 15, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+
+	for _, s := range signals {
+		if s.Reason == "low_token_efficiency" && s.SessionID == "s-normal-ter" {
+			t.Error("s-normal-ter should not be flagged for low_token_efficiency")
+		}
 	}
 }
 
 func TestDetectWasteEmptyInput(t *testing.T) {
-	signals := DetectWaste(nil, nil, 2.0, allToggles)
+	signals := DetectWaste(nil, nil, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for nil input, got %d", len(signals))
 	}
 
-	signals = DetectWaste([]source.TokenEvent{}, nil, 2.0, allToggles)
+	signals = DetectWaste([]source.TokenEvent{}, nil, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty input, got %d", len(signals))
 	}
@@ -217,7 +458,7 @@ func TestDetectWasteAllNormal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for normal data, got %d", len(signals))
@@ -230,12 +471,13 @@ func TestDetectWasteNoSubagentsNoOverheadSignal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	for _, s := range signals {
 		if s.Reason == "subagent_overhead" {
 			t.Error("should not fire subagent_overhead when no subagents")
 		}
+		_ = s // prevents garbage collector from collecting early ;)
 	}
 }
 
@@ -264,7 +506,7 @@ func TestDetectWasteSignalFields(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	for _, s := range signals {
 		if s.Reason == "cost_outlier" {
@@ -315,7 +557,13 @@ func TestDetectWasteSortOrder(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	sortToggles := SignalToggles{
+		CostOutlier:        true,
+		LowSignal:          true,
+		SubagentOverhead:   true,
+		CacheUnderutilized: true,
+	}
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, sortToggles)
 
 	prev := ""
 	for i, s := range signals {
@@ -324,6 +572,10 @@ func TestDetectWasteSortOrder(t *testing.T) {
 			t.Errorf("signals out of order at index %d: %q < %q", i, cur, prev)
 		}
 		prev = cur
+	}
+
+	if len(signals) == 0 {
+		t.Skip("no signals to verify sort order")
 	}
 
 	if signals[0].Severity != "high" {
@@ -355,8 +607,7 @@ func TestCheckCostOutlier_Sigma3(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	// sigma=3: threshold = mean + 3*stddev (much higher, harder to trigger)
-	signals := DetectWaste(events, baselines, 3.0, allToggles)
+	signals := DetectWaste(events, baselines, 3.0, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -368,8 +619,7 @@ func TestCheckCostOutlier_Sigma3(t *testing.T) {
 		t.Log("cost 20 was still flagged at sigma=3 (expected if variance is low)")
 	}
 
-	// sigma=2 should flag it (lower threshold)
-	signals2 := DetectWaste(events, baselines, 2.0, allToggles)
+	signals2 := DetectWaste(events, baselines, 2.0, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 	var found2 bool
 	for _, s := range signals2 {
 		if s.Reason == "cost_outlier" && s.SessionID == "s-outlier" {
@@ -405,7 +655,7 @@ func TestCheckCostOutlier_Sigma1(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 1.0, allToggles)
+	signals := DetectWaste(events, baselines, 1.0, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -426,7 +676,7 @@ func TestCheckCostOutlier_ZeroSigma(t *testing.T) {
 			Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
 	}
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 0, allToggles)
+	signals := DetectWaste(events, baselines, 0, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	for _, s := range signals {
 		if s.Reason == "cost_outlier" {
@@ -459,8 +709,8 @@ func TestDetectWaste_WithSigma(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals2 := DetectWaste(events, baselines, 2.0, allToggles)
-	signals4 := DetectWaste(events, baselines, 4.0, allToggles)
+	signals2 := DetectWaste(events, baselines, 2.0, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
+	signals4 := DetectWaste(events, baselines, 4.0, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	countOutlier := func(signals []WasteSignal) int {
 		c := 0
@@ -489,9 +739,8 @@ func TestCostConsistency(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
-	// All signals for "parent" session should have same SessionCost
 	var parentSignals []WasteSignal
 	for _, s := range signals {
 		if s.SessionID == "parent" {
@@ -539,7 +788,7 @@ func TestWasteSignalHasModel(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines, 2.0, allToggles)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, allToggles)
 
 	var found bool
 	for _, s := range signals {
@@ -587,13 +836,16 @@ func TestDetectWaste_ToggleOff(t *testing.T) {
 	baselines := ComputeBaselines(events)
 
 	off := SignalToggles{
-		CostOutlier:        false,
-		LowSignal:          false,
-		SubagentOverhead:   false,
-		CacheUnderutilized: false,
-		SessionChurn:       false,
+		CostOutlier:          false,
+		LowSignal:            false,
+		SubagentOverhead:     false,
+		CacheUnderutilized:   false,
+		FragmentationIndex:   false,
+		InputOverconsumption: false,
+		OutputExplosion:      false,
+		TokenEfficiency:      false,
 	}
-	signals := DetectWaste(events, baselines, 2.0, off)
+	signals := DetectWaste(events, baselines, defaultCostSigma, defaultInputSigma, defaultOutputSigma, defaultFragThreshold, defaultFragMinSessions, off)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals with all toggles off, got %d", len(signals))

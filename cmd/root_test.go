@@ -44,13 +44,16 @@ func TestEndToEnd(t *testing.T) {
 
 	baselines := analyze.ComputeBaselines(events)
 	toggles := analyze.SignalToggles{
-		CostOutlier:        true,
-		LowSignal:          true,
-		SubagentOverhead:   true,
-		CacheUnderutilized: true,
-		SessionChurn:       true,
+		CostOutlier:          true,
+		LowSignal:            true,
+		SubagentOverhead:     true,
+		CacheUnderutilized:   true,
+		FragmentationIndex:   true,
+		InputOverconsumption: true,
+		OutputExplosion:      true,
+		TokenEfficiency:      true,
 	}
-	signals := analyze.DetectWaste(events, baselines, 2.0, toggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
 
 	if len(signals) == 0 {
 		t.Log("no waste signals found from test data (may be expected for clean data)")
@@ -63,7 +66,6 @@ func TestEndToEnd(t *testing.T) {
 		t.Error("expected non-empty text output")
 	}
 
-	// No panic with JSON flag equivalent
 	trees := analyze.BuildSubagentTree(events)
 	jsonBytes, err := output.FormatJSON(events, baselines, signals, nil, trees)
 	if err != nil {
@@ -121,9 +123,6 @@ func TestFilterByProject(t *testing.T) {
 }
 
 func TestFilterByDays(t *testing.T) {
-	// Filter by days uses time.Now().AddDate(0, 0, -days) as the cutoff.
-	// Events with timestamps older than the cutoff are excluded.
-	// Use sufficiently old events that they would be filtered out by a 1-day window.
 	events := []source.TokenEvent{
 		{SessionID: "s1", Timestamp: today()},
 		{SessionID: "s2", Timestamp: today().AddDate(0, 0, -1)},
@@ -144,13 +143,16 @@ func TestZeroEvents(t *testing.T) {
 	events := []source.TokenEvent{}
 	baselines := analyze.ComputeBaselines(events)
 	toggles := analyze.SignalToggles{
-		CostOutlier:        true,
-		LowSignal:          true,
-		SubagentOverhead:   true,
-		CacheUnderutilized: true,
-		SessionChurn:       true,
+		CostOutlier:          true,
+		LowSignal:            true,
+		SubagentOverhead:     true,
+		CacheUnderutilized:   true,
+		FragmentationIndex:   true,
+		InputOverconsumption: true,
+		OutputExplosion:      true,
+		TokenEfficiency:      true,
 	}
-	signals := analyze.DetectWaste(events, baselines, 2.0, toggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty events, got %d", len(signals))
@@ -168,22 +170,49 @@ func TestTogglesSuppressOutput(t *testing.T) {
 	events := output.CollectEvents(sources)
 	baselines := analyze.ComputeBaselines(events)
 
-	allOff := analyze.SignalToggles{CostOutlier: false, LowSignal: false, SubagentOverhead: false, CacheUnderutilized: false, SessionChurn: false}
-	signals := analyze.DetectWaste(events, baselines, 2.0, allOff)
+	allOff := analyze.SignalToggles{
+		CostOutlier:          false,
+		LowSignal:            false,
+		SubagentOverhead:     false,
+		CacheUnderutilized:   false,
+		FragmentationIndex:   false,
+		InputOverconsumption: false,
+		OutputExplosion:      false,
+		TokenEfficiency:      false,
+	}
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allOff)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals with all toggles off, got %d", len(signals))
 	}
 
-	noChurn := analyze.SignalToggles{CostOutlier: true, LowSignal: true, SubagentOverhead: true, CacheUnderutilized: true, SessionChurn: false}
-	signalsNoChurn := analyze.DetectWaste(events, baselines, 2.0, noChurn)
-	for _, s := range signalsNoChurn {
-		if s.Reason == "session_churn" {
-			t.Error("found session_churn signal with toggle off")
+	noFrag := analyze.SignalToggles{
+		CostOutlier:          true,
+		LowSignal:            true,
+		SubagentOverhead:     true,
+		CacheUnderutilized:   true,
+		FragmentationIndex:   false,
+		InputOverconsumption: true,
+		OutputExplosion:      true,
+		TokenEfficiency:      true,
+	}
+	signalsNoFrag := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, noFrag)
+	for _, s := range signalsNoFrag {
+		if s.Reason == "fragmentation_index" {
+			t.Error("found fragmentation_index signal with toggle off")
 		}
 	}
 
-	noCost := analyze.SignalToggles{CostOutlier: false, LowSignal: true, SubagentOverhead: true, CacheUnderutilized: true, SessionChurn: true}
-	signalsNoCost := analyze.DetectWaste(events, baselines, 2.0, noCost)
+	noCost := analyze.SignalToggles{
+		CostOutlier:          false,
+		LowSignal:            true,
+		SubagentOverhead:     true,
+		CacheUnderutilized:   true,
+		FragmentationIndex:   true,
+		InputOverconsumption: true,
+		OutputExplosion:      true,
+		TokenEfficiency:      true,
+	}
+	signalsNoCost := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, noCost)
 	for _, s := range signalsNoCost {
 		if s.Reason == "cost_outlier" {
 			t.Error("found cost_outlier signal with toggle off")
@@ -199,13 +228,16 @@ func TestTrendsOutput(t *testing.T) {
 
 	baselines := analyze.ComputeBaselines(events)
 	toggles := analyze.SignalToggles{
-		CostOutlier:        true,
-		LowSignal:          true,
-		SubagentOverhead:   true,
-		CacheUnderutilized: true,
-		SessionChurn:       true,
+		CostOutlier:          true,
+		LowSignal:            true,
+		SubagentOverhead:     true,
+		CacheUnderutilized:   true,
+		FragmentationIndex:   true,
+		InputOverconsumption: true,
+		OutputExplosion:      true,
+		TokenEfficiency:      true,
 	}
-	signals := analyze.DetectWaste(events, baselines, 2.0, toggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	cfg := config.Config{}

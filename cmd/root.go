@@ -32,12 +32,15 @@ func Execute() {
 		PrintConfig bool
 		MinCost     float64
 
-		NoCostOutlier       bool
-		NoLowSignal         bool
-		NoSubagentOverhead  bool
-		NoCacheUnderutil    bool
-		NoChurn             bool
-		ShowTrends          bool
+		NoCostOutlier          bool
+		NoLowSignal            bool
+		NoSubagentOverhead     bool
+		NoCacheUnderutil       bool
+		NoFragmentationIndex   bool
+		NoInputOverconsumption bool
+		NoOutputExplosion      bool
+		NoTokenEfficiency      bool
+		ShowTrends             bool
 
 		RefreshPricing bool
 		NoFetchPricing bool
@@ -57,7 +60,10 @@ func Execute() {
 	flag.BoolVar(&flags.NoLowSignal, "no-low-signal", false, "Disable low output/input ratio detection")
 	flag.BoolVar(&flags.NoSubagentOverhead, "no-subagent-overhead", false, "Disable subagent overhead detection")
 	flag.BoolVar(&flags.NoCacheUnderutil, "no-cache-underutil", false, "Disable cache underutilization detection")
-	flag.BoolVar(&flags.NoChurn, "no-churn", false, "Disable session churn detection")
+	flag.BoolVar(&flags.NoFragmentationIndex, "no-fragmentation-index", false, "Disable fragmentation index detection")
+	flag.BoolVar(&flags.NoInputOverconsumption, "no-input-overconsumption", false, "Disable input overconsumption detection")
+	flag.BoolVar(&flags.NoOutputExplosion, "no-output-explosion", false, "Disable output explosion detection")
+	flag.BoolVar(&flags.NoTokenEfficiency, "no-token-efficiency", false, "Disable token efficiency detection")
 	flag.BoolVar(&flags.ShowTrends, "show-trends", false, "Show time-trend summary")
 	flag.BoolVar(&flags.RefreshPricing, "refresh-pricing", false, "Force re-fetch pricing from OpenRouter")
 	flag.BoolVar(&flags.NoFetchPricing, "no-fetch-pricing", false, "Skip network fetch, use embedded pricing only")
@@ -146,20 +152,32 @@ func Execute() {
 	if flags.NoCacheUnderutil {
 		cfg.Signals.CacheUnderutilized = false
 	}
-	if flags.NoChurn {
-		cfg.Signals.SessionChurn = false
+	if flags.NoFragmentationIndex {
+		cfg.Signals.FragmentationIndex = false
+	}
+	if flags.NoInputOverconsumption {
+		cfg.Signals.InputOverconsumption = false
+	}
+	if flags.NoOutputExplosion {
+		cfg.Signals.OutputExplosion = false
+	}
+	if flags.NoTokenEfficiency {
+		cfg.Signals.TokenEfficiency = false
 	}
 	if flags.ShowTrends {
 		cfg.Output.ShowTrends = true
 	}
 	toggles := analyze.SignalToggles{
-		CostOutlier:        cfg.Signals.CostOutlier,
-		LowSignal:          cfg.Signals.LowSignal,
-		SubagentOverhead:   cfg.Signals.SubagentOverhead,
-		CacheUnderutilized: cfg.Signals.CacheUnderutilized,
-		SessionChurn:       cfg.Signals.SessionChurn,
+		CostOutlier:          cfg.Signals.CostOutlier,
+		LowSignal:            cfg.Signals.LowSignal,
+		SubagentOverhead:     cfg.Signals.SubagentOverhead,
+		CacheUnderutilized:   cfg.Signals.CacheUnderutilized,
+		FragmentationIndex:   cfg.Signals.FragmentationIndex,
+		InputOverconsumption: cfg.Signals.InputOverconsumption,
+		OutputExplosion:      cfg.Signals.OutputExplosion,
+		TokenEfficiency:      cfg.Signals.TokenEfficiency,
 	}
-	signals := analyze.DetectWaste(events, baselines, costSigma, toggles)
+	signals := analyze.DetectWaste(events, baselines, costSigma, 2.0, 2.0, 3.0, 3, toggles)
 
 	minCost := cfg.Filters.MinCost
 	if flags.MinCost > 0 {

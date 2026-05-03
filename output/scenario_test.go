@@ -13,6 +13,14 @@ import (
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
+var v1Toggles = analyze.SignalToggles{
+	CostOutlier:        true,
+	LowSignal:          true,
+	SubagentOverhead:   true,
+	CacheUnderutilized: true,
+	FragmentationIndex: false,
+}
+
 func loadScenarioJSONL(tb testing.TB, name string) []source.TokenEvent {
 	tb.Helper()
 	path := filepath.Join("..", "testdata", "scenarios", name)
@@ -118,7 +126,7 @@ func runPipeline(t *testing.T, events []source.TokenEvent) ([]analyze.WasteSigna
 	if len(baselines) == 0 {
 		t.Fatal("no baselines computed")
 	}
-	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 	return signals, baselines
 }
 
@@ -128,13 +136,13 @@ func runPipelineWithToggles(t *testing.T, events []source.TokenEvent, toggles an
 	if len(baselines) == 0 {
 		t.Fatal("no baselines computed")
 	}
-	return analyze.DetectWaste(events, baselines, 2.0, toggles)
+	return analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
 }
 
 func TestScenario_CostOutlier(t *testing.T) {
 	events := loadScenarioJSONL(t, "cost_outlier.jsonl")
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, v1Toggles)
 
 	var costSig, lowSig *analyze.WasteSignal
 	for i := range signals {
@@ -308,7 +316,7 @@ func TestScenario_SubagentOverhead(t *testing.T) {
 	toggles := allToggles
 	toggles.SubagentOverhead = true
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines, 2.0, toggles)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, toggles)
 
 	foundSubagent := false
 	for _, s := range signals {
@@ -374,7 +382,8 @@ func TestScenario_MultiSignal(t *testing.T) {
 
 func TestScenario_AllClean(t *testing.T) {
 	events := loadScenarioJSONL(t, "all_clean.jsonl")
-	signals, _ := runPipeline(t, events)
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, v1Toggles)
 
 	for _, s := range signals {
 		if strings.HasPrefix(s.SessionID, "ses_clean_") {

@@ -40,11 +40,14 @@ func Deduplicate(signals []WasteSignal) []WasteSignal {
 func signalRank(s WasteSignal) int {
 	sev := map[string]int{"high": 6, "medium": 4, "low": 2}
 	reason := map[string]int{
-		"cost_outlier":       5,
-		"subagent_overhead": 4,
-		"session_churn":     3,
-		"low_signal":        2,
-		"cache_underutilized": 1,
+		"cost_outlier":           5,
+		"subagent_overhead":     4,
+		"input_overconsumption": 4,
+		"output_explosion":      3,
+		"fragmentation_index":   3,
+		"low_signal":            2,
+		"low_token_efficiency":  2,
+		"cache_underutilized":   1,
 	}
 	return sev[s.Severity] + reason[s.Reason]
 }

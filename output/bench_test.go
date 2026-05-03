@@ -62,7 +62,7 @@ func BenchmarkPipeline_1K(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		baselines := analyze.ComputeBaselines(events)
-		_ = analyze.DetectWaste(events, baselines, cfg.Thresholds.CostOutlierSigma, allToggles)
+		_ = analyze.DetectWaste(events, baselines, cfg.Thresholds.CostOutlierSigma, 2.0, 2.0, 3.0, 3, allToggles)
 	}
 }
 
@@ -72,7 +72,7 @@ func BenchmarkPipeline_10K(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		baselines := analyze.ComputeBaselines(events)
-		_ = analyze.DetectWaste(events, baselines, cfg.Thresholds.CostOutlierSigma, allToggles)
+		_ = analyze.DetectWaste(events, baselines, cfg.Thresholds.CostOutlierSigma, 2.0, 2.0, 3.0, 3, allToggles)
 	}
 }
 
@@ -91,7 +91,7 @@ func BenchmarkWasteDetection(b *testing.B) {
 	baselines := analyze.ComputeBaselines(events)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = analyze.DetectWaste(events, baselines, 2.0, allToggles)
+		_ = analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 	}
 }
 
@@ -173,7 +173,7 @@ func BenchmarkSignalQuality(b *testing.B) {
 	var tp, fp, fn int
 	for i := 0; i < b.N; i++ {
 		tp, fp, fn = 0, 0, 0
-		signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+		signals := analyze.DetectWaste(events, baselines, 2.0, 2.0, 2.0, 3.0, 3, allToggles)
 		for _, s := range signals {
 			if strings.Contains(s.SessionID, "_waste") {
 				tp++
