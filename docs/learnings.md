@@ -69,6 +69,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Test in-memory SQLite DB schemas must match actual harness DB schemas exactly. If a harness changes its schema, tests break silently by failing to create matching tables. `source/opencode_test.go:361-365`
 - `Baseline.RatioMean` was added to support H5 (session churn) which needs per-project mean ratios. Not in the original PR4 spec but required — `CostStd` alone doesn't capture output/input behavior. `analyze/baseline.go:7`
 - All heuristics depend on `ComputeBaselines` producing a global baseline (key `"*"`). Removing or renaming this key breaks H2, H4, and cross-project percentile comparisons. `analyze/baseline.go:21,65`
+- The embedded pricing table (`source/pricing.go:12-22`) only covers 6 models. All other models fall back to claude-sonnet pricing, inflating costs 5x–17x for deepseek, kimi, minimax, qwen, gpt-5.4. Fix: fetch pricing from OpenRouter API dynamically (PR11). Changing `CostForModel` signature adds a return value — all callers must be updated.
 
 ## Rules
 

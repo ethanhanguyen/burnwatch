@@ -146,7 +146,9 @@ CLI flags override config values at runtime.
 
 ## Pricing
 
-Embedded in binary. Supports:
+**v2 (PR11):** Pricing fetched from OpenRouter API (`https://openrouter.ai/api/v1/models`) on first run, cached locally (7-day TTL). All models get accurate per-token pricing. `≈` indicator shown when embedded fallback is used. No model left behind.
+
+**v1 (deprecated):** Embedded in binary. Supports:
 
 **Anthropic:**
 - Claude Sonnet 4-5: $3.00/$15.00 per 1K tokens (input/output)
@@ -168,5 +170,16 @@ Embedded in binary. Supports:
 2. No TUI or web dashboard — text or JSON output only.
 3. Claude Code cost is computed (not stored by Claude Code) — may slightly differ from actual bills.
 4. Subagent tracking depends on harness support. Claude Code links subagents by directory structure. OpenCode uses `parent_id` FK.
-5. Pricing table becomes stale when providers change prices. Update via new release.
+5. ~~Pricing table becomes stale when providers change prices. Update via new release.~~ **Resolved in v2 (PR11):** pricing fetched dynamically from OpenRouter API, cached with 7-day TTL.
 6. Single-user, single-machine. No cross-machine aggregation.
+
+### v2 roadmap
+
+See [`docs/plans/v2-implementation-plan.md`](../plans/v2-implementation-plan.md) for the full v2 plan covering:
+- Dynamic pricing (PR11)
+- Token baselines + heuristics (PR12–PR13)
+- Config-wired thresholds (PR14)
+- Calibration mode (PR15)
+- Anomaly detection (PR16)
+- LLM verification (PR17)
+- ML pipeline (PR18)

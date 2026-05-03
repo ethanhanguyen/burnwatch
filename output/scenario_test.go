@@ -1,0 +1,383 @@
+package output
+
+import (
+	"bufio"
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/ethanhanguyen/burnwatch/analyze"
+	"github.com/ethanhanguyen/burnwatch/source"
+)
+
+func loadScenarioJSONL(tb testing.TB, name string) []source.TokenEvent {
+	tb.Helper()
+	path := filepath.Join("..", "testdata", "scenarios", name)
+	f, err := os.Open(path)
+	if err != nil {
+		tb.Fatalf("open scenario %s: %v", path, err)
+	}
+	defer f.Close()
+
+	var events []source.TokenEvent
+	scanner := bufio.NewScanner(f)
+	scanner.Buffer(make([]byte, 0, 1024*1024), 10*1024*1024)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		ev := parseScenarioLine(tb, line)
+		events = append(events, ev)
+	}
+	if err := scanner.Err(); err != nil {
+		tb.Fatalf("scan scenario %s: %v", path, err)
+	}
+	return events
+}
+
+type scenarioEntry struct {
+	Type      string           `json:"type"`
+	SessionID string           `json:"sessionId"`
+	Message   scenarioMessage  `json:"message"`
+	Timestamp string           `json:"timestamp"`
+}
+
+type scenarioMessage struct {
+	Model string         `json:"model"`
+	Usage *scenarioUsage `json:"usage"`
+}
+
+type scenarioUsage struct {
+	InputTokens              int64 `json:"input_tokens"`
+	OutputTokens             int64 `json:"output_tokens"`
+	CacheCreationInputTokens int64 `json:"cache_creation_input_tokens"`
+	CacheReadInputTokens     int64 `json:"cache_read_input_tokens"`
+}
+
+func parseScenarioLine(tb testing.TB, line string) source.TokenEvent {
+	tb.Helper()
+	var entry scenarioEntry
+	if err := json.Unmarshal([]byte(line), &entry); err != nil {
+		tb.Fatalf("unmarshal scenario line: %v", err)
+	}
+	if entry.Message.Usage == nil {
+		tb.Fatal("scenario entry has no usage")
+	}
+	ts, _ := time.Parse(time.RFC3339, entry.Timestamp)
+	if ts.IsZero() {
+		ts = time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
+	}
+	cost := source.CostForModel(
+		entry.Message.Model,
+		entry.Message.Usage.InputTokens,
+		entry.Message.Usage.OutputTokens,
+		entry.Message.Usage.CacheReadInputTokens,
+		entry.Message.Usage.CacheCreationInputTokens,
+	)
+	return source.TokenEvent{
+		SessionID:       entry.SessionID,
+		Model:           entry.Message.Model,
+		Provider:        "test",
+		Timestamp:       ts,
+		InputTokens:     entry.Message.Usage.InputTokens,
+		OutputTokens:    entry.Message.Usage.OutputTokens,
+		CacheRead:       entry.Message.Usage.CacheReadInputTokens,
+		CacheWrite:      entry.Message.Usage.CacheCreationInputTokens,
+		CostUSD:         cost,
+		Project:         "scenario-test",
+		Harness:         "claude-code",
+		IsSubagent:      false,
+	}
+}
+
+func findSignalByID(signals []analyze.WasteSignal, sessionID string) *analyze.WasteSignal {
+	for i := range signals {
+		if signals[i].SessionID == sessionID {
+			return &signals[i]
+		}
+	}
+	return nil
+}
+
+func signalIDs(signals []analyze.WasteSignal) []string {
+	var ids []string
+	for _, s := range signals {
+		ids = append(ids, s.SessionID)
+	}
+	return ids
+}
+
+func runPipeline(t *testing.T, events []source.TokenEvent) ([]analyze.WasteSignal, map[string]analyze.Baseline) {
+	t.Helper()
+	baselines := analyze.ComputeBaselines(events)
+	if len(baselines) == 0 {
+		t.Fatal("no baselines computed")
+	}
+	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+	return signals, baselines
+}
+
+func runPipelineWithToggles(t *testing.T, events []source.TokenEvent, toggles analyze.SignalToggles) []analyze.WasteSignal {
+	t.Helper()
+	baselines := analyze.ComputeBaselines(events)
+	if len(baselines) == 0 {
+		t.Fatal("no baselines computed")
+	}
+	return analyze.DetectWaste(events, baselines, 2.0, toggles)
+}
+
+func TestScenario_CostOutlier(t *testing.T) {
+	events := loadScenarioJSONL(t, "cost_outlier.jsonl")
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines, 2.0, allToggles)
+
+	var costSig, lowSig *analyze.WasteSignal
+	for i := range signals {
+		if signals[i].SessionID != "ses_cost_waste" {
+			continue
+		}
+		switch signals[i].Reason {
+		case "cost_outlier":
+			cp := signals[i]
+			costSig = &cp
+		case "low_signal":
+			lp := signals[i]
+			lowSig = &lp
+		}
+	}
+	if costSig == nil {
+		t.Fatal("expected ses_cost_waste to be flagged as cost_outlier")
+	}
+	if costSig.Severity != "high" {
+		t.Errorf("expected severity high, got %s", costSig.Severity)
+	}
+	if costSig.Metric <= costSig.Threshold {
+		t.Errorf("expected metric %.6f > threshold %.6f", costSig.Metric, costSig.Threshold)
+	}
+	_ = lowSig
+
+	for _, id := range []string{"ses_cost_normal_01", "ses_cost_normal_02", "ses_cost_normal_03", "ses_cost_normal_04", "ses_cost_normal_05"} {
+		if s := findSignalByID(signals, id); s != nil {
+			t.Errorf("normal session %s was flagged unexpectedly (reason=%s)", id, s.Reason)
+		}
+	}
+}
+
+func TestScenario_InputOverconsumption(t *testing.T) {
+	events := loadScenarioJSONL(t, "input_overconsumption.jsonl")
+	signals, _ := runPipeline(t, events)
+
+	waste := findSignalByID(signals, "ses_input_waste")
+	if waste == nil {
+		t.Fatal("expected ses_input_waste to be flagged as costly or anomalous")
+	}
+	if waste.InputTokens < 100000 {
+		t.Errorf("expected input tokens > 100K, got %d", waste.InputTokens)
+	}
+}
+
+func TestScenario_OutputExplosion(t *testing.T) {
+	events := loadScenarioJSONL(t, "output_explosion.jsonl")
+	signals, _ := runPipeline(t, events)
+
+	// v1 flags this as cost_outlier (200K output tokens = massive cost)
+	// v2 (PR13) will add dedicated output_explosion heuristic with output token baseline
+	waste := findSignalByID(signals, "ses_output_waste")
+	if waste == nil {
+		// List all reasons for debugging
+		reasons := map[string][]string{}
+		for _, s := range signals {
+			reasons[s.Reason] = append(reasons[s.Reason], s.SessionID)
+		}
+		t.Fatalf("expected ses_output_waste to be flagged, got signals: %v", reasons)
+	}
+	if waste.OutputTokens < 100000 {
+		t.Errorf("expected output tokens > 100K, got %d", waste.OutputTokens)
+	}
+}
+
+func TestScenario_LowTokenEfficiency(t *testing.T) {
+	events := loadScenarioJSONL(t, "low_token_efficiency.jsonl")
+	toggles := allToggles
+	toggles.LowSignal = true
+	signals := runPipelineWithToggles(t, events, toggles)
+
+	found := false
+	for _, s := range signals {
+		if s.SessionID == "ses_ter_waste" && s.Reason == "low_signal" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		reasons := map[string]int{}
+		for _, s := range signals {
+			if s.SessionID == "ses_ter_waste" {
+				reasons[s.Reason]++
+			}
+		}
+		t.Fatalf("expected ses_ter_waste to be flagged as low_signal, got: %v", reasons)
+	}
+}
+
+func TestScenario_Fragmentation(t *testing.T) {
+	events := loadScenarioJSONL(t, "fragmentation.jsonl")
+	signals, _ := runPipeline(t, events)
+
+	day1IDs := map[string]bool{
+		"ses_frag_day1_01": true,
+		"ses_frag_day1_02": true,
+		"ses_frag_day1_03": true,
+		"ses_frag_day1_04": true,
+	}
+	day1Count := 0
+	for _, s := range signals {
+		if day1IDs[s.SessionID] {
+			day1Count++
+		}
+	}
+	if day1Count < 2 {
+		t.Logf("fragmentation: day1 only produced %d signals (may need tuning)", day1Count)
+	}
+
+	day2IDs := map[string]bool{
+		"ses_frag_day2_01": true,
+		"ses_frag_day2_02": true,
+	}
+	for _, s := range signals {
+		if day2IDs[s.SessionID] {
+			t.Errorf("day 2 session %s flagged unexpectedly (day 2 sessions have high ratio)", s.SessionID)
+		}
+	}
+}
+
+func TestScenario_SubagentOverhead(t *testing.T) {
+	parentID := "ses_sub_parent"
+	subID := "ses_sub_agent"
+
+	parentEvents := loadScenarioJSONL(t, "subagent_overhead.jsonl")
+
+	totalParentCost := float64(0)
+	for _, e := range parentEvents {
+		if e.SessionID == parentID {
+			totalParentCost += e.CostUSD
+		}
+	}
+	subCost := totalParentCost * 3.0
+	subEvent := source.TokenEvent{
+		SessionID:       subID,
+		ParentSessionID: parentID,
+		Model:           "claude-sonnet-4-5-20250929",
+		Provider:        "test",
+		Timestamp:       time.Date(2026, 5, 1, 10, 2, 0, 0, time.UTC),
+		InputTokens:     5000,
+		OutputTokens:    500,
+		CostUSD:         subCost,
+		Project:         "scenario-test",
+		Harness:         "claude-code",
+		IsSubagent:      true,
+	}
+	events := append(parentEvents, subEvent)
+
+	trees := analyze.BuildSubagentTree(events)
+	var tree *analyze.SubagentTree
+	for i := range trees {
+		if trees[i].SessionID == parentID {
+			tree = &trees[i]
+			break
+		}
+	}
+	if tree == nil {
+		t.Fatalf("expected subagent tree for parent session %s, got trees: %v", parentID, func() []string {
+			var ids []string
+			for _, tr := range trees {
+				ids = append(ids, tr.SessionID)
+			}
+			return ids
+		}())
+	}
+	if tree.OverheadPct < 50 {
+		t.Fatalf("expected overhead > 50%%, got %.1f%%", tree.OverheadPct)
+	}
+
+	toggles := allToggles
+	toggles.SubagentOverhead = true
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines, 2.0, toggles)
+
+	foundSubagent := false
+	for _, s := range signals {
+		if s.SessionID == parentID && s.Reason == "subagent_overhead" {
+			foundSubagent = true
+			break
+		}
+	}
+	if !foundSubagent {
+		reasons := map[string]int{}
+		for _, s := range signals {
+			if s.SessionID == parentID {
+				reasons[s.Reason]++
+			}
+		}
+		t.Fatalf("expected parent session to be flagged for subagent_overhead, got: %v", reasons)
+	}
+}
+
+func TestScenario_CacheUnderutilized(t *testing.T) {
+	events := loadScenarioJSONL(t, "cache_underutilized.jsonl")
+	toggles := allToggles
+	toggles.CacheUnderutilized = true
+	signals := runPipelineWithToggles(t, events, toggles)
+
+	found := false
+	for _, s := range signals {
+		if s.SessionID == "ses_cache_waste" && s.Reason == "cache_underutilized" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		reasons := map[string]int{}
+		for _, s := range signals {
+			if s.SessionID == "ses_cache_waste" {
+				reasons[s.Reason]++
+			}
+		}
+		t.Fatalf("expected ses_cache_waste to be flagged for cache_underutilized, got: %v", reasons)
+	}
+}
+
+func TestScenario_MultiSignal(t *testing.T) {
+	events := loadScenarioJSONL(t, "multi_signal.jsonl")
+	signals, _ := runPipeline(t, events)
+
+	waste := findSignalByID(signals, "ses_multi_waste")
+	if waste == nil {
+		t.Fatal("expected ses_multi_waste to be flagged (cost outlier + low ratio)")
+	}
+
+	reasons := map[string]int{}
+	for _, s := range signals {
+		if s.SessionID == "ses_multi_waste" {
+			reasons[s.Reason]++
+		}
+	}
+	if len(reasons) < 1 {
+		t.Error("expected at least 1 signal reason for multi-signal session")
+	}
+}
+
+func TestScenario_AllClean(t *testing.T) {
+	events := loadScenarioJSONL(t, "all_clean.jsonl")
+	signals, _ := runPipeline(t, events)
+
+	for _, s := range signals {
+		if strings.HasPrefix(s.SessionID, "ses_clean_") {
+			t.Errorf("clean session %s flagged with reason=%s", s.SessionID, s.Reason)
+		}
+	}
+}

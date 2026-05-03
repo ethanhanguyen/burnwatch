@@ -1,0 +1,54 @@
+{"session_id":"ses_cost_waste","verdict":"waste","reason":"10x baseline cost","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cost_normal_01","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cost_normal_02","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cost_normal_03","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cost_normal_04","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cost_normal_05","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_input_waste","verdict":"waste","reason":"5x baseline input tokens","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_input_normal_01","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_input_normal_02","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_input_normal_03","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_input_normal_04","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_input_normal_05","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_output_waste","verdict":"waste","reason":"massive output generation","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_output_normal_01","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_output_normal_02","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_output_normal_03","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_output_normal_04","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_output_normal_05","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_ter_waste","verdict":"waste","reason":"very low output/input ratio","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_ter_normal_01","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_ter_normal_02","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_ter_normal_03","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_ter_normal_04","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_ter_normal_05","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cache_waste","verdict":"waste","reason":"all writes, no reads","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cache_normal_01","verdict":"not_waste","reason":"good cache usage","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cache_normal_02","verdict":"not_waste","reason":"good cache usage","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cache_normal_03","verdict":"not_waste","reason":"good cache usage","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cache_normal_04","verdict":"not_waste","reason":"good cache usage","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_cache_normal_05","verdict":"not_waste","reason":"good cache usage","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_multi_waste","verdict":"waste","reason":"cost+input outlier","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_multi_normal_01","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_multi_normal_02","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_multi_normal_03","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_multi_normal_04","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_multi_normal_05","verdict":"not_waste","reason":"within baseline","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_sub_parent","verdict":"waste","reason":"high subagent overhead","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_sub_normal","verdict":"not_waste","reason":"normal subagent usage","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_frag_day1_01","verdict":"waste","reason":"fragmented sessions on day","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_frag_day1_02","verdict":"waste","reason":"fragmented sessions on day","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_frag_day1_03","verdict":"waste","reason":"fragmented sessions on day","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_frag_day1_04","verdict":"waste","reason":"fragmented sessions on day","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_frag_day2_01","verdict":"not_waste","reason":"normal sessions","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_frag_day2_02","verdict":"not_waste","reason":"normal sessions","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_01","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_02","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_03","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_04","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_05","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_06","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_07","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_08","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_09","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
+{"session_id":"ses_clean_10","verdict":"not_waste","reason":"normal session","source":"scenario","created_at":"2026-05-02T00:00:00Z"}
