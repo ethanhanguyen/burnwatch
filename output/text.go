@@ -323,7 +323,7 @@ func RunPipeline(events []source.TokenEvent) (
 	recommendations []analyze.Recommendation,
 ) {
 	baselines = analyze.ComputeBaselines(events)
-	signals = analyze.DetectWaste(events, baselines)
+	signals = analyze.DetectWaste(events, baselines, 2.0)
 	recommendations = analyze.GenerateRecommendations(signals, baselines)
 	_ = analyze.BuildSubagentTree(events)
 	return

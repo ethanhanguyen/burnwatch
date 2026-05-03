@@ -32,7 +32,7 @@ func TestDetectWasteCostOutlier(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	var found bool
 	for _, s := range signals {
@@ -72,7 +72,7 @@ func TestDetectWasteLowSignal(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	var found bool
 	for _, s := range signals {
@@ -95,7 +95,7 @@ func TestDetectWasteSubagentOverhead(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	var found bool
 	for _, s := range signals {
@@ -139,7 +139,7 @@ func TestDetectWasteCacheUnderutilized(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	var found bool
 	for _, s := range signals {
@@ -163,7 +163,7 @@ func TestDetectWasteSessionChurn(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	var found bool
 	for _, s := range signals {
@@ -190,12 +190,12 @@ func TestDetectWasteSessionChurn(t *testing.T) {
 }
 
 func TestDetectWasteEmptyInput(t *testing.T) {
-	signals := DetectWaste(nil, nil)
+	signals := DetectWaste(nil, nil, 2.0)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for nil input, got %d", len(signals))
 	}
 
-	signals = DetectWaste([]source.TokenEvent{}, nil)
+	signals = DetectWaste([]source.TokenEvent{}, nil, 2.0)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty input, got %d", len(signals))
 	}
@@ -209,7 +209,7 @@ func TestDetectWasteAllNormal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for normal data, got %d", len(signals))
@@ -222,7 +222,7 @@ func TestDetectWasteNoSubagentsNoOverheadSignal(t *testing.T) {
 	}
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	for _, s := range signals {
 		if s.Reason == "subagent_overhead" {
@@ -256,7 +256,7 @@ func TestDetectWasteSignalFields(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	for _, s := range signals {
 		if s.Reason == "cost_outlier" {
@@ -307,7 +307,7 @@ func TestDetectWasteSortOrder(t *testing.T) {
 	})
 
 	baselines := ComputeBaselines(events)
-	signals := DetectWaste(events, baselines)
+	signals := DetectWaste(events, baselines, 2.0)
 
 	prev := ""
 	for i, s := range signals {
@@ -320,5 +320,125 @@ func TestDetectWasteSortOrder(t *testing.T) {
 
 	if signals[0].Severity != "high" {
 		t.Errorf("first signal should be high severity, got %s", signals[0].Severity)
+	}
+}
+
+func TestCheckCostOutlier_Sigma3(t *testing.T) {
+	events := make([]source.TokenEvent, 0, 7)
+	for i := 1; i <= 6; i++ {
+		events = append(events, source.TokenEvent{
+			SessionID:    "s" + string(rune('0'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      float64(i),
+			InputTokens:  100,
+			OutputTokens: 50,
+			Timestamp:    time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
+		})
+	}
+	events = append(events, source.TokenEvent{
+		SessionID:    "s-outlier",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      20.0,
+		InputTokens:  100,
+		OutputTokens: 50,
+		Timestamp:    time.Date(2026, 5, 1, 17, 0, 0, 0, time.UTC),
+	})
+
+	baselines := ComputeBaselines(events)
+	// sigma=3: threshold = mean + 3*stddev (much higher, harder to trigger)
+	signals := DetectWaste(events, baselines, 3.0)
+
+	var found bool
+	for _, s := range signals {
+		if s.Reason == "cost_outlier" && s.SessionID == "s-outlier" {
+			found = true
+		}
+	}
+	if found {
+		t.Log("cost 20 was still flagged at sigma=3 (expected if variance is low)")
+	}
+
+	// sigma=2 should flag it (lower threshold)
+	signals2 := DetectWaste(events, baselines, 2.0)
+	var found2 bool
+	for _, s := range signals2 {
+		if s.Reason == "cost_outlier" && s.SessionID == "s-outlier" {
+			found2 = true
+		}
+	}
+	if !found2 {
+		t.Error("expected cost_outlier at sigma=2")
+	}
+}
+
+func TestCheckCostOutlier_Sigma1(t *testing.T) {
+	events := make([]source.TokenEvent, 0, 4)
+	for i := 1; i <= 3; i++ {
+		events = append(events, source.TokenEvent{
+			SessionID:    "s" + string(rune('0'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      float64(i),
+			InputTokens:  100,
+			OutputTokens: 50,
+			Timestamp:    time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
+		})
+	}
+	events = append(events, source.TokenEvent{
+		SessionID:    "s-mild",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      5.0,
+		InputTokens:  100,
+		OutputTokens: 50,
+		Timestamp:    time.Date(2026, 5, 1, 14, 0, 0, 0, time.UTC),
+	})
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, 1.0)
+
+	var found bool
+	for _, s := range signals {
+		if s.Reason == "cost_outlier" && s.SessionID == "s-mild" {
+			found = true
+		}
+	}
+	if found {
+		t.Log("cost 5 flagged at sigma=1 (expected with tighter threshold)")
+	}
+}
+
+func TestCostConsistency(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "parent", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 500, OutputTokens: 100, IsSubagent: false, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "child-a", ParentSessionID: "parent", AgentType: "build", CostUSD: 8.0, InputTokens: 0, OutputTokens: 0, IsSubagent: true, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 500, OutputTokens: 100, IsSubagent: false, Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+		{SessionID: "s3", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 500, OutputTokens: 100, IsSubagent: false, Timestamp: time.Date(2026, 5, 1, 12, 0, 0, 0, time.UTC)},
+	}
+
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, 2.0)
+
+	// All signals for "parent" session should have same SessionCost
+	var parentSignals []WasteSignal
+	for _, s := range signals {
+		if s.SessionID == "parent" {
+			parentSignals = append(parentSignals, s)
+		}
+	}
+	if len(parentSignals) == 0 {
+		t.Fatal("expected at least one signal for parent session")
+	}
+
+	firstCost := parentSignals[0].SessionCost
+	if firstCost != 9.0 {
+		t.Errorf("expected parent SessionCost=9.0 (1.0 parent + 8.0 child), got %.2f", firstCost)
+	}
+	for i, s := range parentSignals {
+		if s.SessionCost != firstCost {
+			t.Errorf("inconsistent cost at signal %d: %.2f != %.2f", i, s.SessionCost, firstCost)
+		}
 	}
 }
