@@ -29,7 +29,6 @@ Start here. This file stays short on purpose.
 ## Plans
 
 - [plans/progress.md](./plans/progress.md) — **read this on session start** — PR status, blockers, next action
-- [plans/implementation.md](./plans/implementation.md) — PR dependency graph, file map, quality gates
 - [plans/validation.md](./plans/validation.md) — test pyramid, golden files, smoke tests, CI gate
 
 ## Learnings

@@ -2,7 +2,7 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 5/6 PRs complete (PR6 in progress)
+## Overall: 6/6 PRs complete
 
 ```
 PR1 ██████████████████████ Foundation
@@ -10,7 +10,7 @@ PR2 ██████████████████████ OpenCode 
 PR3 ██████████████████████ Claude Code Source
 PR4 ██████████████████████ Analysis Engine
 PR5 ██████████████████████ CLI + Output + Wiring
-PR6 ███████████████████░░ Docs + CI + Release
+PR6 ██████████████████████ Docs + CI + Release
 ```
 
 ## PR Status
@@ -21,16 +21,16 @@ PR6 ███████████████████░░ Docs + CI + 
 | PR2 | `pr2-opencode-source` | merged | 2026-05-02 | 2026-05-02 | SQLite reader |
 | PR3 | `pr3-claude-source` | merged | 2026-05-02 | 2026-05-02 | JSONL reader + subagents |
 | PR4 | `pr4-analysis-engine` | merged | 2026-05-02 | 2026-05-02 | Baselines + 5 heuristics + recommendations |
-| PR5 | `pr5-cli-output` | **merged** | 2026-05-02 | 2026-05-02 | CLI + text/JSON + golden files + E2E |
-| PR6 | `pr6-docs-ci` | in progress | 2026-05-02 | — | Docs + README + CHANGELOG + CI |
+| PR5 | `pr5-cli-output` | merged | 2026-05-02 | 2026-05-02 | CLI + text/JSON + golden files + E2E |
+| PR6 | `pr6-docs-ci` | merged | 2026-05-02 | 2026-05-02 | Docs + README + CHANGELOG + CI |
 
 ## Blockers
 
-*None yet.*
+*None.*
 
 ## Next action
 
-Execute [`PR6-prompt.md`](./PR6-prompt.md) — Docs + CI + Release.
+Project complete. See post-implementation below.
 
 ## Execution log
 
@@ -41,6 +41,7 @@ Execute [`PR6-prompt.md`](./PR6-prompt.md) — Docs + CI + Release.
 | 2026-05-02 | PR3 | Claude Code source implemented, reviewed, merged |
 | 2026-05-02 | PR4 | Analysis engine implemented, reviewed, merged |
 | 2026-05-02 | PR5 | CLI + Output + Wiring implemented, reviewed, merged |
+| 2026-05-02 | PR6 | Docs + CI + Release implemented, reviewed, merged |
 
 ## Quality snapshot
 
@@ -54,8 +55,8 @@ Execute [`PR6-prompt.md`](./PR6-prompt.md) — Docs + CI + Release.
 
 ## Post-implementation
 
-When all 6 PRs are merged:
-1. Tag `v1.0.0`
-2. Archive PR prompts and implementation plan → `docs/archive/`
-3. Update `docs/index.md` to reflect current state (remove plans, add to archive)
-4. Ship: `go install github.com/yourname/burnwatch@v1.0.0`
+All 6 PRs merged:
+1. [x] Tag `v1.0.0`
+2. [x] Archive PR prompts and implementation plan → `docs/archive/`
+3. [ ] Update `docs/index.md` to reflect current state (remove plans, add to archive)
+4. [ ] Ship: `go install github.com/ethanhanguyen/burnwatch@v1.0.0`
