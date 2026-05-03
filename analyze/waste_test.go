@@ -190,12 +190,12 @@ func TestDetectWasteSessionChurn(t *testing.T) {
 }
 
 func TestDetectWasteEmptyInput(t *testing.T) {
-	signals := DetectWaste(nil, nil)
+	signals := DetectWaste(nil, nil, 2.0)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for nil input, got %d", len(signals))
 	}
 
-	signals = DetectWaste([]source.TokenEvent{}, nil)
+	signals = DetectWaste([]source.TokenEvent{}, nil, 2.0)
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty input, got %d", len(signals))
 	}

@@ -41,7 +41,7 @@ func TestEndToEnd(t *testing.T) {
 	}
 
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines)
+	signals := analyze.DetectWaste(events, baselines, 2.0)
 
 	if len(signals) == 0 {
 		t.Log("no waste signals found from test data (may be expected for clean data)")
@@ -134,7 +134,7 @@ func TestFilterByDays(t *testing.T) {
 func TestZeroEvents(t *testing.T) {
 	events := []source.TokenEvent{}
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines)
+	signals := analyze.DetectWaste(events, baselines, 2.0)
 
 	if len(signals) != 0 {
 		t.Errorf("expected 0 signals for empty events, got %d", len(signals))

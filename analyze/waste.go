@@ -35,7 +35,7 @@ type sessionAgg struct {
 	isSubagent bool
 }
 
-func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline) []WasteSignal {
+func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline, costSigma float64) []WasteSignal {
 	if len(events) == 0 || len(baselines) == 0 {
 		return nil
 	}
@@ -93,6 +93,13 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline) []Wa
 		treeBySession[trees[i].SessionID] = &trees[i]
 	}
 
+	// B4: Use tree total cost when available (includes subagent costs)
+	for _, a := range agg {
+		if tree := treeBySession[a.sessionID]; tree != nil && tree.TotalCost > 0 {
+			a.cost = tree.TotalCost
+		}
+	}
+
 	global := baselines[globalKey]
 
 	var signals []WasteSignal
@@ -101,7 +108,7 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline) []Wa
 		key := a.project + ":" + a.harness
 		bl := baselines[key]
 
-		if signal := checkCostOutlier(a, bl); signal != nil {
+		if signal := checkCostOutlier(a, bl, costSigma); signal != nil {
 			signals = append(signals, *signal)
 		}
 
@@ -134,18 +141,18 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline) []Wa
 	return signals
 }
 
-func checkCostOutlier(a *sessionAgg, bl Baseline) *WasteSignal {
+func checkCostOutlier(a *sessionAgg, bl Baseline, sigma float64) *WasteSignal {
 	if bl.SessionCount < 2 {
 		return nil
 	}
-	threshold := bl.CostMean + 2*bl.CostStd
+	threshold := bl.CostMean + sigma*bl.CostStd
 	if a.cost > threshold {
 		return &WasteSignal{
 			SessionID:   a.sessionID,
 			Project:     a.project,
 			Severity:    "high",
 			Reason:      "cost_outlier",
-			Detail:      fmt.Sprintf("Session cost $%.2f exceeds project baseline μ+2σ = $%.2f", a.cost, threshold),
+			Detail:      fmt.Sprintf("Session cost $%.2f exceeds project baseline μ+%.0fσ = $%.2f", a.cost, sigma, threshold),
 			Metric:      a.cost,
 			Threshold:   threshold,
 			SessionCost: a.cost,

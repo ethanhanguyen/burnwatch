@@ -23,6 +23,7 @@ func Execute() {
 		Verbose     bool
 		ConfigPath  string
 		PrintConfig bool
+		MinCost     float64
 	}
 
 	flag.StringVar(&flags.DBPath, "db", "", "OpenCode database path")
@@ -33,6 +34,7 @@ func Execute() {
 	flag.BoolVar(&flags.Verbose, "verbose", false, "Show all events, not just waste signals")
 	flag.StringVar(&flags.ConfigPath, "config", "", "Config file path (default: ./.burnwatch.toml, ~/.config/burnwatch/config.toml)")
 	flag.BoolVar(&flags.PrintConfig, "print-config", false, "Print effective config and exit")
+	flag.Float64Var(&flags.MinCost, "min-cost", 0, "Hide waste signals below this dollar amount")
 	flag.Parse()
 
 	cfg, err := config.Load(flags.ConfigPath)
@@ -84,7 +86,19 @@ func Execute() {
 	}
 
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines)
+	costSigma := cfg.Thresholds.CostOutlierSigma
+	signals := analyze.DetectWaste(events, baselines, costSigma)
+
+	minCost := cfg.Filters.MinCost
+	if flags.MinCost > 0 {
+		minCost = flags.MinCost
+	}
+	if minCost > 0 {
+		signals = analyze.FilterByMinCost(signals, minCost)
+	}
+	if cfg.Filters.Deduplicate {
+		signals = analyze.Deduplicate(signals)
+	}
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	if flags.JSON {
