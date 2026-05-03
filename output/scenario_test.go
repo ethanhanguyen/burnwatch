@@ -32,7 +32,7 @@ func loadScenarioJSONL(tb testing.TB, name string) []source.TokenEvent {
 	if err != nil {
 		tb.Fatalf("open scenario %s: %v", path, err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	var events []source.TokenEvent
 	scanner := bufio.NewScanner(f)
@@ -116,13 +116,6 @@ func findSignalByID(signals []analyze.WasteSignal, sessionID string) *analyze.Wa
 	return nil
 }
 
-func signalIDs(signals []analyze.WasteSignal) []string {
-	var ids []string
-	for _, s := range signals {
-		ids = append(ids, s.SessionID)
-	}
-	return ids
-}
 
 func runScenarioPipeline(t *testing.T, events []source.TokenEvent) ([]analyze.WasteSignal, map[string]analyze.Baseline) {
 	t.Helper()

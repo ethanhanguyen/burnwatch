@@ -137,7 +137,7 @@ deduplicate = true
 group_churn = true
 `
 	fp := writeTempFile(t, content)
-	defer os.Remove(fp)
+	defer func() { _ = os.Remove(fp) }()
 
 	cfg, err := Load(fp)
 	if err != nil {
@@ -193,7 +193,7 @@ group_churn = true
 
 func TestLoad_InvalidTOML(t *testing.T) {
 	fp := writeTempFile(t, "this = is not valid toml [[[")
-	defer os.Remove(fp)
+	defer func() { _ = os.Remove(fp) }()
 
 	_, err := Load(fp)
 	if err == nil {
@@ -207,7 +207,7 @@ func TestLoad_PartialOverride(t *testing.T) {
 cost_outlier_sigma = 5.0
 `
 	fp := writeTempFile(t, content)
-	defer os.Remove(fp)
+	defer func() { _ = os.Remove(fp) }()
 
 	cfg, err := Load(fp)
 	if err != nil {
@@ -402,7 +402,7 @@ func TestLoad_SearchOrderExplicit(t *testing.T) {
 cost_outlier_sigma = 7.0
 `
 	fp := writeTempFile(t, content)
-	defer os.Remove(fp)
+	defer func() { _ = os.Remove(fp) }()
 
 	cfg, err := Load(fp)
 	if err != nil {
@@ -413,6 +413,52 @@ cost_outlier_sigma = 7.0
 	}
 }
 
+func TestWriteDefault(t *testing.T) {
+	tmpDir := t.TempDir()
+	path := tmpDir + "/.burnwatch.toml"
+
+	if err := WriteDefault(path); err != nil {
+		t.Fatalf("WriteDefault failed: %v", err)
+	}
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read written config: %v", err)
+	}
+
+	if !strings.Contains(string(data), "cost_outlier_sigma") {
+		t.Error("written config should contain cost_outlier_sigma")
+	}
+	if !strings.Contains(string(data), "fragmentation_min_cost") {
+		t.Error("written config should contain fragmentation_min_cost")
+	}
+
+	cfg, err := Load(path)
+	if err != nil {
+		t.Fatalf("Load written config: %v", err)
+	}
+	if cfg.Thresholds.FragmentationMinCost != 0.50 {
+		t.Errorf("FragmentationMinCost = %f, want 0.50", cfg.Thresholds.FragmentationMinCost)
+	}
+}
+
+func TestWriteDefault_DirNotFound(t *testing.T) {
+	err := WriteDefault("/nonexistent/dir/config.toml")
+	if err == nil {
+		t.Fatal("expected error for nonexistent directory")
+	}
+}
+
+func TestLoad_EmptyStringResolves(t *testing.T) {
+	cfg, err := Load("")
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+	if cfg.Thresholds.FragmentationMinCost != 0.50 {
+		t.Errorf("expected default FragmentationMinCost, got %f", cfg.Thresholds.FragmentationMinCost)
+	}
+}
+
 func writeTempFile(t *testing.T, content string) string {
 	t.Helper()
 	f, err := os.CreateTemp("", "burnwatch-config-test-*.toml")
@@ -420,10 +466,10 @@ func writeTempFile(t *testing.T, content string) string {
 		t.Fatal(err)
 	}
 	if _, err := f.WriteString(content); err != nil {
-		f.Close()
+		_ = f.Close()
 		t.Fatal(err)
 	}
-	f.Close()
+	_ = f.Close()
 	return f.Name()
 }
 

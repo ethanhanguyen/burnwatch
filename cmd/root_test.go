@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"bytes"
+	"flag"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -175,6 +178,70 @@ func TestTogglesSuppressOutput(t *testing.T) {
 		if s.Reason == "cost_outlier" {
 			t.Error("found cost_outlier signal with toggle off")
 		}
+	}
+}
+
+func runExecute(args []string) (string, string) {
+	origArgs := os.Args
+	os.Args = append([]string{"burnwatch"}, args...)
+
+	origStderr := os.Stderr
+	origStdout := os.Stdout
+
+	rOut, wOut, _ := os.Pipe()
+	rErr, wErr, _ := os.Pipe()
+	os.Stdout = wOut
+	os.Stderr = wErr
+
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
+
+	Execute()
+
+	_ = wOut.Close()
+	_ = wErr.Close()
+
+	var stdoutBuf, stderrBuf bytes.Buffer
+	_, _ = io.Copy(&stdoutBuf, rOut)
+	_, _ = io.Copy(&stderrBuf, rErr)
+
+	os.Stdout = origStdout
+	os.Stderr = origStderr
+	os.Args = origArgs
+
+	return stdoutBuf.String(), stderrBuf.String()
+}
+
+func TestExecute_Version(t *testing.T) {
+	stdout, _ := runExecute([]string{"--version"})
+	if !strings.Contains(stdout, "burnwatch") {
+		t.Errorf("expected version output, got: %s", stdout)
+	}
+}
+
+func TestExecute_Init(t *testing.T) {
+	tmpDir := t.TempDir()
+	origDir, _ := os.Getwd()
+	_ = os.Chdir(tmpDir)
+	t.Cleanup(func() { _ = os.Chdir(origDir) })
+
+	stdout, _ := runExecute([]string{"--init"})
+	if !strings.Contains(stdout, "Wrote .burnwatch.toml") {
+		t.Errorf("expected init confirmation, got: %s", stdout)
+	}
+
+	data, err := os.ReadFile(".burnwatch.toml")
+	if err != nil {
+		t.Fatalf("expected .burnwatch.toml to exist: %v", err)
+	}
+	if !strings.Contains(string(data), "fragmentation_min_cost") {
+		t.Error("generated config should contain fragmentation_min_cost")
+	}
+}
+
+func TestExecute_PrintConfig(t *testing.T) {
+	stdout, _ := runExecute([]string{"--print-config"})
+	if !strings.Contains(stdout, "fragmentation_min_cost") {
+		t.Errorf("expected config output, got: %s", stdout)
 	}
 }
 

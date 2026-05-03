@@ -51,7 +51,7 @@ func TestFetchPricing_Integration(t *testing.T) {
 
 func TestFetchPricing_Mock(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(openRouterResponse{
+		_ = json.NewEncoder(w).Encode(openRouterResponse{
 			Data: []openRouterModel{
 				{ID: "deepseek/deepseek-v4-pro", Pricing: openRouterPricing{Prompt: "0.000000435", Completion: "0.00000087"}},
 				{ID: "anthropic/claude-sonnet-4-5", Pricing: openRouterPricing{Prompt: "0.000003", Completion: "0.000015", CacheRead: "0.00000030"}},
@@ -98,7 +98,7 @@ func TestFetchPricing_MockError(t *testing.T) {
 
 func TestFetchPricing_MockEmpty(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(openRouterResponse{Data: nil})
+		_ = json.NewEncoder(w).Encode(openRouterResponse{Data: nil})
 	}))
 	defer server.Close()
 
@@ -137,7 +137,7 @@ func TestFetchAndCache(t *testing.T) {
 
 func TestFetchAndCache_Success(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(openRouterResponse{
+		_ = json.NewEncoder(w).Encode(openRouterResponse{
 			Data: []openRouterModel{
 				{ID: "test/model-1", Pricing: openRouterPricing{Prompt: "0.000001", Completion: "0.000002"}},
 			},

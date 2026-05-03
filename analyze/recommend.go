@@ -56,14 +56,14 @@ func recommendForSignal(s WasteSignal, baselines map[string]Baseline) Recommenda
 
 	case "input_overconsumption":
 		r.Action = "Reduce input context bloat — check for repeated file reads or tool-call loops"
-		r.Detail = fmt.Sprintf("Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message.")
+		r.Detail = "Session consumed excessive input tokens compared to project peers. The agent may be reading too much context per message."
 		if bl := findBaseline(s.Project, baselines); bl != nil && s.InputTokens > 0 {
 			r.SavingsEst = s.SessionCost * (1 - bl.InputMean/float64(s.InputTokens))
 		}
 
 	case "output_explosion":
 		r.Action = "Check for runaway generation loops or repeated corrections"
-		r.Detail = fmt.Sprintf("Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs.")
+		r.Detail = "Session generated excessive output tokens compared to project peers. Review for duplicate or corrective outputs."
 		if bl := findBaseline(s.Project, baselines); bl != nil && s.OutputTokens > 0 {
 			r.SavingsEst = s.SessionCost * (1 - bl.OutputMean/float64(s.OutputTokens))
 		}

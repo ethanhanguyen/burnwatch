@@ -56,7 +56,7 @@ func fetchPricingFromURL(client *http.Client, url string) ([]PricingEntry, error
 	if err != nil {
 		return nil, fmt.Errorf("fetch: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("unexpected status %d", resp.StatusCode)
@@ -98,7 +98,7 @@ func fetchPricingFromURL(client *http.Client, url string) ([]PricingEntry, error
 
 func parsePricingFloat(s string) float64 {
 	var f float64
-	fmt.Sscanf(s, "%f", &f)
+	_, _ = fmt.Sscanf(s, "%f", &f)
 	return f
 }
 
