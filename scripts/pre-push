@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CHECK="$SCRIPT_DIR/review-check.sh"
+
+if [ ! -x "$CHECK" ]; then
+	echo "pre-push: review-check.sh not found at $CHECK" >&2
+	exit 1
+fi
+
+BASE="main"
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+	if [ -n "${remote_sha:-}" ] && [ "$remote_sha" != "0000000000000000000000000000000000000000" ]; then
+		BASE="$remote_sha"
+	fi
+done
+
+exec "$CHECK" "$BASE"

@@ -1,60 +1,93 @@
 # Code Review
 
-<!--
-  Static reference. Applies to every PR — no per-review fill-in needed.
-  Severity: Critical (potential bug / broken invariant), Should (pattern/architecture violation), Could (style/nit).
-  Every finding cites a concrete file:line.
--->
+Static checklist applied to every PR. Run before merge.
 
-## Behavioral
+---
 
-- [ ] **Simplicity.** No speculative features, unnecessary abstractions, or "flexibility" not requested. If 200 lines could be 50, flag it.
-- [ ] **Surgical.** Only expected files changed. No drive-by refactors, comment "improvements," or deleted dead code.
-- [ ] **Explicit.** No hidden assumptions. If something is unclear, stop and ask — don't pick silently among interpretations.
-- [ ] **Goal-driven.** Changes trace to a concrete success criterion. No code without a testable claim.
+## Phase 0: Automated
 
-## Go Idioms
+Single command. All must pass. Runs on `git push` via pre-push hook.
 
-| Check | Severity |
-|-------|----------|
-| Early return on empty/zero input — no nested conditionals | Should |
-| Error wrapping with `%w`, not `%v` or string concatenation | Should |
-| Float comparison in tests uses `math.Abs(got-want) > delta` | Critical |
-| No comments on exported functions (codebase convention) | Could |
-| Short variable names in tight loops, descriptive otherwise | Could |
-| No `interface{}`, `map[string]any`, or generics (codebase convention) | Should |
-| Table-driven tests for parse/transform logic (not copy-pasted sub-tests) | Should |
+```
+./scripts/review-check.sh
+```
 
-## Defensive Code
+| Check | What it verifies |
+|-------|-----------------|
+| `go vet ./...` | No vet warnings |
+| `golangci-lint run` | Zero lint warnings |
+| `go build -o burnwatch .` | Clean compile |
+| `go test -cover ./...` | Coverage >= 80% per package |
+| No `interface{}` / `map[string]any` in diff | Codebase convention |
+| No `panic()` in non-test Go files | Use `t.Fatalf` / `t.Errorf` |
+| Testdata paths use `filepath.Join("..", "testdata", …)` | Go runs tests from package dir |
+| No new config files (`.env`, `.yaml`, `.toml`, `.json`) | Env vars + CLI flags only |
+| No `sync.Mutex` / `sync.RWMutex` in non-test diff | Single-goroutine architecture |
 
-| Check | Severity |
-|-------|----------|
-| Negative tokens clamped to 0 at entry point, not redundantly | Critical |
-| Non-fatal parse errors go to error channel (skip entry, continue) | Critical |
-| Error channels buffered (cap 10), events channel unbuffered | Critical |
-| Channel consumer drains events and errors concurrently (goroutine + done channel) | Should |
-| No panics — use `t.Fatalf` for precondition failures, `t.Errorf` for field checks | Should |
+**Pre-push hook:** `ln -sf ../../scripts/pre-push .git/hooks/pre-push`
 
-## Project-Specific
+---
 
-| Check | Source |
-|-------|--------|
-| New Source touches 3 files: `source/<name>.go`, `source/interface.go` `Discover()`, `README.md` | Hidden coupling |
-| `CostForModel` signature unchanged — it's the single pricing entry point for all Sources | Hidden coupling |
-| Pricing table is an ordered `[]struct{}` slice, not a map. New entries must not shadow existing model substrings. | Gotcha |
-| Global baseline key `"*"` preserved — removing/renaming breaks H2, H4, and cross-project percentiles | Gotcha |
-| N ≥ 6 sessions required for cost outlier detection to trip (max z = sqrt(N-1)) | Gotcha |
-| Test in-memory SQLite schemas match actual harness DB schemas exactly | Gotcha |
-| Unexported helper types declared at package level, not inside functions | Mistake |
-| No config files introduced — env vars + CLI flags only | Architecture |
-| Concurrency is single-goroutine per `Source.Events()`. No mutexes, goroutine pools, or race conditions. | Architecture |
-| `TokenEvent` is least-common-denominator — harness-specific data is dropped, not added as fields | Architecture |
-| Testdata paths use `filepath.Join("..", "testdata", ...)` — Go runs tests from package dir | Pattern |
-| Output sort order is explicit: severity desc → reason asc → SessionID. Must stay deterministic. | Pattern |
+## Phase 1: Diff Inspection
 
-## Without Fail
+Verify scope and coupling. ~2 min manual.
 
-- [ ] `go vet ./...` passes
-- [ ] `golangci-lint run` passes (zero warnings)
-- [ ] `go build -o burnwatch .` succeeds
-- [ ] `go test ./... -cover` passes with ≥90% coverage on new code
+| Check | How to verify |
+|-------|---------------|
+| Only expected files changed | `git diff main...HEAD --name-only` — must match PR Files table |
+| New Source touches exactly 3 files | `source/<name>.go` + `source/interface.go` (`Discover()`) + `README.md` |
+| `CostForModel` signature unchanged | `git diff main...HEAD -- source/pricing.go` — verify signature intact |
+| Global baseline key `"*"` preserved | `git diff main...HEAD -- analyze/baseline.go` — star key must not be renamed/removed |
+| Unexported helpers at package level | Scan diff: helper types must be at file top-level, not inside functions |
+| `TokenEvent` is least-common-denominator | No harness-specific fields added to `source/event.go` |
+| No drive-by reformats | Whitespace-only changes in unrelated files get flagged |
+
+---
+
+## Phase 2: Code Patterns
+
+Semantic correctness. ~5 min manual.
+
+### Go Idioms
+
+| Check | How to verify | Severity |
+|-------|---------------|----------|
+| Early return on empty/zero input | `git diff` — scan for nested `if val > 0 { … }` | Should |
+| Error wrapping with `%w`, not `%v` | `git diff \| grep '%v'` — flag any in error-return paths | Should |
+| Float comparison uses `math.Abs(delta)` | Search diff for `==` or `!=` with float types | Critical |
+| No comments on exported functions | Scan diff for `// Foo does …` above `func Foo` (convention to omit) | Could |
+| Short names in tight loops, descriptive otherwise | Subjective — flag single-char names in 20+ line scopes | Could |
+| Table-driven tests for parse/transform logic | Verify `_test.go` diff uses `tests := []struct{…}` not copy-paste | Should |
+
+### Defensive Code
+
+| Check | How to verify | Severity |
+|-------|---------------|----------|
+| Negative tokens clamped to 0 at entry | Verify clamp happens once, not redundantly in each consumer | Critical |
+| Non-fatal parse errors go to error channel | `errorCh <-` not `return err` for per-entry parse failures | Critical |
+| Channel consumer drains events + errors concurrently | Verify goroutine + `done` channel pattern in `Source.Events()` | Should |
+| Error channels buffered (cap 10), events channel unbuffered | Check `make(chan …)` calls in diff | Critical |
+| No panics — use `t.Fatalf` for preconditions | Any `panic(` call in non-test code must be flagged | Should |
+
+### Project Gotchas
+
+| Check | Source | How to verify |
+|-------|--------|---------------|
+| Pricing table is ordered `[]struct{}`, not map | Gotcha | No `map[string]` in `source/pricing.go` |
+| New pricing entries must not shadow existing model substrings | Gotcha | Review new model names don't prefix-match existing keys |
+| N >= 6 sessions required for cost outlier to trip | Gotcha | Verify guard in `analyze/waste.go` checks `len(sessions) >= 6` |
+| Test in-memory SQLite schemas match actual harness DB schemas | Gotcha | Cross-reference `CREATE TABLE` in tests vs harness source |
+| Output sort: severity desc -> reason asc -> SessionID | Pattern | Check `sort.Slice` in `output/` matches contract |
+
+---
+
+## Phase 3: Behavioral Gates
+
+Design-level sanity. Each gate has a pass condition. ~3 min.
+
+| Gate | Pass condition | Evidence |
+|------|---------------|----------|
+| **Simplicity** | No speculative features, unnecessary abstractions, or "flexibility" not in PR spec. Diff under 200 LoC for non-trivial PR. | No unused exported types; every new function traced to a success criterion. |
+| **Surgical** | All changed files listed in PR Files table. No unrelated touchpoints. | `git diff main...HEAD --name-only` matches Files table (excl. go.sum/go.mod). |
+| **Explicit** | Every ambiguous decision has a PR comment, ADR, or code comment referencing the constraint. | No undocumented assumptions visible in diff — testable by a fresh reviewer. |
+| **Goal-driven** | Every added function called from >=1 test asserting a success criterion from the PR. | `go test -run=TestXxx -v` shows assertions matching PR success criteria. |

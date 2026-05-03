@@ -7,6 +7,7 @@ Start here. This file stays short on purpose.
 - [quickstart.md](./quickstart.md) — install, first run, interpret output, pipe to jq
 - [architecture.md](./architecture.md) — module boundaries, data flow, design decisions
 - [contributing.md](./contributing.md) — local setup, testing, adding new harnesses
+- [code-review.md](./code-review.md) — 3-phase checklist: automated, diff inspection, code patterns, behavioral gates
 
 ## Rules
 
