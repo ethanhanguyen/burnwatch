@@ -43,6 +43,11 @@ func Execute() {
 		os.Exit(1)
 	}
 
+	if err := config.Validate(cfg); err != nil {
+		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
+		os.Exit(1)
+	}
+
 	if flags.PrintConfig {
 		enc := toml.NewEncoder(os.Stdout)
 		if err := enc.Encode(cfg); err != nil {

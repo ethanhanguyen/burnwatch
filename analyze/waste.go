@@ -2,7 +2,6 @@ package analyze
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 	"time"
 
@@ -127,16 +126,7 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline, cost
 
 	signals = append(signals, checkSessionChurn(agg, baselines)...)
 
-	sevOrder := map[string]int{"high": 3, "medium": 2, "low": 1}
-	sort.Slice(signals, func(i, j int) bool {
-		if signals[i].Severity != signals[j].Severity {
-			return sevOrder[signals[i].Severity] > sevOrder[signals[j].Severity]
-		}
-		if signals[i].Reason != signals[j].Reason {
-			return signals[i].Reason < signals[j].Reason
-		}
-		return signals[i].SessionID < signals[j].SessionID
-	})
+	sortSignals(signals)
 
 	return signals
 }

@@ -357,19 +357,17 @@ func extractDateFromDetail(detail string) string {
 	return rest[:commaIdx]
 }
 
+type churnKey struct {
+	project string
+	date    string
+}
+
 func writeChurnGroups(b *strings.Builder, signals []analyze.WasteSignal,
 	recBySignal map[analyze.WasteSignal]analyze.Recommendation) {
 
-	type churnKey struct {
-		project string
-		date    string
-	}
 	groups := make(map[churnKey][]analyze.WasteSignal)
 
 	for _, s := range signals {
-		if s.Reason != "session_churn" {
-			continue
-		}
 		date := extractDateFromDetail(s.Detail)
 		key := churnKey{s.Project, date}
 		groups[key] = append(groups[key], s)
@@ -384,8 +382,8 @@ func writeChurnGroups(b *strings.Builder, signals []analyze.WasteSignal,
 				totalSavings += rec.SavingsEst
 			}
 		}
-		fmt.Fprintf(b, "  MEDIUM %s on %s: %.0f sessions below mean ratio, $%.2f total\n",
-			key.project, key.date, float64(len(sigs)), totalCost)
+		fmt.Fprintf(b, "  %s %s on %s: %.0f sessions below mean ratio, $%.2f total\n",
+			strings.ToUpper(sigs[0].Severity), key.project, key.date, float64(len(sigs)), totalCost)
 		fmt.Fprintf(b, "    → Consolidate fragmented sessions. Potential savings: $%.2f\n", totalSavings)
 	}
 }

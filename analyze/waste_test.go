@@ -410,6 +410,68 @@ func TestCheckCostOutlier_Sigma1(t *testing.T) {
 	}
 }
 
+func TestCheckCostOutlier_ZeroSigma(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "s1", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 100, OutputTokens: 50,
+			Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},
+		{SessionID: "s2", Project: "p", Harness: "h", CostUSD: 5.0, InputTokens: 100, OutputTokens: 50,
+			Timestamp: time.Date(2026, 5, 1, 11, 0, 0, 0, time.UTC)},
+	}
+	baselines := ComputeBaselines(events)
+	signals := DetectWaste(events, baselines, 0)
+
+	for _, s := range signals {
+		if s.Reason == "cost_outlier" {
+			t.Logf("cost_outlier fired at sigma=0: total=%d", len(signals))
+		}
+	}
+}
+
+func TestDetectWaste_WithSigma(t *testing.T) {
+	events := make([]source.TokenEvent, 0, 7)
+	for i := 1; i <= 6; i++ {
+		events = append(events, source.TokenEvent{
+			SessionID:    "s" + string(rune('0'+i)),
+			Project:      "p",
+			Harness:      "h",
+			CostUSD:      float64(i),
+			InputTokens:  100,
+			OutputTokens: 50,
+			Timestamp:    time.Date(2026, 5, 1, 10+i, 0, 0, 0, time.UTC),
+		})
+	}
+	events = append(events, source.TokenEvent{
+		SessionID:    "s-outlier",
+		Project:      "p",
+		Harness:      "h",
+		CostUSD:      20.0,
+		InputTokens:  100,
+		OutputTokens: 50,
+		Timestamp:    time.Date(2026, 5, 1, 17, 0, 0, 0, time.UTC),
+	})
+
+	baselines := ComputeBaselines(events)
+	signals2 := DetectWaste(events, baselines, 2.0)
+	signals4 := DetectWaste(events, baselines, 4.0)
+
+	countOutlier := func(signals []WasteSignal) int {
+		c := 0
+		for _, s := range signals {
+			if s.Reason == "cost_outlier" {
+				c++
+			}
+		}
+		return c
+	}
+
+	c2 := countOutlier(signals2)
+	c4 := countOutlier(signals4)
+
+	if c4 > c2 {
+		t.Errorf("sigma=4 (%d outliers) should not have more outliers than sigma=2 (%d outliers)", c4, c2)
+	}
+}
+
 func TestCostConsistency(t *testing.T) {
 	events := []source.TokenEvent{
 		{SessionID: "parent", Project: "p", Harness: "h", CostUSD: 1.0, InputTokens: 500, OutputTokens: 100, IsSubagent: false, Timestamp: time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)},

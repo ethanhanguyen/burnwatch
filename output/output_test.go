@@ -522,43 +522,48 @@ func TestWriteChurnGroups(t *testing.T) {
 }
 
 func TestFormatText_GroupChurn(t *testing.T) {
+	baseTime := time.Date(2026, 4, 15, 10, 0, 0, 0, time.UTC)
 	events := []source.TokenEvent{
-		{SessionID: "sa", Harness: "opencode", Project: "proj", InputTokens: 100, OutputTokens: 10, CostUSD: 1.0, Timestamp: fixedTime},
-		{SessionID: "sb", Harness: "opencode", Project: "proj", InputTokens: 100, OutputTokens: 10, CostUSD: 1.0, Timestamp: fixedTime},
-		{SessionID: "sc", Harness: "opencode", Project: "proj", InputTokens: 100, OutputTokens: 10, CostUSD: 1.0, Timestamp: fixedTime},
+		{SessionID: "sa", Harness: "opencode", Project: "proj", InputTokens: 1000, OutputTokens: 50, CostUSD: 1.0, Timestamp: baseTime},
+		{SessionID: "sb", Harness: "opencode", Project: "proj", InputTokens: 1000, OutputTokens: 30, CostUSD: 1.0, Timestamp: baseTime},
+		{SessionID: "sc", Harness: "opencode", Project: "proj", InputTokens: 1000, OutputTokens: 80, CostUSD: 1.0, Timestamp: baseTime},
+		{SessionID: "sd", Harness: "opencode", Project: "proj", InputTokens: 1000, OutputTokens: 500, CostUSD: 2.0, Timestamp: baseTime.AddDate(0, 0, 1)},
 	}
 
 	baselines := analyze.ComputeBaselines(events)
-	signals := analyze.DetectWaste(events, baselines)
+	signals := analyze.DetectWaste(events, baselines, 2.0)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
-	// Test GroupChurn=false (default)
-	gotUngrouped := FormatText(events, baselines, signals, recommendations, false, config.Config{})
-	if strings.Contains(gotUngrouped, "on") && !strings.Contains(gotUngrouped, "No waste") {
-		// Individual churn lines should show dates
+	hasChurn := false
+	for _, s := range signals {
+		if s.Reason == "session_churn" {
+			hasChurn = true
+			break
+		}
+	}
+	if !hasChurn {
+		t.Skip("test data did not generate session_churn signals")
 	}
 
-	// Test GroupChurn=true
+	// Test GroupChurn=false (default) — individual lines with date
+	gotUngrouped := FormatText(events, baselines, signals, recommendations, false, config.Config{})
+	if !strings.Contains(gotUngrouped, "sessions below mean ratio") {
+		t.Error("ungrouped output should show churn lines")
+	}
+
+	// Test GroupChurn=true — one grouped line
 	cfg := config.Config{}
 	cfg.Output.GroupChurn = true
 	gotGrouped := FormatText(events, baselines, signals, recommendations, false, cfg)
 
-	// grouped output should have the "on DATE" format in the group header
-	if len(signals) > 0 {
-		hasChurn := false
-		for _, s := range signals {
-			if s.Reason == "session_churn" {
-				hasChurn = true
-				break
-			}
-		}
-		if hasChurn {
-			if !strings.Contains(gotGrouped, "on ") {
-				t.Errorf("grouped output should show date, got: %s", gotGrouped)
-			}
-			if !strings.Contains(gotGrouped, "total") {
-				t.Errorf("grouped output should show total, got: %s", gotGrouped)
-			}
-		}
+	if !strings.Contains(gotGrouped, "on 2026-04-15") {
+		t.Errorf("grouped output should show date, got: %s", gotGrouped)
+	}
+	if !strings.Contains(gotGrouped, "total") {
+		t.Errorf("grouped output should show total, got: %s", gotGrouped)
+	}
+	// In grouped mode, "sessions below mean ratio" should appear exactly once (in the group header)
+	if strings.Count(gotGrouped, "sessions below mean ratio") != 1 {
+		t.Errorf("grouped output should have exactly 1 'sessions below mean ratio' line, got: %s", gotGrouped)
 	}
 }
