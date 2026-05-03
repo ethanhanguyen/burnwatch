@@ -36,3 +36,6 @@ Thumbs.db
 # Archive (moved post-implementation plans)
 docs/archive/
 burnwatch.log
+
+# GoReleaser output
+dist/
