@@ -2,12 +2,12 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 0/6 complete (v2.5→v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 2/6 complete (v2.5→v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
-v2.5  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0/2 (critical fixes)
+v2.5  ████████████████████████████████████████ 2/2 (critical fixes)
 v3    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0/4 (features)
 
 PR1  ██████████████████████ Foundation
@@ -26,8 +26,8 @@ PR12 ██████████████████████ Token Ba
 PR13 ██████████████████████ Token-Based Heuristics
 PR14 ██████████████████████ Config-Wired Thresholds
 
-PR15 ····················· Fix Pricing + Uncosted
-PR16 ····················· Output Quality Fixes
+PR15 ██████████████████████ Fix Pricing + Uncosted
+PR16 ██████████████████████ Output Quality Fixes
 
 PR17 ····················· Calibration Mode
 PR18 ····················· Unsupervised Anomaly Detection
@@ -53,8 +53,8 @@ PR20 ····················· ML Pipeline (experimental)
 | PR12 | `pr12-token-baselines` | merged | 2026-05-02 | 2026-05-02 | InputMean, OutputMean, TER, token percentiles |
 | PR13 | `pr13-token-heuristics` | merged | 2026-05-03 | 2026-05-03 | H6 input overconsumption, H7 output explosion, H8 token efficiency, H9 fragmentation index |
 | PR14 | `pr14-config-wiring` | merged | 2026-05-03 | 2026-05-03 | Wire all thresholds to config, new CLI flags, complete PR7 work |
-| PR15 | `pr15-pricing-fix` | **not started** | — | — | 1000x embedded bug, cache validation, uncosted fallback |
-| PR16 | `pr16-output-quality` | **not started** | — | — | Fragment min-cost gating, savings dedup, --init |
+| PR15 | `pr15-pricing-fix` | **merged** | 2026-05-03 | 2026-05-03 | 1000x embedded bug, cache validation, uncosted fallback |
+| PR16 | `pr15-pricing-fix` | **merged** | 2026-05-03 | 2026-05-03 | Fragment min-cost gating, savings dedup, --init |
 | PR17 | `pr17-calibrate` | **not started** | — | — | --calibrate mode, distribution, suggestions |
 | PR18 | `pr18-anomaly-detection` | **not started** | — | — | Isolation forest on session feature vectors |
 | PR19 | `pr19-llm-verification` | **not started** | — | — | LLM review of top-N waste signals |
@@ -87,15 +87,15 @@ Each milestone requires a gate check before the next PR can start.
 
 ### Gate P15 (after PR15 merge)
 
-- [ ] **P15.1 — Cost accuracy:** Run on real data (`burnwatch -harness all -days 30`). Spot-check 3 Claude sessions against OpenRouter billing dashboard. Variance <5%.
-- [ ] **P15.2 — Cache health:** `burnwatch --refresh-pricing` writes `pricing.json` with >500 entries. `burnwatch --no-fetch-pricing` falls back to embedded table without 1000x inflation.
-- [ ] **P15.3 — Graceful degradation:** Simulate pricing fetch failure. Verify uncosted sessions show `$?`, no fallback price used.
+- [x] **P15.1 — Cost accuracy:** Run on real data (`burnwatch -harness all -days 30`). Spot-check 3 Claude sessions against OpenRouter billing dashboard. Variance <5%.
+- [x] **P15.2 — Cache health:** `burnwatch --refresh-pricing` writes `pricing.json` with >500 entries. `burnwatch --no-fetch-pricing` falls back to embedded table without 1000x inflation.
+- [x] **P15.3 — Graceful degradation:** Simulate pricing fetch failure. Verify uncosted sessions show `$?`, no fallback price used.
 
 ### Gate P16 (after PR16 merge)
 
-- [ ] **P16.1 — Fragment noise:** Run on real data. Fragmentation signals <100 (was 1,900+). No sub-$0.50 session flagged by H9.
-- [ ] **P16.2 — Savings honesty:** "Potential savings" ≤ sum of all session costs. Same session flagged by 3 heuristics is counted once.
-- [ ] **P16.3 — Init:** `burnwatch --init` in tmpdir → `.burnwatch.toml` loads without errors.
+- [x] **P16.1 — Fragment noise:** Run on real data. Fragmentation signals <100 (was 1,900+). No sub-$0.50 session flagged by H9.
+- [x] **P16.2 — Savings honesty:** "Potential savings" ≤ sum of all session costs. Same session flagged by 3 heuristics is counted once.
+- [x] **P16.3 — Init:** `burnwatch --init` in tmpdir → `.burnwatch.toml` loads without errors.
 
 ### Gate P17 (after PR17 merge)
 
@@ -144,6 +144,8 @@ Start PR15: Fix Pricing + Uncosted Fallback. See `docs/plans/PR15-prompt.md`.
 | 2026-05-03 | PR14 | Config-wired thresholds: all hardcoded constants moved to config, new CLI flags, signature changes, full test coverage |
 | 2026-05-03 | — | **Post-PR14 review found 1000x pricing bug.** Embedded table uses $/MTok values but CostForModel treats as $/1K. All costs inflated. Cache corrupted (1 fake entry). OpenCode trusts DB costs instead of recalculating. Fallback price fabricates costs for unknown models. |
 | 2026-05-03 | — | v2.5 plan drafted: PR15 (pricing fix), PR16 (output quality). Original PR15-18 renumbered to PR17-20. Validation gates added at each milestone. |
+| 2026-05-03 | PR15 | Fix embedded pricing 1000x, remove fallback, add CostUnknown, gate cost heuristics |
+| 2026-05-03 | PR16 | Fragment min-cost gating, savings dedup, --init flag, config.example.toml |
 
 ## Quality snapshot
 
