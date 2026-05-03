@@ -37,7 +37,7 @@ func generateSyntheticEvents(n int) []source.TokenEvent {
 		model := models[rng.Intn(len(models))]
 		proj := names[rng.Intn(len(names))]
 		ts := baseTime.Add(time.Duration(i) * time.Minute)
-		cost, approx := source.CostForModel(model, in, out, cr, cw)
+		cost, approx, _ := source.CostForModel(model, in, out, cr, cw)
 		events = append(events, source.TokenEvent{
 			SessionID:       sid,
 			Model:           model,
@@ -115,7 +115,7 @@ func BenchmarkPricingLookup(b *testing.B) {
 		mi := i % len(models)
 		ti := i % len(tokens)
 		tok := tokens[ti]
-		_, _ = source.CostForModel(models[mi], tok.in, tok.out, tok.cr, tok.cw)
+	_, _, _ = source.CostForModel(models[mi], tok.in, tok.out, tok.cr, tok.cw)
 	}
 }
 

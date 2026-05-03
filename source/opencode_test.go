@@ -55,8 +55,8 @@ func TestOpenCodeSource_Events(t *testing.T) {
 	if first.SessionID == "" {
 		t.Error("first event SessionID is empty")
 	}
-	if first.CostUSD <= 0 {
-		t.Errorf("first event CostUSD = %f, want > 0", first.CostUSD)
+	if first.CostUSD < 0 {
+		t.Errorf("first event CostUSD = %f, want >= 0", first.CostUSD)
 	}
 	if first.Project == "" {
 		t.Error("first event Project is empty")
@@ -75,8 +75,8 @@ func TestOpenCodeSource_Events(t *testing.T) {
 				t.Errorf("subagent event %q has empty ParentSessionID", e.SessionID)
 			}
 		}
-		if e.CostUSD <= 0 {
-			t.Errorf("event %q: CostUSD = %f, want > 0", e.SessionID, e.CostUSD)
+		if e.CostUSD < 0 {
+			t.Errorf("event %q: CostUSD = %f, want >= 0", e.SessionID, e.CostUSD)
 		}
 	}
 	if subagentCount == 0 {
@@ -191,7 +191,8 @@ func TestOpenCodeSource_ParseMessage(t *testing.T) {
 				CacheRead:       1234,
 				CacheWrite:      0,
 				ReasoningTokens: 313,
-				CostUSD:         0.093594,
+				CostUSD:         0.05609375,
+				CostApproximate: false,
 				Harness:         "opencode",
 			},
 		},
@@ -211,7 +212,7 @@ func TestOpenCodeSource_ParseMessage(t *testing.T) {
 				Model:     "claude-sonnet-4-5",
 				Provider:  "anthropic",
 				Timestamp: mustParseTime(t, 1775925856369),
-				CostUSD:   0.50,
+				CostUSD:   0.0,
 				Harness:   "opencode",
 			},
 		},

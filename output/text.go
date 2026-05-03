@@ -238,7 +238,10 @@ func writeProjects(b *strings.Builder, baselines map[string]analyze.Baseline) {
 		})
 	}
 	sort.Slice(projects, func(i, j int) bool {
-		return projects[i].cost > projects[j].cost
+		if projects[i].cost != projects[j].cost {
+			return projects[i].cost > projects[j].cost
+		}
+		return projects[i].name < projects[j].name
 	})
 
 	if len(projects) == 0 {
@@ -265,7 +268,9 @@ func medianFromSorted(sorted []float64) float64 {
 func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Recommendation, baselines map[string]analyze.Baseline) {
 	sev := strings.ToUpper(s.Severity)
 	costPrefix := "$"
-	if s.CostApproximate {
+	if s.CostUnknown {
+		costPrefix = "$?"
+	} else if s.CostApproximate {
 		costPrefix = "≈ $"
 	}
 	if s.SessionID != "" {
@@ -296,20 +301,32 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 	case "input_overconsumption":
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 		if s.Model != "" {
-			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
-				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
+			label := ""
+			if s.CostUnknown {
+				label = " [no pricing data]"
+			}
+			fmt.Fprintf(b, "    Model: %s%s, %s in / %s out\n",
+				s.Model, label, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
 		}
 	case "output_explosion":
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 		if s.Model != "" {
-			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
-				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
+			label := ""
+			if s.CostUnknown {
+				label = " [no pricing data]"
+			}
+			fmt.Fprintf(b, "    Model: %s%s, %s in / %s out\n",
+				s.Model, label, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
 		}
 	case "low_token_efficiency":
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 		if s.Model != "" {
-			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
-				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
+			label := ""
+			if s.CostUnknown {
+				label = " [no pricing data]"
+			}
+			fmt.Fprintf(b, "    Model: %s%s, %s in / %s out\n",
+				s.Model, label, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
 		}
 	case "fragmentation_index":
 		fmt.Fprintf(b, " — %s\n", s.Detail)

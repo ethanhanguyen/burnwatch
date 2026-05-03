@@ -37,6 +37,7 @@ type JSONWasteSignal struct {
 	Threshold       float64 `json:"threshold"`
 	SessionCost     float64 `json:"session_cost,omitempty"`
 	CostApproximate bool    `json:"cost_approximate,omitempty"`
+	CostUnknown     bool    `json:"cost_unknown,omitempty"`
 }
 
 type JSONSubagentNode struct {
@@ -96,6 +97,7 @@ func FormatJSON(
 			Threshold:       s.Threshold,
 			SessionCost:     s.SessionCost,
 			CostApproximate: s.CostApproximate,
+			CostUnknown:     s.CostUnknown,
 		})
 	}
 
@@ -213,7 +215,10 @@ func buildJSONProjects(baselines map[string]analyze.Baseline) []JSONProject {
 		})
 	}
 	sort.Slice(projects, func(i, j int) bool {
-		return projects[i].TotalCost > projects[j].TotalCost
+		if projects[i].TotalCost != projects[j].TotalCost {
+			return projects[i].TotalCost > projects[j].TotalCost
+		}
+		return projects[i].Name < projects[j].Name
 	})
 	return projects
 }

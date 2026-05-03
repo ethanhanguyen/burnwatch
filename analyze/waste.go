@@ -22,6 +22,7 @@ type WasteSignal struct {
 	InputTokens     int64
 	OutputTokens    int64
 	CostApproximate bool
+	CostUnknown     bool
 }
 
 type sessionAgg struct {
@@ -40,6 +41,7 @@ type sessionAgg struct {
 	isSubagent      bool
 	model           string
 	costApproximate bool
+	costUnknown     bool
 }
 
 func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
@@ -66,6 +68,9 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		a.cost += e.CostUSD
 		if e.CostApproximate {
 			a.costApproximate = true
+		}
+		if e.CostUnknown {
+			a.costUnknown = true
 		}
 
 		in := e.InputTokens
@@ -126,8 +131,10 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		bl := baselines[key]
 
 		if cfg.Signals.CostOutlier {
-			if signal := checkCostOutlier(a, bl, cfg.Thresholds.CostOutlierSigma); signal != nil {
-				signals = append(signals, *signal)
+			if !a.costUnknown {
+				if signal := checkCostOutlier(a, bl, cfg.Thresholds.CostOutlierSigma); signal != nil {
+					signals = append(signals, *signal)
+				}
 			}
 		}
 
@@ -138,8 +145,10 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		}
 
 		if cfg.Signals.SubagentOverhead {
-			if signal := checkSubagentOverhead(a, treeBySession, cfg.Thresholds.SubagentOverheadPct); signal != nil {
-				signals = append(signals, *signal)
+			if !a.costUnknown {
+				if signal := checkSubagentOverhead(a, treeBySession, cfg.Thresholds.SubagentOverheadPct); signal != nil {
+					signals = append(signals, *signal)
+				}
 			}
 		}
 
@@ -196,6 +205,7 @@ func checkCostOutlier(a *sessionAgg, bl Baseline, sigma float64) *WasteSignal {
 			InputTokens:     a.inputSum,
 			OutputTokens:    a.outputSum,
 			CostApproximate: a.costApproximate,
+			CostUnknown:     a.costUnknown,
 		}
 	}
 	return nil
@@ -222,6 +232,7 @@ func checkLowSignal(a *sessionAgg, global Baseline) *WasteSignal {
 			InputTokens:     a.inputSum,
 			OutputTokens:    a.outputSum,
 			CostApproximate: a.costApproximate,
+			CostUnknown:     a.costUnknown,
 		}
 	}
 	return nil
@@ -246,6 +257,7 @@ func checkSubagentOverhead(a *sessionAgg, treeBySession map[string]*SubagentTree
 			InputTokens:     a.inputSum,
 			OutputTokens:    a.outputSum,
 			CostApproximate: a.costApproximate,
+			CostUnknown:     a.costUnknown,
 		}
 	}
 	return nil
@@ -273,6 +285,7 @@ func checkCacheUnderutilized(a *sessionAgg, global Baseline) *WasteSignal {
 			InputTokens:     a.inputSum,
 			OutputTokens:    a.outputSum,
 			CostApproximate: a.costApproximate,
+			CostUnknown:     a.costUnknown,
 		}
 	}
 	return nil
@@ -300,6 +313,7 @@ func checkInputOverconsumption(a *sessionAgg, bl Baseline, sigma float64) *Waste
 			InputTokens:     a.inputSum,
 			OutputTokens:    a.outputSum,
 			CostApproximate: a.costApproximate,
+			CostUnknown:     a.costUnknown,
 		}
 	}
 	return nil
@@ -327,6 +341,7 @@ func checkOutputExplosion(a *sessionAgg, bl Baseline, sigma float64) *WasteSigna
 			InputTokens:     a.inputSum,
 			OutputTokens:    a.outputSum,
 			CostApproximate: a.costApproximate,
+			CostUnknown:     a.costUnknown,
 		}
 	}
 	return nil
@@ -393,6 +408,9 @@ func checkFragmentationIndex(agg map[string]*sessionAgg, fragThreshold float64, 
 			if seen[s.sessionID] {
 				continue
 			}
+			if s.costUnknown {
+				continue
+			}
 			seen[s.sessionID] = true
 			signals = append(signals, WasteSignal{
 				SessionID:       s.sessionID,
@@ -406,8 +424,9 @@ func checkFragmentationIndex(agg map[string]*sessionAgg, fragThreshold float64, 
 				Model:           s.model,
 				InputTokens:     s.inputSum,
 				OutputTokens:    s.outputSum,
-				CostApproximate: s.costApproximate,
-			})
+			CostApproximate: s.costApproximate,
+			CostUnknown:     s.costUnknown,
+		})
 		}
 	}
 

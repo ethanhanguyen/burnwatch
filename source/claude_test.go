@@ -348,18 +348,18 @@ func TestCostForModel_FromPricingTable(t *testing.T) {
 		cacheWrite int64
 		wantCost   float64
 	}{
-		{"claude-sonnet-4-5-20250929", 1000, 0, 0, 0, 3.00},
-		{"claude-sonnet-4-5-20250929", 0, 1000, 0, 0, 15.00},
-		{"claude-sonnet-4-5-20250929", 0, 0, 1000, 0, 0.30},
-		{"claude-sonnet-4-5-20250929", 0, 0, 0, 1000, 3.75},
-		{"claude-opus-4-5", 1000, 0, 0, 0, 15.00},
-		{"claude-opus-4-5", 0, 1000, 0, 0, 75.00},
-		{"claude-haiku-4-5", 1000, 0, 0, 0, 0.80},
-		{"claude-haiku-4-5", 0, 1000, 0, 0, 4.00},
+		{"claude-sonnet-4-5-20250929", 1000, 0, 0, 0, 0.003},
+		{"claude-sonnet-4-5-20250929", 0, 1000, 0, 0, 0.015},
+		{"claude-sonnet-4-5-20250929", 0, 0, 1000, 0, 0.0003},
+		{"claude-sonnet-4-5-20250929", 0, 0, 0, 1000, 0.00375},
+		{"claude-opus-4-5", 1000, 0, 0, 0, 0.015},
+		{"claude-opus-4-5", 0, 1000, 0, 0, 0.075},
+		{"claude-haiku-4-5", 1000, 0, 0, 0, 0.0008},
+		{"claude-haiku-4-5", 0, 1000, 0, 0, 0.004},
 	}
 
 	for _, tt := range tests {
-		got, _ := CostForModel(tt.model, tt.input, tt.output, tt.cacheRead, tt.cacheWrite)
+		got, _, _ := CostForModel(tt.model, tt.input, tt.output, tt.cacheRead, tt.cacheWrite)
 		if math.Abs(got-tt.wantCost) > delta {
 			t.Errorf("CostForModel(%q, %d, %d, %d, %d) = %f, want %f",
 				tt.model, tt.input, tt.output, tt.cacheRead, tt.cacheWrite, got, tt.wantCost)

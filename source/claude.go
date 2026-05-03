@@ -198,7 +198,7 @@ func (s *ClaudeSource) parseLine(line, project, sessionID, agentID string, isSub
 		}
 	}
 
-	cost, approx := CostForModel(
+	cost, approx, costUnknown := CostForModel(
 		entry.Message.Model,
 		entry.Message.Usage.InputTokens,
 		entry.Message.Usage.OutputTokens,
@@ -220,6 +220,7 @@ func (s *ClaudeSource) parseLine(line, project, sessionID, agentID string, isSub
 		ReasoningTokens: 0,
 		CostUSD:         cost,
 		CostApproximate: approx,
+		CostUnknown:     costUnknown,
 		Project:         project,
 		Harness:         "claude-code",
 		IsSubagent:      isSubagent,

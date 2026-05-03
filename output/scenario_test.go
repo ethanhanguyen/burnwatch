@@ -83,7 +83,7 @@ func parseScenarioLine(tb testing.TB, line string) source.TokenEvent {
 	if ts.IsZero() {
 		ts = time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
 	}
-	cost, approx := source.CostForModel(
+	cost, approx, _ := source.CostForModel(
 		entry.Message.Model,
 		entry.Message.Usage.InputTokens,
 		entry.Message.Usage.OutputTokens,

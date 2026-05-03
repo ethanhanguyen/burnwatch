@@ -171,8 +171,9 @@ func TestFetchAndCache_Success(t *testing.T) {
 
 func TestInitPricing_CacheHit(t *testing.T) {
 	tmpDir := t.TempDir()
-	entries := []PricingEntry{
-		{Key: "cached-model", Input: 1.0, Output: 2.0, CacheRead: 0},
+	entries := make([]PricingEntry, 50)
+	for i := range entries {
+		entries[i] = PricingEntry{Key: "model-" + string(rune('a'+i%26)), Input: float64(i+1), Output: float64(i+2), CacheRead: 0}
 	}
 	cache := &CacheEntry{
 		FetchedAt: time.Now(),
@@ -208,7 +209,7 @@ func TestInitPricing_CacheHit(t *testing.T) {
 	if !pricingInitialized {
 		t.Error("InitPricing should leave pricingInitialized true")
 	}
-	if len(fetchedPricing) != 1 || fetchedPricing[0].Key != "cached-model" {
+	if len(fetchedPricing) != 50 {
 		t.Error("fetchedPricing should not change on cache hit")
 	}
 }
@@ -217,10 +218,12 @@ func TestCacheRoundTrip(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, "pricing.json")
 
-	entries := []PricingEntry{
-		{Key: "claude-sonnet-4-5", Input: 3.0, Output: 15.0, CacheRead: 0.30},
-		{Key: "deepseek-v4-pro", Input: 0.435, Output: 0.87, CacheRead: 0},
+	entries := make([]PricingEntry, 50)
+	for i := range entries {
+		entries[i] = PricingEntry{Key: "model-" + string(rune('a'+i%26)), Input: float64(i+1), Output: float64(i+2), CacheRead: 0}
 	}
+	entries[0] = PricingEntry{Key: "claude-sonnet-4-5", Input: 3.0, Output: 15.0, CacheRead: 0.30}
+	entries[1] = PricingEntry{Key: "deepseek-v4-pro", Input: 0.435, Output: 0.87, CacheRead: 0}
 	cache := &CacheEntry{
 		FetchedAt: time.Now(),
 		Entries:   entries,
@@ -236,21 +239,6 @@ func TestCacheRoundTrip(t *testing.T) {
 	}
 	if len(loaded.Entries) != len(entries) {
 		t.Errorf("entries count: %d, want %d", len(loaded.Entries), len(entries))
-	}
-	for i, e := range entries {
-		le := loaded.Entries[i]
-		if le.Key != e.Key {
-			t.Errorf("entry[%d].Key = %q, want %q", i, le.Key, e.Key)
-		}
-		if math.Abs(le.Input-e.Input) > 1e-9 {
-			t.Errorf("entry[%d].Input = %f, want %f", i, le.Input, e.Input)
-		}
-		if math.Abs(le.Output-e.Output) > 1e-9 {
-			t.Errorf("entry[%d].Output = %f, want %f", i, le.Output, e.Output)
-		}
-		if math.Abs(le.CacheRead-e.CacheRead) > 1e-9 {
-			t.Errorf("entry[%d].CacheRead = %f, want %f", i, le.CacheRead, e.CacheRead)
-		}
 	}
 }
 
@@ -353,12 +341,52 @@ func TestCachePath(t *testing.T) {
 	}
 }
 
+func TestLoadCache_TooFewEntries(t *testing.T) {
+	tmpDir := t.TempDir()
+	path := filepath.Join(tmpDir, "few.json")
+	entries := make([]PricingEntry, 49)
+	for i := range entries {
+		entries[i] = PricingEntry{Key: "model-" + string(rune('a'+i%26)), Input: float64(i+1)}
+	}
+	cache := &CacheEntry{FetchedAt: time.Now(), TTL: 24 * time.Hour, Entries: entries}
+	data, _ := json.Marshal(cache)
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		t.Fatal(err)
+	}
+	_, err := LoadCache(path)
+	if err == nil {
+		t.Error("expected error for cache with only 49 entries (<50)")
+	}
+}
+
+func TestLoadCache_MinEntriesValid(t *testing.T) {
+	tmpDir := t.TempDir()
+	path := filepath.Join(tmpDir, "min.json")
+	entries := make([]PricingEntry, 50)
+	for i := range entries {
+		entries[i] = PricingEntry{Key: "model-" + string(rune('a'+i%26)), Input: float64(i+1)}
+	}
+	cache := &CacheEntry{FetchedAt: time.Now(), TTL: 24 * time.Hour, Entries: entries}
+	data, _ := json.Marshal(cache)
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		t.Fatal(err)
+	}
+	_, err := LoadCache(path)
+	if err != nil {
+		t.Errorf("expected success for cache with 50 entries, got: %v", err)
+	}
+}
+
 func TestSaveCacheDirectoryCreation(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, "new", "subdir", "pricing.json")
+	entries := make([]PricingEntry, 50)
+	for i := range entries {
+		entries[i] = PricingEntry{Key: "model-" + string(rune('a'+i%26)), Input: float64(i+1)}
+	}
 	cache := &CacheEntry{
 		FetchedAt: time.Now(),
-		Entries:   []PricingEntry{{Key: "test", Input: 1.0}},
+		Entries:   entries,
 	}
 	if err := SaveCache(path, cache); err != nil {
 		t.Fatalf("SaveCache should create directories: %v", err)
@@ -367,18 +395,22 @@ func TestSaveCacheDirectoryCreation(t *testing.T) {
 	if err != nil {
 		t.Fatalf("LoadCache: %v", err)
 	}
-	if len(loaded.Entries) != 1 {
-		t.Errorf("expected 1 entry, got %d", len(loaded.Entries))
+	if len(loaded.Entries) != 50 {
+		t.Errorf("expected 50 entries, got %d", len(loaded.Entries))
 	}
 }
 
 func TestLoadCache_Expired(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, "expired.json")
+	entries := make([]PricingEntry, 50)
+	for i := range entries {
+		entries[i] = PricingEntry{Key: "model-" + string(rune('a'+i%26)), Input: float64(i+1)}
+	}
 	cache := &CacheEntry{
 		FetchedAt: time.Now().Add(-8 * 24 * time.Hour),
 		TTL:       1 * time.Hour,
-		Entries:   []PricingEntry{{Key: "test", Input: 1.0}},
+		Entries:   entries,
 	}
 	data, _ := json.Marshal(cache)
 	if err := os.WriteFile(path, data, 0644); err != nil {

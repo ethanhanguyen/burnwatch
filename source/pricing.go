@@ -19,15 +19,13 @@ var pricing = []struct {
 	key string
 	p   priceEntry
 }{
-	{"claude-sonnet-4-5", priceEntry{3.00, 15.00, 0.30, 3.75}},
-	{"claude-opus-4-5", priceEntry{15.00, 75.00, 1.50, 18.75}},
-	{"claude-haiku-4-5", priceEntry{0.80, 4.00, 0.08, 1.00}},
-	{"gemini-3-pro", priceEntry{1.25, 5.00, 0, 0}},
-	{"gemini-2.5-pro", priceEntry{1.25, 5.00, 0, 0}},
-	{"gemini-2.5-flash", priceEntry{0.15, 0.60, 0, 0}},
+	{"claude-sonnet-4-5", priceEntry{0.003, 0.015, 0.0003, 0.00375}},
+	{"claude-opus-4-5", priceEntry{0.015, 0.075, 0.0015, 0.01875}},
+	{"claude-haiku-4-5", priceEntry{0.0008, 0.004, 0.00008, 0.001}},
+	{"gemini-3-pro", priceEntry{0.00125, 0.005, 0, 0}},
+	{"gemini-2.5-pro", priceEntry{0.00125, 0.005, 0, 0}},
+	{"gemini-2.5-flash", priceEntry{0.00015, 0.0006, 0, 0}},
 }
-
-var fallback = priceEntry{3.00, 15.00, 0.30, 3.75}
 
 var fetchedPricing []PricingEntry
 var pricingInitialized bool
@@ -69,7 +67,7 @@ func fetchAndCache(client *http.Client) error {
 	return nil
 }
 
-func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite int64) (float64, bool) {
+func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite int64) (float64, bool, bool) {
 	if inputTokens < 0 {
 		inputTokens = 0
 	}
@@ -85,22 +83,25 @@ func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite
 
 	modelLower := strings.ToLower(model)
 
-	p, approximate := lookupPrice(modelLower)
+	p, approximate, costUnknown := lookupPrice(modelLower)
+	if costUnknown {
+		return 0, false, true
+	}
 
 	cost := float64(inputTokens)/1000.0*p.input +
 		float64(outputTokens)/1000.0*p.output +
 		float64(cacheRead)/1000.0*p.cacheRead +
 		float64(cacheWrite)/1000.0*p.cacheWrite
 
-	return cost, approximate
+	return cost, approximate, false
 }
 
-func lookupPrice(modelLower string) (priceEntry, bool) {
+func lookupPrice(modelLower string) (priceEntry, bool, bool) {
 	bestMatch := ""
 	bestLen := 0
 	for _, e := range fetchedPricing {
 		if strings.EqualFold(modelLower, e.Key) {
-			return priceEntry{e.Input, e.Output, e.CacheRead, 0}, false
+			return priceEntry{e.Input, e.Output, e.CacheRead, 0}, false, false
 		}
 		if strings.Contains(modelLower, e.Key) {
 			if len(e.Key) > bestLen {
@@ -112,16 +113,16 @@ func lookupPrice(modelLower string) (priceEntry, bool) {
 	if bestMatch != "" {
 		for _, e := range fetchedPricing {
 			if e.Key == bestMatch {
-				return priceEntry{e.Input, e.Output, e.CacheRead, 0}, false
+				return priceEntry{e.Input, e.Output, e.CacheRead, 0}, false, false
 			}
 		}
 	}
 
 	for _, entry := range pricing {
 		if strings.Contains(modelLower, entry.key) {
-			return entry.p, false
+			return entry.p, false, false
 		}
 	}
 
-	return fallback, true
+	return priceEntry{}, false, true
 }

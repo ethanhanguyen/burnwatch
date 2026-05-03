@@ -129,8 +129,8 @@ func LoadCache(path string) (*CacheEntry, error) {
 	if err := json.Unmarshal(data, &cache); err != nil {
 		return nil, err
 	}
-	if len(cache.Entries) == 0 {
-		return nil, fmt.Errorf("empty cache entries")
+	if len(cache.Entries) < 50 {
+		return nil, fmt.Errorf("cache has too few entries (%d), treating as stale", len(cache.Entries))
 	}
 	ttl := pricingCacheTTL
 	if cache.TTL > 0 {

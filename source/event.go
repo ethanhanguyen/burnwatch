@@ -16,6 +16,7 @@ type TokenEvent struct {
 	ReasoningTokens int64
 	CostUSD         float64
 	CostApproximate bool
+	CostUnknown     bool
 	Project         string
 	Harness         string
 	IsSubagent      bool

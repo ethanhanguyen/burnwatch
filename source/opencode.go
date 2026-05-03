@@ -155,6 +155,14 @@ func (s *OpenCodeSource) tokenDataToEvent(td tokenData, sessionID, parentSession
 		ts = time.UnixMilli(td.Time.Created)
 	}
 
+	cost, approx, costUnknown := CostForModel(
+		td.ModelID,
+		inputTokens,
+		outputTokens,
+		cacheRead,
+		cacheWrite,
+	)
+
 	return TokenEvent{
 		SessionID:       sessionID,
 		ParentSessionID: parentSessionID,
@@ -167,7 +175,9 @@ func (s *OpenCodeSource) tokenDataToEvent(td tokenData, sessionID, parentSession
 		CacheRead:       cacheRead,
 		CacheWrite:      cacheWrite,
 		ReasoningTokens: reasoningTokens,
-		CostUSD:         td.Cost,
+		CostUSD:         cost,
+		CostApproximate: approx,
+		CostUnknown:     costUnknown,
 		Project:         project,
 		Harness:         "opencode",
 		IsSubagent:      parentSessionID != "",
