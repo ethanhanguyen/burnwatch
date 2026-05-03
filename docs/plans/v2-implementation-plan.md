@@ -1,57 +1,73 @@
-# Burnwatch v2 Implementation Plan
+# Burnwatch v2.5 Implementation Plan
 
-> **Status:** Planning | **Date:** 2026-05-02 | **Dependency:** PR1–PR10 (all merged)
+> **Status:** Phase 0 (critical fixes) not started | **Date:** 2026-05-03 | **Dependency:** PR1–PR14 (all merged)
 
 ## Motivation
 
-The burnwatch v1 assessment revealed three root problems:
+The burnwatch v1 assessment revealed three root problems. PR11-14 addressed #2 and #3 partially. The 2026-05-03 post-PR14 review discovered new critical bugs:
 
-1. **Cost calculations are wrong.** The embedded pricing table (`source/pricing.go`) covers only 6 models. All others (deepseek, kimi, minimax, gpt-5.4, qwen — the majority of user sessions) fall back to claude-sonnet-4-5 pricing ($3/$15 per MTok). DeepSeek is actually ~$0.44/$0.87 — costs are inflated **7x–17x**. This makes dollar-based heuristics and the potential-savings headline meaningless.
+1. **Cost calculations are wrong (1000x bug).** The embedded pricing table (`source/pricing.go`) stores $/MTok values but `CostForModel()` divides tokens by 1000 (treating as $/1K). All Claude sessions inflated 1000x. Real cost ~$963, burnwatch reported $963K. *Partially fixed by PR11 (OpenRouter fetch), fully fixed by PR15.*
 
-2. **Token data is collected but unused by heuristics.** `TokenEvent` has separate `InputTokens`/`OutputTokens` since PR1. `sessionAgg` sums them independently. But every heuristic operates on cost or ratio — never on absolute input or output token counts. This is squandering data that is already cleanly plumbed through every layer.
+2. **Pricing cache corrupted.** `~/Library/Caches/burnwatch/pricing.json` has 1 fake entry (`model-1`) instead of 500+ OpenRouter models. All non-Claude/Gemini models fall back to embedded table → 1000x inflation. *Fixed by PR15 (cache validation).*
 
-3. **Heuristic thresholds are hardcoded.** Only `cost_outlier_sigma` is configurable. `LowSignalPercentile` exists in config but isn't wired. Subagent overhead (50%), churn min sessions (3), P10 percentiles — all unchanging constants. A project with 3,000 sessions gets the same thresholds as one with 30.
+3. **OpenCode trusts database costs.** OpenCode source uses `td.Cost` from the message JSON instead of recalculating via `CostForModel()`. If OpenCode's own pricing is wrong, burnwatch propagates wrong costs. *Fixed by PR15 (unified cost path).*
+
+4. **Fallback price fabricates authority.** Unknown models get claude-sonnet pricing as a guess. A fabricated dollar sign on a guess is worse than silence. *Fixed by PR15 (uncosted fallback).*
+
+5. **Fragmentation noise.** H9 fires on 1,900+ sub-$0.05 sessions (OpenCode's many-API-call per task pattern). *Fixed by PR16 (min-cost gating).*
+
+6. **Savings double-counting.** Same session flagged by H1, H6, H7, H8 — each claiming independent savings. Potential savings sum overshoots actual waste by ~3x. *Fixed by PR16 (dedup).*
+
+7. **Token data is collected but unused by heuristics.** `TokenEvent` has separate `InputTokens`/`OutputTokens` since PR1. `sessionAgg` sums them independently. But every heuristic operates on cost or ratio — never on absolute input or output token counts. *Fixed by PR13.*
+
+8. **Heuristic thresholds are hardcoded.** *Fixed by PR14.*
 
 ## Phases
 
 ```
-Phase A (Foundation)
+Phase A (Foundation) — merged
   PR11 ─── PR12 ─── PR13 ─── PR14
   pricing   token    token    config
   fetch     baselines heuristics wiring
 
-Phase B (Calibration + Advanced)
-  PR15 ─── PR16 ─── PR17
-  calibrate anomaly  LLM verify
+Phase 0 (Critical Fix — sequential)
+  PR15 ─── PR16
+  pricing   output-quality
+  fix       (noise + dedup + init)
 
-Phase C (ML — experimental, post-v2)
-  PR18
+Phase 1 (v2 Features — sequential)
+  PR17 ─── PR18 ─── PR19
+  calibrate anomaly  LLM verify
+  (was PR15) (was PR16) (was PR17)
+
+Phase 2 (ML — experimental)
+  PR20
   supervised
+  (was PR18)
 ```
 
 ### Dependency graph
 
 ```
-PR11 (pricing)     ── no deps, can start immediately
-PR12 (baselines)   ── after PR11 (uses new cost data for cross-validation)
-PR13 (heuristics)  ── after PR12 (needs token baselines)
-PR14 (config)      ── after PR13 (needs heuristic toggles defined)
+PR11 (pricing)     ── no deps, merged
+PR12 (baselines)   ── after PR11, merged
+PR13 (heuristics)  ── after PR12, merged
+PR14 (config)      ── after PR13, merged
 
-PR15 (calibrate)   ── after PR13 (prints distributions for all heuristics)
-                    ── parallel with PR14
+PR15 (pricing fix) ── after PR14 (needs config for uncosted toggle)
+                   ── blocks ALL analysis (1000x inflated costs)
 
-PR16 (anomaly)     ── after PR14+PR15 (needs config-wired thresholds, calibration context)
-PR17 (LLM)         ── after PR16 (uses anomaly scores to pick top-N for review)
+PR16 (output)      ── after PR15 (needs corrected cost data)
 
-PR18 (ML)          ── after PR17 (needs labeled data from LLM verification)
+PR17 (calibrate)   ── after PR16 (was PR15; needs config init, clean output)
+PR18 (anomaly)     ── after PR14+PR17 (was PR16; needs config-wired thresholds)
+PR19 (LLM)         ── after PR18 (was PR17; uses anomaly scores)
+PR20 (ML)          ── after PR19 (was PR18; needs labeled data)
 ```
 
 ### Parallel opportunities
 
-| Group | PRs | Rationale |
-|-------|-----|-----------|
-| G1 | PR14, PR15 | Different files, no shared state |
-| G2 | PR16, PR17 | Different packages, PR17 depends on PR16 output format |
+None in Phase 0–1. All PRs are sequential. PR15 blocks all analysis. PR16 needs PR15 costs. PR17-20 depend on clean output from PR16.
 
 ---
 
@@ -117,7 +133,33 @@ Add entries for PR13 heuristics:
 
 **Files affected:** `config/config.go`, `config/config_test.go`, `analyze/waste.go`, `analyze/baseline.go`, `cmd/root.go`
 
-### PR15: Calibration Mode
+### PR15: Fix Pricing + Uncosted Fallback
+
+**What:** Fix 3 pricing bugs + add uncosted handling:
+
+- **A. 1000x embedded pricing bug:** Divide all 6 embedded `priceEntry` values by 1000. Was `{3.00, 15.00, ...}` (accidental $/MTok), should be `{0.003, 0.015, ...}` ($/1K, matching fetched pricing format).
+- **B. Cache validation:** `LoadCache` treats <50 entries as stale. Re-fetch from OpenRouter. Fixes the single fake `"model-1"` entry corruption.
+- **C. OpenCode cost source:** Replace `CostUSD: td.Cost` with `CostForModel()` call — same calculation path as Claude source.
+- **D. Uncosted fallback:** Remove `fallback` variable. Unknown models get `CostUnknown=true`. Cost-based heuristics (H1/H3/H9) skip. Token heuristics (H2/H4/H6/H7/H8) still fire.
+- **E. Uncosted display:** `$?` and `[no pricing data]` in text output. `cost_unknown` field in JSON.
+
+**Why:** The 1000x bug makes all dollar-based analysis meaningless. Cache corruption silently inflates non-Claude model costs. Fabricating prices for unknown models is worse than silence. Uncork the blocks for all downstream PRs.
+
+**Files affected:** `source/pricing.go`, `source/pricing_fetcher.go`, `source/opencode.go`, `source/event.go`, `source/claude.go`, `analyze/waste.go`, `output/text.go`, `output/json.go`, all `*_test.go` (golden file updates)
+
+### PR16: Output Quality Fixes
+
+**What:** Three output-quality improvements:
+
+- **Fragmentation noise suppression:** Config key `thresholds.fragmentation_min_cost = 0.50`. Sessions below this cost are skipped by H9. Fixes 1,900+ noise signals from sub-$0.05 OpenCode sessions.
+- **Savings deduplication:** Same session flagged by multiple heuristics is counted once in the "Potential savings" summary. Savings capped at session cost.
+- **Config init:** `burnwatch --init` writes default `.burnwatch.toml`. `config.example.toml` shipped in repo. `--init` refuses to overwrite existing config.
+
+**Why:** Makes output usable. Without min-cost gating, OpenCode users get flooded by fragmentation noise. Without dedup, the "Potential savings" number is misleading. Without `--init`, new users have no config file.
+
+**Files affected:** `config/config.go`, `analyze/waste.go`, `output/text.go`, `output/json.go`, `cmd/root.go`, `config.example.toml` (new)
+
+### PR17: Calibration Mode (was PR15)
 
 **What:** `--calibrate` flag that prints the full statistical distribution of every metric and suggests threshold values:
 
@@ -166,7 +208,7 @@ Also supports `--calibrate --json` for machine-readable output.
 
 **Files affected:** `analyze/calibrate.go` (new), `analyze/calibrate_test.go` (new), `output/calibrate_text.go` (new), `output/calibrate_json.go` (new), `cmd/root.go` (new flags)
 
-### PR16: Unsupervised Anomaly Detection
+### PR18: Unsupervised Anomaly Detection (was PR16)
 
 **What:** Complement the threshold-based heuristics with an Isolation Forest that flags multi-dimensional outliers.
 
@@ -188,7 +230,7 @@ Also supports `--calibrate --json` for machine-readable output.
 
 **Files affected:** `analyze/anomaly.go` (new), `analyze/anomaly_test.go` (new), `analyze/waste.go` (integration), `config/config.go` (toggle + threshold), `cmd/root.go` (flag)
 
-### PR17: LLM Verification
+### PR19: LLM Verification (was PR17)
 
 **What:** For the top-20 highest-cost waste signals, optionally call an LLM to verify whether the session represents genuine waste and diagnose the root cause.
 
@@ -215,11 +257,11 @@ Reply: WASTE|NOT_WASTE|<reason>
 - Requires explicit `--llm-verify --llm-key <key>` (never reads key from env/files)
 - Prints estimated cost before firing, requires `--llm-confirm` flag
 
-**Why:** Reduces false positives on the most impactful signals. $0.40 to verify $800K in potential savings is worth it. Builds training labels for PR18.
+**Why:** Reduces false positives on the most impactful signals. $0.40 to verify top signals is worth it. Builds training labels for PR20.
 
 **Files affected:** `analyze/llm_verify.go` (new), `analyze/llm_verify_test.go` (new), `analyze/waste.go` (integration), `cmd/root.go` (flags), `config/config.go` (llm section)
 
-### PR18: ML Pipeline (Experimental)
+### PR20: ML Pipeline — Experimental (was PR18)
 
 **What:** Supervised machine learning pipeline that learns waste detection from user-labeled sessions.
 
@@ -235,7 +277,7 @@ Labels stored in `~/.cache/burnwatch/labels.jsonl`:
 {"session_id":"ses_abc123","label":"waste","reason":"loop","timestamp":"2026-05-02T..."}
 ```
 
-**Feature extraction** (same vector as PR16):
+**Feature extraction** (same vector as PR18):
 ```
 [inputSum, outputSum, ratio, cacheRate, cost, subagentOverheadPct, 
  sessionCountToday, modelPriceTier, isWeekend, inputPerEvent]
@@ -354,13 +396,13 @@ Each scenario is a crafted Claude-format JSONL file in `testdata/scenarios/`. Th
 
 ### Labels (`testdata/labels/labels.jsonl`)
 
-54 sessions labeled: 14 waste, 40 clean. Bootstrapped from scenario data. Grows via manual CLI labels (PR18) and LLM verification (PR17).
+54 sessions labeled: 14 waste, 40 clean. Bootstrapped from scenario data. Grows via manual CLI labels (PR20) and LLM verification (PR19).
 
 ## Total Scope
 
 | Metric | Count |
 |--------|-------|
-| PRs | 8 (PR11–PR18) |
+| PRs | 10 (PR11–PR20) |
 | New test files | 2 (`output/scenario_test.go`, `output/bench_test.go`) |
 | Scenario files | 9 (`testdata/scenarios/*.jsonl`) |
 | Labels | 54 (`testdata/labels/labels.jsonl`) |
@@ -368,5 +410,5 @@ Each scenario is a crafted Claude-format JSONL file in `testdata/scenarios/`. Th
 | New CLI flags | ~12 |
 | New config fields | ~15 |
 | External dependencies | 0 (all pure Go, no new deps) |
-| LLM costs (PR17) | $0.40/run (optional, opt-in) |
+| LLM costs (PR19) | $0.40/run (optional, opt-in) |
 | Estimated lines of code | ~2,500–3,000 net new (incl. tests + scenarios) |

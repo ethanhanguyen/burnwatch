@@ -24,18 +24,20 @@ Start here. This file stays short on purpose.
 
 - [plans/v2-implementation-plan.md](./plans/v2-implementation-plan.md) — v2 roadmap: pricing, token heuristics, calibration, anomaly detection, ML
 
-## Active PR prompts (v2)
+## Active PR prompts (v2.5→v3)
 
 | PR | Prompt | Description |
 |----|--------|-------------|
-| PR11 | [plans/PR11-prompt.md](./plans/PR11-prompt.md) | Dynamic Pricing — OpenRouter API + cache |
-| PR12 | [plans/PR12-prompt.md](./plans/PR12-prompt.md) | Token Baselines — input/output mean, std, percentiles |
-| PR13 | [plans/PR13-prompt.md](./plans/PR13-prompt.md) | Token-Based Heuristics — H6–H9 |
-| PR14 | [plans/PR14-prompt.md](./plans/PR14-prompt.md) | Config-Wired Thresholds |
-| PR15 | [plans/PR15-prompt.md](./plans/PR15-prompt.md) | Calibration Mode |
-| PR16 | [plans/PR16-prompt.md](./plans/PR16-prompt.md) | Unsupervised Anomaly Detection |
-| PR17 | [plans/PR17-prompt.md](./plans/PR17-prompt.md) | LLM Verification |
-| PR18 | [plans/PR18-prompt.md](./plans/PR18-prompt.md) | ML Pipeline (experimental) |
+| ~~PR11~~ | [plans/PR11-prompt.md](./plans/PR11-prompt.md) | ~~Dynamic Pricing — OpenRouter API + cache~~ merged |
+| ~~PR12~~ | [plans/PR12-prompt.md](./plans/PR12-prompt.md) | ~~Token Baselines — input/output mean, std, percentiles~~ merged |
+| ~~PR13~~ | [plans/PR13-prompt.md](./plans/PR13-prompt.md) | ~~Token-Based Heuristics — H6–H9~~ merged |
+| ~~PR14~~ | [plans/PR14-prompt.md](./plans/PR14-prompt.md) | ~~Config-Wired Thresholds~~ merged |
+| **PR15** | [plans/PR15-prompt.md](./plans/PR15-prompt.md) | **Fix Pricing + Uncosted — 1000x bug, cache validation, fallback removal** |
+| **PR16** | [plans/PR16-prompt.md](./plans/PR16-prompt.md) | **Output Quality — fragment noise, savings dedup, config init** |
+| PR17 | [plans/PR17-prompt.md](./plans/PR17-prompt.md) | Calibration Mode (was PR15) |
+| PR18 | [plans/PR18-prompt.md](./plans/PR18-prompt.md) | Unsupervised Anomaly Detection (was PR16) |
+| PR19 | [plans/PR19-prompt.md](./plans/PR19-prompt.md) | LLM Verification (was PR17) |
+| PR20 | [plans/PR20-prompt.md](./plans/PR20-prompt.md) | ML Pipeline — experimental (was PR18) |
 
 ## Recent decisions
 

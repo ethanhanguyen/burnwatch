@@ -2,11 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/8 PRs complete (v2)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 0/6 complete (v2.5→v3)
 
 ```
-v1 ████████████████████████████████████████ 10/10 merged
-v2 ████████████████░░░░░░░░░░░░░░░░░░░░ 4/8
+v1    ████████████████████████████████████████ 10/10 merged
+v2    ████████████████████████████████████████ 4/4 merged
+v2.5  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0/2 (critical fixes)
+v3    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0/4 (features)
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -23,10 +25,14 @@ PR11 ██████████████████████ Dynamic 
 PR12 ██████████████████████ Token Baselines
 PR13 ██████████████████████ Token-Based Heuristics
 PR14 ██████████████████████ Config-Wired Thresholds
-PR15 ····················· Calibration Mode
-PR16 ····················· Unsupervised Anomaly Detection
-PR17 ····················· LLM Verification
-PR18 ····················· ML Pipeline (experimental)
+
+PR15 ····················· Fix Pricing + Uncosted
+PR16 ····················· Output Quality Fixes
+
+PR17 ····················· Calibration Mode
+PR18 ····················· Unsupervised Anomaly Detection
+PR19 ····················· LLM Verification
+PR20 ····················· ML Pipeline (experimental)
 ```
 
 ## PR Status
@@ -45,38 +51,75 @@ PR18 ····················· ML Pipeline (experimental)
 | PR10 | `pr10-deeper-insights` | merged | 2026-05-02 | 2026-05-02 | C1 model/tokens, C2 signal toggles, C3 trends |
 | PR11 | `pr11-dynamic-pricing` | merged | 2026-05-02 | 2026-05-02 | OpenRouter fetch, cache, fallback, fix wrong $ |
 | PR12 | `pr12-token-baselines` | merged | 2026-05-02 | 2026-05-02 | InputMean, OutputMean, TER, token percentiles |
-| PR13 | `pr13-token-heuristics` | **merged** | 2026-05-03 | 2026-05-03 | H6 input overconsumption, H7 output explosion, H8 token efficiency, H9 fragmentation index |
-| PR14 | `pr14-config-wiring` | **merged** | 2026-05-03 | 2026-05-03 | Wire all thresholds to config, new CLI flags, complete PR7 work |
-| PR15 | `pr15-calibrate` | **not started** | — | — | --calibrate mode, distribution, suggestions |
-| PR16 | `pr16-anomaly-detection` | **not started** | — | — | Isolation forest on session feature vectors |
-| PR17 | `pr17-llm-verification` | **not started** | — | — | LLM review of top-N waste signals |
-| PR18 | `pr18-ml-pipeline` | **not started** | — | — | Supervised logistic regression (experimental) |
+| PR13 | `pr13-token-heuristics` | merged | 2026-05-03 | 2026-05-03 | H6 input overconsumption, H7 output explosion, H8 token efficiency, H9 fragmentation index |
+| PR14 | `pr14-config-wiring` | merged | 2026-05-03 | 2026-05-03 | Wire all thresholds to config, new CLI flags, complete PR7 work |
+| PR15 | `pr15-pricing-fix` | **not started** | — | — | 1000x embedded bug, cache validation, uncosted fallback |
+| PR16 | `pr16-output-quality` | **not started** | — | — | Fragment min-cost gating, savings dedup, --init |
+| PR17 | `pr17-calibrate` | **not started** | — | — | --calibrate mode, distribution, suggestions |
+| PR18 | `pr18-anomaly-detection` | **not started** | — | — | Isolation forest on session feature vectors |
+| PR19 | `pr19-llm-verification` | **not started** | — | — | LLM review of top-N waste signals |
+| PR20 | `pr20-ml-pipeline` | **not started** | — | — | Supervised logistic regression (experimental) |
 
 ## Blockers
 
-*None.*
+**PR15 (critical):** Embedded pricing table uses $/MTok values but treated as $/1K — all costs inflated 1000x. $963K reported should be ~$963. All analysis and downstream PRs blocked until fixed.
 
-## Dependency graph (v2)
+## Dependency graph
 
 ```
-Phase A (Foundation)
-  PR11 ─── PR12 ─── PR13 ─── PR14
-  pricing   token    token    config
-  fetch     baselines heuristics wiring
+Phase 0 (Critical Fix — sequential)
+  PR15 ─── PR16
+  pricing   output-quality
+  fix       (noise + dedup + init)
 
-Phase B (Calibration + Advanced)
-  PR15 ─── PR16 ─── PR17
-  calibrate anomaly  LLM verify
-  (|| PR14)
+Phase 1 (v2 Features — sequential)
+  PR17 ─── PR18 ─── PR19
+  calibrate anomaly  llm-verify
 
-Phase C (ML — experimental)
-  PR18
+Phase 2 (Experimental)
+  PR20
   supervised
 ```
 
+## Validation gates
+
+Each milestone requires a gate check before the next PR can start.
+
+### Gate P15 (after PR15 merge)
+
+- [ ] **P15.1 — Cost accuracy:** Run on real data (`burnwatch -harness all -days 30`). Spot-check 3 Claude sessions against OpenRouter billing dashboard. Variance <5%.
+- [ ] **P15.2 — Cache health:** `burnwatch --refresh-pricing` writes `pricing.json` with >500 entries. `burnwatch --no-fetch-pricing` falls back to embedded table without 1000x inflation.
+- [ ] **P15.3 — Graceful degradation:** Simulate pricing fetch failure. Verify uncosted sessions show `$?`, no fallback price used.
+
+### Gate P16 (after PR16 merge)
+
+- [ ] **P16.1 — Fragment noise:** Run on real data. Fragmentation signals <100 (was 1,900+). No sub-$0.50 session flagged by H9.
+- [ ] **P16.2 — Savings honesty:** "Potential savings" ≤ sum of all session costs. Same session flagged by 3 heuristics is counted once.
+- [ ] **P16.3 — Init:** `burnwatch --init` in tmpdir → `.burnwatch.toml` loads without errors.
+
+### Gate P17 (after PR17 merge)
+
+- [ ] **P17.1 — Output compact:** `burnwatch --calibrate` prints <80 lines, readable on a terminal.
+- [ ] **P17.2 — Suggestions valid:** Copy suggested thresholds to `.burnwatch.toml`. Re-run `burnwatch`. Verify same metrics produce same signals (no breakage).
+
+### Gate P18 (after PR18 merge)
+
+- [ ] **P18.1 — Isolation correct:** Known-outlier test: 95 normal + 5 outliers → all 5 score >0.6.
+- [ ] **P18.2 — No false positives:** Identical data → all scores ≈0.5 (no isolation possible, no false anomaly).
+- [ ] **P18.3 — Performance:** 1000 sessions × 100 trees <200ms.
+
+### Gate P19 (after PR19 merge)
+
+- [ ] **P19.1 — Parse reliability:** Manual test with real API key. All verdicts parse correctly (WASTE/NOT_WASTE/UNKNOWN).
+- [ ] **P19.2 — Cost estimate:** Estimate before confirm is accurate within 50%.
+
+### Gate P20 (after PR20 merge)
+
+- [ ] **P20.1 — F1 score:** Precision + recall on held-out labeled data >0.70.
+
 ## Next action
 
-Start PR15: Calibration Mode. Use baselines to generate --calibrate suggestions. See `docs/plans/PR15-prompt.md`.
+Start PR15: Fix Pricing + Uncosted Fallback. See `docs/plans/PR15-prompt.md`.
 
 ## Execution log
 
@@ -99,34 +142,15 @@ Start PR15: Calibration Mode. Use baselines to generate --calibrate suggestions.
 | 2026-05-02 | PR12 | Token baselines: InputMean, InputStd, InputP50/P90, OutputMean, OutputStd, OutputP50/P90, TERP10, raw arrays |
 | 2026-05-03 | PR13 | Token heuristics: H6 input overconsumption, H7 output explosion, H8 token efficiency, H9 fragmentation index (replaces H5) |
 | 2026-05-03 | PR14 | Config-wired thresholds: all hardcoded constants moved to config, new CLI flags, signature changes, full test coverage |
+| 2026-05-03 | — | **Post-PR14 review found 1000x pricing bug.** Embedded table uses $/MTok values but CostForModel treats as $/1K. All costs inflated. Cache corrupted (1 fake entry). OpenCode trusts DB costs instead of recalculating. Fallback price fabricates costs for unknown models. |
+| 2026-05-03 | — | v2.5 plan drafted: PR15 (pricing fix), PR16 (output quality). Original PR15-18 renumbered to PR17-20. Validation gates added at each milestone. |
 
 ## Quality snapshot
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| Test coverage | ≥90% (new code) | 87.4% overall, >90% on new code |
+| Test coverage | ≥90% (new code) | 84.1% overall |
 | `go vet` | 0 warnings | 0 |
 | `golangci-lint` | 0 issues | 0 |
 | Binary builds | pass | pass |
-| Golden files match | pass | pass |
-
-## Post-implementation (v1)
-
-All v1 PRs merged. Tasks:
-1. [x] Tag `v1.0.0`
-2. [x] Archive PR prompts and implementation plan → `docs/archive/`
-3. [x] Update `docs/index.md` to reflect current state
-4. [ ] Ship: `go install github.com/ethanhanguyen/burnwatch@v1.0.0`
-
-## V2 tasks
-
-- [x] PR11: Fix pricing (OpenRouter) — highest impact, fixes wrong dollar amounts
-- [x] PR12: Token baselines — prerequisite for token heuristics
-- [x] PR13: Token heuristics — H6–H9
-- [x] PR14: Config wiring — complete PR7's unfinished work
-- [x] Post-PR14 code review — removed dead code, deduplicated, fixed unwired components
-- [ ] PR15: Calibration mode
-- [ ] PR16: Anomaly detection
-- [ ] PR17: LLM verification
-- [ ] PR18: ML pipeline
-- [ ] Tag `v2.0.0`
+| Golden files match | pass | pass (will break in PR15 — costs drop 1000x) |

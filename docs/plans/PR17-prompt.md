@@ -1,268 +1,216 @@
-# PR17: LLM Verification — AI-Powered Waste Signal Review
+# PR17: Calibration Mode — Distribution Analysis + Threshold Recommendations
 
 > **Workflow:** Follow `docs/PR-template.md`. Review `AGENTS.md` behavioral guidelines before implementing.
 
 ## Objective
 
-Optionally verify the top-N waste signals using an LLM (via OpenRouter API). The LLM reviews session statistics and classifies each signal as genuine waste or false positive, with a diagnosis. This reduces false positives on the most impactful signals and builds labeled data for PR18.
+Add a `--calibrate` mode that prints the full statistical distribution of every metric across all user sessions and suggests threshold values based on the data. Turns the "statistically calibrated" claim into a real user workflow.
 
 ## Success Criteria
 
-- [ ] `--llm-verify --llm-key <key>` enables LLM verification for top-N signals (default 20, max 50)
-- [ ] `--llm-verify --llm-key <key> --llm-confirm` prints estimated cost and requires confirmation before calling
-- [ ] LLM call uses OpenRouter API (`https://openrouter.ai/api/v1/chat/completions`) with `anthropic/claude-haiku-4.5`
-- [ ] Prompt includes session stats: input/output tokens, model, cost, subagent count, overhead %, project, date, sessions that day
-- [ ] LLM response parsed for `WASTE|NOT_WASTE|<reason>` pattern. Fallback: `UNKNOWN|parse_error` if response can't be parsed
-- [ ] Verification result added to WasteSignal: `LlmVerdict`, `LlmReason` fields
-- [ ] Text output shows `[LLM: WASTE — <reason>]` or `[LLM: NOT_WASTE]`
-- [ ] JSON output includes `llm_verification` object
-- [ ] Network errors are handled gracefully (retry once, skip on failure)
-- [ ] Rate limited: max 1 request/second (OpenRouter free tier)
-- [ ] No API key stored in env/files — must be passed via `--llm-key` flag each time
-- [ ] Zero-cost when `--llm-verify` is not used (no network calls)
+- [ ] `burnwatch --calibrate` prints full distribution for: session cost, input tokens, output tokens, output/input ratio, cache hit rate, token efficiency ratio, subagent overhead %
+- [ ] Each distribution shows: count, mean, σ, P10, P25, P50, P75, P90, P95, P99
+- [ ] Output includes "Suggested thresholds" section with config file snippets
+- [ ] `--calibrate --json` outputs JSON format for machine consumption
+- [ ] `--calibrate` respects `--harness`, `--project`, `--days` filters
+- [ ] `--calibrate` output is compact enough to read on a terminal (<80 lines)
+- [ ] Works with zero-config (no `.burnwatch.toml` needed)
+- [ ] All existing tests pass (no regressions)
 
 ## Dependencies
 
-- **Must merge first:** PR16 (anomaly detection — anomaly scores help prioritize which signals to verify)
-- **External dependencies:** None (stdlib `net/http` only)
-- **Can be parallel with:** None (uses PR16 output ordering to select top-N)
-- **Breaking changes / Migrations needed:** New WasteSignal fields. New CLI flags.
+- **Must merge first:** PR16 (output quality — needs config init flag for writing calibration suggestions, honest savings numbers)
+- **External dependencies:** None
+- **Can be parallel with:** None (sequential after PR16)
+- **Breaking changes / Migrations needed:** None (new mode, additive)
 
 ---
 
 ## Pre-flight
 
 - [ ] Pull latest main: `git fetch origin && git checkout main && git pull origin main`
-- [ ] Create feature branch: `git checkout -b pr17-llm-verification`
+- [ ] Create feature branch: `git checkout -b pr17-calibrate`
 - [ ] Verify build environment works on clean main
 
 ## Files
 
 | File | Purpose | Notes |
 |------|---------|-------|
-| `analyze/llm_verify.go` | LLM client, prompt builder, response parser | New file |
-| `analyze/llm_verify_test.go` | Prompt construction, response parsing, error handling | New file |
-| `analyze/waste.go` | Add LlmVerdict/LlmReason to WasteSignal | Modify |
-| `cmd/root.go` | Add `--llm-verify`, `--llm-key`, `--llm-confirm`, `--llm-max-verifications`, `--llm-model` flags | Modify |
-| `config/config.go` | Add llm config section | Modify |
-| `config/config_test.go` | Test defaults | Modify |
-| `output/text.go` | Display LLM verdict in signal output | Modify |
-| `output/json.go` | Serialize llm_verification | Modify |
-| `output/text_test.go` | Golden file updates (or skip — LLM output varies) | Modify |
+| `analyze/calibrate.go` | CalibrationReport struct, ComputeCalibration function | New file |
+| `analyze/calibrate_test.go` | Test distribution computation, suggestion logic | New file |
+| `output/calibrate_text.go` | Text-formatted calibration output | New file |
+| `output/calibrate_json.go` | JSON-formatted calibration output | New file |
+| `output/calibrate_test.go` | Test both output formats | New file |
+| `cmd/root.go` | Add `--calibrate` flag, route to calibration output | Modify |
 
 ---
 
 ## Implementation
 
-### `analyze/llm_verify.go` — LLM client
-
-```
-Type: LlmConfig
-Fields:
-  APIKey      string
-  Model       string    // default: "anthropic/claude-haiku-4.5"
-  APIURL      string    // default: "https://openrouter.ai/api/v1/chat/completions"
-  MaxSignals  int       // default: 20
-  HTTPClient  *http.Client
-
-Type: LlmVerdict
-Fields:
-  SessionID string `json:"session_id"`
-  Verdict   string `json:"verdict"`    // "WASTE", "NOT_WASTE", "UNKNOWN"
-  Reason    string `json:"reason"`
-  CostUSD   float64 `json:"cost_usd"`  // API call cost
-  Error     string `json:"error,omitempty"`
-
-Functions:
-  VerifySignals(signals []WasteSignal, config LlmConfig) ([]LlmVerdict, error)
-    → Sort signals by potential savings desc
-    → Take top config.MaxSignals
-    → For each signal: buildPrompt → callLLM → parseResponse
-    → Rate limit: time.Sleep(1 * time.Second) between calls
-    → Return []LlmVerdict
-
-  buildPrompt(s WasteSignal) string
-    → Construct prompt from signal fields
-
-  callLLM(prompt string, config LlmConfig) (string, error)
-    → POST to OpenRouter API
-    → Parse JSON response
-    → Return content string
-
-  parseResponse(response string) (verdict string, reason string)
-    → Match "WASTE|reason" or "NOT_WASTE|reason" or "UNKNOWN|reason"
-    → Fallback: if no match, verdict="UNKNOWN", reason="parse_error: <first 100 chars>"
-
-  estimateCost(signals []WasteSignal, model string) float64
-    → Rough estimate: len(signals) * (500 input tokens * $0.0000008 + 50 output tokens * $0.000004)
-    → ~$0.02 per signal with haiku
-```
-
-### Prompt template
-
-```
-You are an AI agent waste analyzer. Review this coding session for wasteful behavior.
-
-Session: {sessionID}
-Cost: ${cost}
-Model: {model}
-Input tokens: {inputTokens} ({formatTokens(inputTokens)})
-Output tokens: {outputTokens} ({formatTokens(outputTokens)})
-Output/input ratio: {ratio}
-Subagents: {subagentCount} ({overheadPct}% overhead)
-Project: {project}
-Date: {date}
-Sessions that day: {sessionCountToday}
-Signal severity: {severity}
-Signal reason: {reason}
-Signal detail: {detail}
-
-Common waste patterns to check:
-- Context bloat (reading too many files unnecessarily)
-- Tool-call loops (repeated calls returning same/similar results)
-- Over-delegation (subagents for trivial tasks)
-- Model mismatch (expensive model for simple task)
-- Runaway generation (output growing over time, self-reinforcing)
-
-Reply EXACTLY in this format:
-WASTE|<reason>   (if this session represents wasted tokens/money)
-NOT_WASTE|<reason>   (if this is legitimate usage)
-
-Examples:
-WASTE|context bloat from repeated file reads
-NOT_WASTE|code review session, inherently high-input/low-output
-WASTE|subagent over-delegation: 5 subagents for 10 lines of code
-```
-
-### API call
+### `analyze/calibrate.go` — CalibrationReport
 
 ```go
-type openRouterRequest struct {
-    Model    string          `json:"model"`
-    Messages []chatMessage   `json:"messages"`
-    MaxTokens int            `json:"max_tokens"`
+package analyze
+
+type DistStats struct {
+    Count  int       `json:"count"`
+    Mean   float64   `json:"mean"`
+    Std    float64   `json:"std"`
+    P10    float64   `json:"p10"`
+    P25    float64   `json:"p25"`
+    P50    float64   `json:"p50"`
+    P75    float64   `json:"p75"`
+    P90    float64   `json:"p90"`
+    P95    float64   `json:"p95"`
+    P99    float64   `json:"p99"`
+    Min    float64   `json:"min"`
+    Max    float64   `json:"max"`
 }
 
-type chatMessage struct {
-    Role    string `json:"role"`
-    Content string `json:"content"`
+type CalibrationReport struct {
+    TotalSessions      int       `json:"total_sessions"`
+    TotalSubagents     int       `json:"total_subagents"`
+    ProjectCount       int       `json:"project_count"`
+    DateRangeStart     string    `json:"date_range_start"`
+    DateRangeEnd       string    `json:"date_range_end"`
+
+    SessionCost        DistStats `json:"session_cost"`
+    InputTokens        DistStats `json:"input_tokens"`
+    OutputTokens       DistStats `json:"output_tokens"`
+    Ratio              DistStats `json:"output_input_ratio"`
+    CacheHitRate       DistStats `json:"cache_hit_rate"`
+    TokenEfficiency    DistStats `json:"token_efficiency_ratio"`
+    SubagentOverhead   DistStats `json:"subagent_overhead_pct"`
+
+    Suggestions        []ThresholdSuggestion `json:"suggestions"`
 }
 
-type openRouterResponse struct {
-    Choices []struct {
-        Message struct {
-            Content string `json:"content"`
-        } `json:"message"`
-    } `json:"choices"`
-    Usage struct {
-        PromptTokens     int `json:"prompt_tokens"`
-        CompletionTokens int `json:"completion_tokens"`
-    } `json:"usage"`
+type ThresholdSuggestion struct {
+    ConfigKey   string  `json:"config_key"`
+    Value       float64 `json:"value"`
+    Rationale   string  `json:"rationale"`
 }
 
-func callLLM(prompt string, config LlmConfig) (string, error) {
-    body := openRouterRequest{
-        Model: config.Model,
-        Messages: []chatMessage{
-            {Role: "user", Content: prompt},
-        },
-        MaxTokens: 200,
-    }
-    jsonBody, _ := json.Marshal(body)
-
-    req, _ := http.NewRequest("POST", config.APIURL, bytes.NewReader(jsonBody))
-    req.Header.Set("Content-Type", "application/json")
-    req.Header.Set("Authorization", "Bearer "+config.APIKey)
-    req.Header.Set("HTTP-Referer", "https://github.com/ethanhanguyen/burnwatch")
-    req.Header.Set("X-Title", "Burnwatch")
-
-    resp, err := config.HTTPClient.Do(req)
-    // ... handle errors, parse response ...
-}
+func ComputeCalibration(events []source.TokenEvent, baselines map[string]Baseline) CalibrationReport
 ```
 
-### `analyze/waste.go` — WasteSignal extension
+### `ComputeCalibration()` algorithm
+
+1. Aggregate events into per-session metrics (reuse `sessionMetrics` from baseline.go, or duplicate the aggregation — simpler to just copy)
+2. For each metric, collect all session values into a sorted slice
+3. Compute DistStats for each metric
+4. Generate suggestions:
 
 ```go
-type WasteSignal struct {
-    // ... existing ...
-    LlmVerdict string `json:"llm_verdict,omitempty"`   // "WASTE", "NOT_WASTE", "UNKNOWN"
-    LlmReason  string `json:"llm_reason,omitempty"`    // diagnosis from LLM
+func generateSuggestions(cost, input, output, ratio, cache, ter, overhead DistStats) []ThresholdSuggestion {
+    var s []ThresholdSuggestion
+
+    // Cost outlier: sigma such that ~2% of sessions are flagged (P98 boundary)
+    suggestedSigma := (cost.P98 - cost.Mean) / cost.Std
+    if suggestedSigma < 1.5 { suggestedSigma = 2.0 }  // floor
+    s = append(s, ThresholdSuggestion{
+        ConfigKey: "cost_outlier_sigma",
+        Value:     math.Round(suggestedSigma*10) / 10,
+        Rationale: fmt.Sprintf("flags ~%.0f%% of sessions as cost outliers", 100-percentileRank(cost, cost.Mean+suggestedSigma*cost.Std)),
+    })
+
+    // Input overconsumption: same logic on input tokens
+    // Output explosion: same logic on output tokens
+    // Low signal percentile: use P5 value (stricter than P10 default)
+    s = append(s, ThresholdSuggestion{
+        ConfigKey: "low_signal_percentile",
+        Value:     5.0,
+        Rationale: "stricter than default P10 — only flags bottom 5% of ratios",
+    })
+
+    // Subagent overhead: suggest P75 as threshold (current 50% catches too many)
+    s = append(s, ThresholdSuggestion{
+        ConfigKey: "subagent_overhead_pct",
+        Value:     math.Round(overhead.P75),
+        Rationale: fmt.Sprintf("P75 of subagent overhead — flags sessions in top quartile"),
+    })
+
+    // Fragmentation index: suggest 2x median daily sessions
+    // ...
+
+    return s
 }
 ```
 
-### `output/text.go` — Display verdict
+### `output/calibrate_text.go` — Text output
 
 ```
-  HIGH ses_abc123 (project): $94510.79 — 33.2x project baseline
-    Model: claude-sonnet-4-6, 30.4K in / 306.2K out
-    [LLM: WASTE — repeated file reads causing context bloat; agent read the same file 12 times]
-    → Investigate session for unnecessary loops or re-prompts. Potential savings: $91666.30
+Your data: 908 main sessions, 1255 subagent sessions across 10 projects
+Period: 2026-04-10 to 2026-05-02
+
+Session costs ($):
+  n=908  μ=1172.37  σ=5231.44
+  P10=0.02  P25=0.08  P50=0.47  P75=1.84  P90=8.21  P95=27.50  P99=2844.49
+  min=0.00  max=94510.79
+
+Input tokens:
+  n=908  μ=187234  σ=751892
+  P10=1234  P25=4872  P50=12451  P75=45231  P90=187234  P95=520123  P99=2928341
+  min=0  max=20500000
+
+Output tokens:
+  n=908  μ=42156  σ=156234
+  P10=518  P25=1523  P50=3187  P75=12451  P90=41234  P95=92156  P99=306231
+  min=0  max=3062000
+
+Output/input ratio:
+  n=908  μ=0.52
+  P10=0.02  P25=0.08  P50=0.31  P75=0.87  P90=1.82  P95=3.45  P99=12.31
+  min=0.00  max=45.21
+
+Cache hit rate (%):
+  n=908
+  P10=52.1  P25=65.3  P50=74.3  P75=87.6  P90=94.2  P95=97.1  P99=99.5
+  min=0.0  max=100.0
+
+Token efficiency ratio:
+  n=908  μ=0.52
+  P10=0.08  P25=0.21  P50=0.47  P75=0.89  P90=1.91  P95=3.12  P99=8.74
+  min=0.00  max=25.13
+
+Subagent overhead (%):
+  n=226 (sessions with subagents)
+  P10=8.3  P25=32.1  P50=72.1  P75=84.3  P90=92.5  P95=96.2  P99=100.0
+  min=0.3  max=100.0
+
+Suggested thresholds (for .burnwatch.toml):
+  [thresholds]
+  cost_outlier_sigma = 2.5
+  input_overconsumption_sigma = 2.5
+  output_explosion_sigma = 2.5
+  low_signal_percentile = 5.0
+  token_efficiency_percentile = 5.0
+  subagent_overhead_pct = 75.0
+  fragmentation_index_threshold = 3.0
+
+  [signals]
+  ... (all enabled by default)
 ```
 
-### cmd/root.go — New flags
+### `output/calibrate_json.go` — JSON output
+
+Serialize `CalibrationReport` as JSON. Follow existing `output/json.go` conventions.
+
+### `cmd/root.go` — New flag
 
 ```go
-flag.BoolVar(&flags.LlmVerify, "llm-verify", false, "Verify top-N waste signals with LLM")
-flag.StringVar(&flags.LlmKey, "llm-key", "", "OpenRouter API key for LLM verification")
-flag.BoolVar(&flags.LlmConfirm, "llm-confirm", false, "Confirm LLM verification (bypasses cost prompt)")
-flag.IntVar(&flags.LlmMaxVerifications, "llm-max-verifications", 20, "Max signals to verify (1-50)")
-flag.StringVar(&flags.LlmModel, "llm-model", "anthropic/claude-haiku-4.5", "Model for verification")
+flag.BoolVar(&flags.Calibrate, "calibrate", false, "Show data distribution and suggest thresholds")
 
-// In Execute(), after DetectWaste:
-if flags.LlmVerify {
-    if flags.LlmKey == "" {
-        fmt.Fprintln(os.Stderr, "Error: --llm-key is required with --llm-verify")
-        os.Exit(1)
+// In Execute():
+if flags.Calibrate {
+    // ... load events, compute baselines (same as normal flow) ...
+    report := analyze.ComputeCalibration(allEvents, baselines)
+    if flags.JSON {
+        output.WriteCalibrationJSON(os.Stdout, report)
+    } else {
+        output.WriteCalibrationText(os.Stdout, report)
     }
-    if flags.LlmMaxVerifications < 1 || flags.LlmMaxVerifications > 50 {
-        fmt.Fprintln(os.Stderr, "Error: --llm-max-verifications must be 1-50")
-        os.Exit(1)
-    }
-    estimatedCost := analyze.EstimateLLMCost(signals, flags.LlmModel, flags.LlmMaxVerifications)
-    if !flags.LlmConfirm {
-        fmt.Printf("LLM verification will verify %d signals using %s.\n", 
-            min(flags.LlmMaxVerifications, len(signals)), flags.LlmModel)
-        fmt.Printf("Estimated cost: $%.2f\n", estimatedCost)
-        fmt.Print("Continue? (y/N): ")
-        var answer string
-        fmt.Scanln(&answer)
-        if strings.ToLower(answer) != "y" {
-            fmt.Println("Aborted.")
-            return
-        }
-    }
-    verdicts, err := analyze.VerifySignals(signals, analyze.LlmConfig{...})
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "LLM verification error: %v\n", err)
-    }
-    // Merge verdicts into signals
-    for i := range signals {
-        for _, v := range verdicts {
-            if signals[i].SessionID == v.SessionID {
-                signals[i].LlmVerdict = v.Verdict
-                signals[i].LlmReason = v.Reason
-                break
-            }
-        }
-    }
-}
-```
-
-### Config additions
-
-```go
-type LlmConfig struct {
-    Model           string `toml:"model"`
-    MaxVerifications int   `toml:"max_verifications"`
-    APIURL          string `toml:"api_url"`   // hidden: not exposed in TOML, only CLI flag
-}
-
-// Defaults:
-Llm{
-    Model:           "anthropic/claude-haiku-4.5",
-    MaxVerifications: 20,
-    APIURL:          "https://openrouter.ai/api/v1/chat/completions",
+    return
 }
 ```
 
@@ -270,52 +218,49 @@ Llm{
 
 ## Test Requirements
 
-1. **`analyze/llm_verify_test.go`**:
-   - Prompt contains all required fields (sessionID, cost, tokens, model, etc.)
-   - Prompt length <2000 characters (fits in small context window)
-   - Parse "WASTE|context bloat" → verdict=WASTE, reason=context bloat
-   - Parse "NOT_WASTE|legitimate code review" → verdict=NOT_WASTE
-   - Parse "UNKNOWN|unclear" → verdict=UNKNOWN
-   - Parse "garbage text without pipe" → verdict=UNKNOWN, reason=parse_error
-   - Parse "WASTE|multi|pipe" → verdict=WASTE, reason=multi|pipe (only split on first pipe)
-   - Empty response → verdict=UNKNOWN
-   - estimateCost: 20 signals → ~$0.40
-   - estimateCost: 0 signals → $0.00
-   - Sort by potential savings: top signal is the one with highest cost × savingsRatio
+1. **`analyze/calibrate_test.go`**:
+   - 5 sessions with known values → DistStats computed correctly
+   - P50 of [1,2,3,4,5] = 3.0
+   - Single session → P10=P50=P90=value, std=0
+   - No sessions → all DistStats zero/empty
+   - Suggestions generated from stats have reasonable values (sigma > 0)
+   - Date range: min/max timestamps extracted correctly
+   - Total sessions / subagent count correct
 
-2. **`cmd/` — Manual test:**
-   - Not easily testable without API key. Use `--llm-verify --llm-key $OPENROUTER_KEY --llm-confirm` manually.
-   - Document manual test procedure in PR description.
+2. **`output/calibrate_test.go`**:
+   - Text output contains all expected sections (cost, input, output, ratio, cache, ter, overhead, suggestions)
+   - Text output formats numbers correctly (K/M suffixes, 2 decimal places for $)
+   - JSON output round-trips: marshal → unmarshal → fields match
+   - Golden file for calibration text output
 
-3. Coverage target: >=90% on new code (all parse/estimate logic; API call excluded via interface mock)
+3. Coverage target: >=90% on new code
 
 ---
 
 ## Approach
 
-1. Define `LlmConfig`, `LlmVerdict`, parse/estimate functions
-2. Write tests (RED → GREEN)
-3. Implement API call function (with interface for testability)
-4. Build prompt template
-5. Add WasteSignal fields
-6. Wire CLI flags + config
-7. Add output display
-8. Manual integration test with real API key
-9. Full test suite + lint
+1. Define `CalibrationReport`, `DistStats`, `ThresholdSuggestion` in `analyze/calibrate.go`
+2. Implement `ComputeCalibration()`
+3. Write calibration tests (RED → GREEN)
+4. Implement text output in `output/calibrate_text.go`
+5. Implement JSON output in `output/calibrate_json.go`
+6. Wire `--calibrate` flag in `cmd/root.go`
+7. Golden file for calibration output
+8. Full test suite + lint
 
 ---
 
 ## Exit Criteria
 
 - [ ] Pull latest main
-- [ ] Create feature branch from main: `git checkout -b pr17-llm-verification`
+- [ ] Create feature branch from main: `git checkout -b pr17-calibrate`
 - [ ] Lint passes (zero warnings) — `golangci-lint run`
 - [ ] Build compiles cleanly — `go build -o burnwatch .`
 - [ ] Tests pass with >=90% coverage on new code — `go test ./... -cover`
 - [ ] Self-review: run through [docs/code-review.md](../code-review.md)
 - [ ] Document learnings in `docs/learnings.md`
-- [ ] Commit: `feat: LLM verification for top-N waste signals`
-- [ ] Push to branch `pr17-llm-verification`
+- [ ] Commit: `feat: calibration mode — distribution analysis + threshold suggestions`
+- [ ] Push to branch `pr17-calibrate`
 - [ ] Open pull request
 - [ ] Dispatch CodeReviewer subagent against the PR diff
 - [ ] Update `docs/plans/progress.md` to reflect merge
@@ -326,10 +271,9 @@ Llm{
 
 ## Notes
 
-- No new dependencies. `net/http` + `encoding/json` from stdlib for API calls.
-- OpenRouter free tier allows ~20 requests/minute. Rate limit of 1/second stays well within this.
-- `--llm-verify` without `--llm-confirm` shows cost estimate and prompts for confirmation. `--llm-confirm` skips the prompt (for scripting).
-- API key is never written to disk, env, or config. Must be passed each time.
-- `--llm-model` accepts any OpenRouter model ID. Default `anthropic/claude-haiku-4.5` is cheap and good at classification.
-- The prompt template explicitly asks for the WASTE|NOT_WASTE format. This is crucial for reliable parsing.
-- If the API returns an error, verdict is set to UNKNOWN and the signal is still displayed (just without LLM label).
+- `DistStats` reuses the existing `percentile()` and `stddev()` functions from `baseline.go`. Extract them to a shared `analyze/stats.go` or keep them in `baseline.go` and reference from `calibrate.go` (same package, no import needed).
+- Session costs for calibration should use the fixed PR11 pricing to be accurate.
+- Subagent overhead stats only include sessions that have subagents (n=226 in the example).
+- `formatTokens()` from `output/text.go` is reused for token display in calibration text.
+- The `--calibrate` mode does NOT load config (no self-referential loop). It computes stats from raw data and prints suggestions.
+- P98 is used for sigma suggestions because sigma-based outlier detection with sigma=2.0 flags ~2.5% of normally distributed data. P98 is close to mean+2σ.
