@@ -14,7 +14,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.25'
-      - run: go list ./... | grep -v -x "$(go list -m)" | xargs go test -cover -coverprofile=coverage.out
+      - run: go test -cover -coverprofile=coverage.out $(go list ./... | grep -v '/cmd$' | grep -v -x "$(go list -m)")
+      - run: go test ./cmd/...
       - run: go tool cover -func=coverage.out | tail -1
       - run: go vet ./...
       - name: golangci-lint

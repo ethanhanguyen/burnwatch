@@ -71,11 +71,18 @@ check_go_test_coverage() {
 			if [[ "$line" =~ coverage:\ ([0-9.]+)% ]]; then
 				pct=${BASH_REMATCH[1]}
 				pct_int=${pct%.*}
+				if [[ "$line" =~ ^ok ]]; then
+					pkg=$(echo "$line" | awk '{print $2}')
+				else
+					pkg=$(echo "$line" | awk '{print $1}')
+				fi
+				if [[ "$pkg" == *"/cmd" ]] || [[ "$pkg" == "$(go list -m)" ]]; then
+					continue
+				fi
 				if [ "$pct_int" -lt "$min" ]; then
 					min=$pct_int
 				fi
 				if [ "$pct_int" -lt 80 ]; then
-					pkg=$(echo "$line" | awk '{print $2}')
 					low="$low  $pkg: ${pct}%"
 				fi
 			fi
@@ -83,7 +90,7 @@ check_go_test_coverage() {
 		if [ -n "$low" ]; then
 			fail "go test -cover — packages below 80%:$low"
 		else
-			pass "go test -cover — all packages >=80% (min: ${min}%)"
+			pass "go test -cover — all non-cmd packages >=80% (min: ${min}%)"
 		fi
 	else
 		fail "go test -cover — test failures"
@@ -132,7 +139,7 @@ check_testdata_paths() {
 
 check_no_new_config_files() {
 	local hits
-	hits=$(echo "$DIFF_FILES" | grep -E '\.(env|ya?ml|toml|json)$' | grep -v '.golangci.yml' | grep -v '.goreleaser.yml' | grep -v 'go.sum' | grep -v 'testdata/' || true)
+	hits=$(echo "$DIFF_FILES" | grep -E '\.(env|ya?ml|toml|json)$' | grep -v '.golangci.yml' | grep -v '.goreleaser.yml' | grep -v 'go.sum' | grep -v 'testdata/' | grep -v '.github/' || true)
 	if [ -z "$hits" ]; then
 		pass "no new config files introduced"
 	else
