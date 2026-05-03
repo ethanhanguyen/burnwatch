@@ -2,7 +2,7 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 6/6 PRs complete
+## Overall: 6/10 PRs complete
 
 ```
 PR1 ██████████████████████ Foundation
@@ -11,6 +11,10 @@ PR3 ██████████████████████ Claude Co
 PR4 ██████████████████████ Analysis Engine
 PR5 ██████████████████████ CLI + Output + Wiring
 PR6 ██████████████████████ Docs + CI + Release
+PR7 ░░░░░░░░░░░░░░░░░░░░░░ Config File
+PR8 ░░░░░░░░░░░░░░░░░░░░░░ Phase A — Display Fixes
+PR9 ░░░░░░░░░░░░░░░░░░░░░░ Phase B — Noise Reduction
+PR10 ░░░░░░░░░░░░░░░░░░░░░░ Phase C — Deeper Insights
 ```
 
 ## PR Status
@@ -23,25 +27,41 @@ PR6 ██████████████████████ Docs + CI
 | PR4 | `pr4-analysis-engine` | merged | 2026-05-02 | 2026-05-02 | Baselines + 5 heuristics + recommendations |
 | PR5 | `pr5-cli-output` | merged | 2026-05-02 | 2026-05-02 | CLI + text/JSON + golden files + E2E |
 | PR6 | `pr6-docs-ci` | merged | 2026-05-02 | 2026-05-02 | Docs + README + CHANGELOG + CI |
+| PR7 | `pr7-config` | planned | — | — | Config file: TOML, thresholds, filters, toggles |
+| PR8 | `pr8-display-fixes` | planned | — | — | A1 label fix, A2 churn grouping, A3 dates |
+| PR9 | `pr9-noise-reduction` | planned | — | — | B1 min-cost, B2 dedup, B3 sigma, B4 cost fix |
+| PR10 | `pr10-deeper-insights` | planned | — | — | C1 model/tokens, C2 signal toggles, C3 trends |
 
 ## Blockers
 
 *None.*
 
+## Dependency graph
+
+```
+PR7 (config) ──┬── PR8 (display)     [parallel after PR7]
+               ├── PR9 (noise)       [parallel after PR7]
+               └── PR10 (insights)   [serial after PR7+PR8+PR9]
+```
+
 ## Next action
 
-Project complete. See post-implementation below.
+Execute PR7 (config file), then PR8+PR9 in parallel, then PR10.
+
+PR prompts: `docs/plans/PR7-prompt.md` through `docs/plans/PR10-prompt.md`.
 
 ## Execution log
 
 | Date | PR | Action |
 |------|----|--------|
-| 2026-05-02 | — | Implementation plan and PR prompts written |
+| 2026-05-02 | — | Implementation plan and PR prompts written (PR1-6) |
+| 2026-05-02 | PR1 | Foundation (no-op, already in place) |
 | 2026-05-02 | PR2 | OpenCode source implemented, reviewed, merged |
 | 2026-05-02 | PR3 | Claude Code source implemented, reviewed, merged |
 | 2026-05-02 | PR4 | Analysis engine implemented, reviewed, merged |
 | 2026-05-02 | PR5 | CLI + Output + Wiring implemented, reviewed, merged |
 | 2026-05-02 | PR6 | Docs + CI + Release implemented, reviewed, merged |
+| 2026-05-02 | PR7-10 | PR prompts written for Phase A+B+C + config |
 
 ## Quality snapshot
 
