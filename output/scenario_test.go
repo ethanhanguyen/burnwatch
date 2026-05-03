@@ -71,7 +71,7 @@ func parseScenarioLine(tb testing.TB, line string) source.TokenEvent {
 	if ts.IsZero() {
 		ts = time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
 	}
-	cost := source.CostForModel(
+	cost, approx := source.CostForModel(
 		entry.Message.Model,
 		entry.Message.Usage.InputTokens,
 		entry.Message.Usage.OutputTokens,
@@ -88,6 +88,7 @@ func parseScenarioLine(tb testing.TB, line string) source.TokenEvent {
 		CacheRead:       entry.Message.Usage.CacheReadInputTokens,
 		CacheWrite:      entry.Message.Usage.CacheCreationInputTokens,
 		CostUSD:         cost,
+		CostApproximate: approx,
 		Project:         "scenario-test",
 		Harness:         "claude-code",
 		IsSubagent:      false,

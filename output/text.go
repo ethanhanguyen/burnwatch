@@ -264,8 +264,12 @@ func medianFromSorted(sorted []float64) float64 {
 
 func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Recommendation, baselines map[string]analyze.Baseline) {
 	sev := strings.ToUpper(s.Severity)
+	costPrefix := "$"
+	if s.CostApproximate {
+		costPrefix = "≈ $"
+	}
 	if s.SessionID != "" {
-		fmt.Fprintf(b, "  %s %s (%s): $%.2f", sev, truncate(s.SessionID, 20), s.Project, s.SessionCost)
+		fmt.Fprintf(b, "  %s %s (%s): %s%.2f", sev, truncate(s.SessionID, 20), s.Project, costPrefix, s.SessionCost)
 	} else {
 		fmt.Fprintf(b, "  %s Project %s", sev, s.Project)
 	}

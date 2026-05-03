@@ -1,6 +1,12 @@
 package source
 
-import "strings"
+import (
+	"fmt"
+	"net/http"
+	"os"
+	"strings"
+	"time"
+)
 
 type priceEntry struct {
 	input      float64
@@ -23,7 +29,47 @@ var pricing = []struct {
 
 var fallback = priceEntry{3.00, 15.00, 0.30, 3.75}
 
-func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite int64) float64 {
+var fetchedPricing []PricingEntry
+var pricingInitialized bool
+
+func InitPricing(client *http.Client) error {
+	if pricingInitialized {
+		return nil
+	}
+	cachePath := CachePath()
+	cache, err := LoadCache(cachePath)
+	if err == nil {
+		fetchedPricing = cache.Entries
+		pricingInitialized = true
+		return nil
+	}
+	return fetchAndCache(client)
+}
+
+func RefreshPricing(client *http.Client) error {
+	return fetchAndCache(client)
+}
+
+func fetchAndCache(client *http.Client) error {
+	entries, err := FetchPricing(client)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Pricing fetch failed: %v (using embedded pricing)\n", err)
+		pricingInitialized = true
+		return err
+	}
+	cache := &CacheEntry{
+		FetchedAt: time.Now(),
+		Entries:   entries,
+	}
+	if saveErr := SaveCache(CachePath(), cache); saveErr != nil {
+		fmt.Fprintf(os.Stderr, "Cache save failed: %v\n", saveErr)
+	}
+	fetchedPricing = entries
+	pricingInitialized = true
+	return nil
+}
+
+func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite int64) (float64, bool) {
 	if inputTokens < 0 {
 		inputTokens = 0
 	}
@@ -37,19 +83,45 @@ func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite
 		cacheWrite = 0
 	}
 
-	model = strings.ToLower(model)
-	p := fallback
-	for _, entry := range pricing {
-		if strings.Contains(model, entry.key) {
-			p = entry.p
-			break
-		}
-	}
+	modelLower := strings.ToLower(model)
+
+	p, approximate := lookupPrice(modelLower)
 
 	cost := float64(inputTokens)/1000.0*p.input +
 		float64(outputTokens)/1000.0*p.output +
 		float64(cacheRead)/1000.0*p.cacheRead +
 		float64(cacheWrite)/1000.0*p.cacheWrite
 
-	return cost
+	return cost, approximate
+}
+
+func lookupPrice(modelLower string) (priceEntry, bool) {
+	bestMatch := ""
+	bestLen := 0
+	for _, e := range fetchedPricing {
+		if strings.EqualFold(modelLower, e.Key) {
+			return priceEntry{e.Input, e.Output, e.CacheRead, 0}, false
+		}
+		if strings.Contains(modelLower, e.Key) {
+			if len(e.Key) > bestLen {
+				bestMatch = e.Key
+				bestLen = len(e.Key)
+			}
+		}
+	}
+	if bestMatch != "" {
+		for _, e := range fetchedPricing {
+			if e.Key == bestMatch {
+				return priceEntry{e.Input, e.Output, e.CacheRead, 0}, false
+			}
+		}
+	}
+
+	for _, entry := range pricing {
+		if strings.Contains(modelLower, entry.key) {
+			return entry.p, false
+		}
+	}
+
+	return fallback, true
 }

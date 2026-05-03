@@ -15,6 +15,7 @@ type TokenEvent struct {
 	CacheWrite      int64
 	ReasoningTokens int64
 	CostUSD         float64
+	CostApproximate bool
 	Project         string
 	Harness         string
 	IsSubagent      bool

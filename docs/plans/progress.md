@@ -2,11 +2,11 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 0/8 PRs started (v2)
+## Overall: 10/10 PRs complete (v1), 1/8 PRs complete (v2)
 
 ```
 v1 ████████████████████████████████████████ 10/10 merged
-v2 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 0/8
+v2 ████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 1/8
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -19,7 +19,7 @@ PR8  ██████████████████████ Phase A 
 PR9  ██████████████████████ Phase B — Noise Reduction
 PR10 ██████████████████████ Phase C — Deeper Insights
 
-PR11 ····················· Dynamic Pricing (OpenRouter)
+PR11 ██████████████████████ Dynamic Pricing (OpenRouter)
 PR12 ····················· Token Baselines
 PR13 ····················· Token-Based Heuristics
 PR14 ····················· Config-Wired Thresholds
@@ -43,7 +43,7 @@ PR18 ····················· ML Pipeline (experimental)
 | PR8 | `pr8-display-fixes` | merged | 2026-05-02 | 2026-05-02 | A1 label fix, A2 churn grouping, A3 dates |
 | PR9 | `pr9-noise-reduction` | merged | 2026-05-02 | 2026-05-02 | B1 min-cost, B2 dedup, B3 sigma, B4 cost fix |
 | PR10 | `pr10-deeper-insights` | merged | 2026-05-02 | 2026-05-02 | C1 model/tokens, C2 signal toggles, C3 trends |
-| PR11 | `pr11-dynamic-pricing` | **not started** | — | — | OpenRouter fetch, cache, fallback, fix wrong $ |
+| PR11 | `pr11-dynamic-pricing` | merged | 2026-05-02 | 2026-05-02 | OpenRouter fetch, cache, fallback, fix wrong $ |
 | PR12 | `pr12-token-baselines` | **not started** | — | — | InputMean, OutputMean, TER, token percentiles |
 | PR13 | `pr13-token-heuristics` | **not started** | — | — | H6–H9: input, output, TER, fragmentation index |
 | PR14 | `pr14-config-wiring` | **not started** | — | — | Wire all thresholds to config, complete PR7 work |
@@ -76,7 +76,7 @@ Phase C (ML — experimental)
 
 ## Next action
 
-Start PR11: Dynamic Pricing. Fixes the most critical v1 bug (wrong dollar amounts for all non-Anthropic/non-Google models). See `docs/plans/PR11-prompt.md`.
+Start PR12: Token Baselines. Adds input/output token baselines (mean, std, percentiles) as prerequisite for token-based heuristics. See `docs/plans/PR12-prompt.md`.
 
 ## Execution log
 
@@ -95,6 +95,7 @@ Start PR11: Dynamic Pricing. Fixes the most critical v1 bug (wrong dollar amount
 | 2026-05-02 | PR10 | Deeper insights implemented, reviewed, merged |
 | 2026-05-02 | — | Burnwatch assessment complete. Identified 3 root problems. |
 | 2026-05-02 | — | V2 implementation plan and PR11–PR18 prompts written. |
+| 2026-05-02 | PR11 | Dynamic pricing: OpenRouter API, 7-day cache, CostApproximate propagation, ≈ indicator |
 
 ## Quality snapshot
 
@@ -116,7 +117,7 @@ All v1 PRs merged. Tasks:
 
 ## V2 tasks
 
-- [ ] PR11: Fix pricing (OpenRouter) — highest impact, fixes wrong dollar amounts
+- [x] PR11: Fix pricing (OpenRouter) — highest impact, fixes wrong dollar amounts
 - [ ] PR12: Token baselines — prerequisite for token heuristics
 - [ ] PR13: Token heuristics — H6–H9
 - [ ] PR14: Config wiring — complete PR7's unfinished work

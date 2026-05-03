@@ -57,6 +57,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Model tracking for WasteSignals: use "last model wins" — assign `a.model = e.Model` whenever `e.Model != ""` during the event loop. Most sessions use a single model; this is an approximation good enough for v1. `analyze/waste.go:92-94`
 - Signal toggle pattern: define a `SignalToggles` struct in the analyze package, guard each `check*` call with the toggle, merge CLI `--no-*` flags into config toggles before passing to `DetectWaste`. Centralized gating, no scattered boolean checks. `analyze/waste.go:26-32,127-154`
 - Weekly trend aggregation: group events by Monday boundary using `weekStartOf()`, compute per-week totals, compare first vs last week. Use Unicode arrows (↑ ↓ →) for direction. Controlled by `config.Output.ShowTrends`. `analyze/trend.go:32-101`
+- HTTP clients that fetch from a fixed external URL should expose a package-level `var url = "..."` so tests can override it with a `httptest.Server` URL. The main function delegates to an unexported helper that takes the URL explicitly. `source/pricing_fetcher.go:42-49`
 - Use a package-level `var NowFunc = time.Now` for testable time-dependent code. Override in tests to a fixed reference time so today/week/month calculations produce deterministic output. `output/json.go:223`, `output/output_test.go:21`
 - Golden file tests with `-update` flag: use `flag.Bool("update", ...)` and `os.WriteFile` to regenerate expected output when format changes. Run `go test ./pkg/... -update` to update, then re-run without flag to verify. `output/output_test.go:15,51-57`
 
@@ -69,7 +70,9 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Test in-memory SQLite DB schemas must match actual harness DB schemas exactly. If a harness changes its schema, tests break silently by failing to create matching tables. `source/opencode_test.go:361-365`
 - `Baseline.RatioMean` was added to support H5 (session churn) which needs per-project mean ratios. Not in the original PR4 spec but required — `CostStd` alone doesn't capture output/input behavior. `analyze/baseline.go:7`
 - All heuristics depend on `ComputeBaselines` producing a global baseline (key `"*"`). Removing or renaming this key breaks H2, H4, and cross-project percentile comparisons. `analyze/baseline.go:21,65`
+- OpenRouter API returns per-token prices (e.g. `"prompt":"0.000003"`), but burnwatch uses per‑1K‑token prices internally. Convert by multiplying by 1000. Getting this wrong inflates/deflates costs by 3 orders of magnitude. `source/pricing_fetcher.go:80-82`
 - The embedded pricing table (`source/pricing.go:12-22`) only covers 6 models. All other models fall back to claude-sonnet pricing, inflating costs 5x–17x for deepseek, kimi, minimax, qwen, gpt-5.4. Fix: fetch pricing from OpenRouter API dynamically (PR11). Changing `CostForModel` signature adds a return value — all callers must be updated.
+- Adding a new field to `TokenEvent` (`source/event.go`) that is consumed downstream requires touching: (1) all source implementations that create TokenEvent (claude.go, opencode.go), (2) all test helpers that construct events (scenario_test.go, bench_test.go), (3) all aggregation structs (sessionAgg in waste.go), (4) all output structs (WasteSignal, JSONWasteSignal). Propagation of a single field touches 8+ files. `source/event.go:21`
 
 ## Rules
 

@@ -3,6 +3,7 @@ package cmd
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
@@ -37,6 +38,9 @@ func Execute() {
 		NoCacheUnderutil    bool
 		NoChurn             bool
 		ShowTrends          bool
+
+		RefreshPricing bool
+		NoFetchPricing bool
 	}
 
 	flag.StringVar(&flags.DBPath, "db", "", "OpenCode database path")
@@ -55,6 +59,8 @@ func Execute() {
 	flag.BoolVar(&flags.NoCacheUnderutil, "no-cache-underutil", false, "Disable cache underutilization detection")
 	flag.BoolVar(&flags.NoChurn, "no-churn", false, "Disable session churn detection")
 	flag.BoolVar(&flags.ShowTrends, "show-trends", false, "Show time-trend summary")
+	flag.BoolVar(&flags.RefreshPricing, "refresh-pricing", false, "Force re-fetch pricing from OpenRouter")
+	flag.BoolVar(&flags.NoFetchPricing, "no-fetch-pricing", false, "Skip network fetch, use embedded pricing only")
 
 	versionFlag := flag.Bool("version", false, "Print version and exit")
 	flag.Parse()
@@ -86,6 +92,15 @@ func Execute() {
 
 	if flags.DBPath != "" {
 		_ = os.Setenv("BURNWATCH_OPENCODE_DB", flags.DBPath)
+	}
+
+	if !flags.NoFetchPricing {
+		httpClient := &http.Client{Timeout: 10 * time.Second}
+		if flags.RefreshPricing {
+			_ = source.RefreshPricing(httpClient)
+		} else {
+			_ = source.InitPricing(httpClient)
+		}
 	}
 
 	sources := source.Discover()

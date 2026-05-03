@@ -359,7 +359,7 @@ func TestCostForModel_FromPricingTable(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := CostForModel(tt.model, tt.input, tt.output, tt.cacheRead, tt.cacheWrite)
+		got, _ := CostForModel(tt.model, tt.input, tt.output, tt.cacheRead, tt.cacheWrite)
 		if math.Abs(got-tt.wantCost) > delta {
 			t.Errorf("CostForModel(%q, %d, %d, %d, %d) = %f, want %f",
 				tt.model, tt.input, tt.output, tt.cacheRead, tt.cacheWrite, got, tt.wantCost)

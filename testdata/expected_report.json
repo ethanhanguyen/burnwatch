@@ -68,7 +68,8 @@
       "detail": "Session cost $22208.88 exceeds project baseline μ+2σ = $8782.75",
       "metric": 22208.881820000017,
       "threshold": 8782.746918877187,
-      "session_cost": 22208.881820000017
+      "session_cost": 22208.881820000017,
+      "cost_approximate": true
     },
     {
       "session_id": "0ffdd08e-42db-4ff5-a9b2-b47c72f63f58",
@@ -78,7 +79,8 @@
       "detail": "Session cost $15229.61 exceeds project baseline μ+2σ = $12499.68",
       "metric": 15229.6062,
       "threshold": 12499.682868751142,
-      "session_cost": 15229.6062
+      "session_cost": 15229.6062,
+      "cost_approximate": true
     },
     {
       "session_id": "1d5ac8c6-c875-45be-9ac9-5e72b537b1b9",
@@ -88,7 +90,8 @@
       "detail": "Session cost $12571.52 exceeds project baseline μ+2σ = $8782.75",
       "metric": 12571.517940000007,
       "threshold": 8782.746918877187,
-      "session_cost": 12571.517940000007
+      "session_cost": 12571.517940000007,
+      "cost_approximate": true
     },
     {
       "session_id": "1f766932-f7d1-4a04-850f-449ae001e3dc",
@@ -98,7 +101,8 @@
       "detail": "Session cost $94510.79 exceeds project baseline μ+2σ = $12499.68",
       "metric": 94510.78545999993,
       "threshold": 12499.682868751142,
-      "session_cost": 94510.78545999993
+      "session_cost": 94510.78545999993,
+      "cost_approximate": true
     },
     {
       "session_id": "20834312-69fa-4496-8627-64c1865e9bcf",
@@ -108,7 +112,8 @@
       "detail": "Session cost $27582.55 exceeds project baseline μ+2σ = $12499.68",
       "metric": 27582.55290000002,
       "threshold": 12499.682868751142,
-      "session_cost": 27582.55290000002
+      "session_cost": 27582.55290000002,
+      "cost_approximate": true
     },
     {
       "session_id": "2ad7a59d-31a1-44b3-9f0b-415060434a23",
@@ -118,7 +123,8 @@
       "detail": "Session cost $14768.90 exceeds project baseline μ+2σ = $8782.75",
       "metric": 14768.899459999997,
       "threshold": 8782.746918877187,
-      "session_cost": 14768.899459999997
+      "session_cost": 14768.899459999997,
+      "cost_approximate": true
     },
     {
       "session_id": "2e8f450b-811a-4588-8b44-507702359ddd",
@@ -128,7 +134,8 @@
       "detail": "Session cost $11544.53 exceeds project baseline μ+2σ = $8782.75",
       "metric": 11544.53028,
       "threshold": 8782.746918877187,
-      "session_cost": 11544.53028
+      "session_cost": 11544.53028,
+      "cost_approximate": true
     },
     {
       "session_id": "327cb18e-fe6e-4018-a9a4-1a395d475ed1",
@@ -138,7 +145,8 @@
       "detail": "Session cost $21797.26 exceeds project baseline μ+2σ = $8782.75",
       "metric": 21797.25698000001,
       "threshold": 8782.746918877187,
-      "session_cost": 21797.25698000001
+      "session_cost": 21797.25698000001,
+      "cost_approximate": true
     },
     {
       "session_id": "33394beb-e67f-4e47-a009-f5af6c5b89e7",
@@ -148,7 +156,8 @@
       "detail": "Session cost $10584.25 exceeds project baseline μ+2σ = $8782.75",
       "metric": 10584.2466,
       "threshold": 8782.746918877187,
-      "session_cost": 10584.2466
+      "session_cost": 10584.2466,
+      "cost_approximate": true
     },
     {
       "session_id": "38e4ad56-3682-444f-8206-7e0f88941a94",
@@ -158,7 +167,8 @@
       "detail": "Session cost $19573.62 exceeds project baseline μ+2σ = $12499.68",
       "metric": 19573.620880000017,
       "threshold": 12499.682868751142,
-      "session_cost": 19573.620880000017
+      "session_cost": 19573.620880000017,
+      "cost_approximate": true
     },
     {
       "session_id": "3b22407e-4da9-4216-8f3a-c964542b1ac4",
@@ -168,7 +178,8 @@
       "detail": "Session cost $14334.98 exceeds project baseline μ+2σ = $8782.75",
       "metric": 14334.980099999993,
       "threshold": 8782.746918877187,
-      "session_cost": 14334.980099999993
+      "session_cost": 14334.980099999993,
+      "cost_approximate": true
     },
     {
       "session_id": "4042e074-8321-4675-9b86-0cb9bcd674a6",
@@ -178,7 +189,8 @@
       "detail": "Session cost $10101.92 exceeds project baseline μ+2σ = $8782.75",
       "metric": 10101.917700000005,
       "threshold": 8782.746918877187,
-      "session_cost": 10101.917700000005
+      "session_cost": 10101.917700000005,
+      "cost_approximate": true
     },
     {
       "session_id": "44d7a535-2a37-4e2b-8472-7755e80f44a7",
@@ -188,7 +200,8 @@
       "detail": "Session cost $39757.15 exceeds project baseline μ+2σ = $12499.68",
       "metric": 39757.15139999999,
       "threshold": 12499.682868751142,
-      "session_cost": 39757.15139999999
+      "session_cost": 39757.15139999999,
+      "cost_approximate": true
     },
     {
       "session_id": "4785a17e-808f-4c9b-94b1-1afb21499df9",
@@ -198,7 +211,8 @@
       "detail": "Session cost $20807.56 exceeds project baseline μ+2σ = $8782.75",
       "metric": 20807.55660000001,
       "threshold": 8782.746918877187,
-      "session_cost": 20807.55660000001
+      "session_cost": 20807.55660000001,
+      "cost_approximate": true
     },
     {
       "session_id": "4c8a8d3d-f45a-49e0-b3dc-7ce689a2dfb2",
@@ -208,7 +222,8 @@
       "detail": "Session cost $12681.92 exceeds project baseline μ+2σ = $12499.68",
       "metric": 12681.91764,
       "threshold": 12499.682868751142,
-      "session_cost": 12681.91764
+      "session_cost": 12681.91764,
+      "cost_approximate": true
     },
     {
       "session_id": "50b18c47-d85a-404d-9f28-c905d0c2dc22",
@@ -218,7 +233,8 @@
       "detail": "Session cost $28320.60 exceeds project baseline μ+2σ = $8782.75",
       "metric": 28320.6012,
       "threshold": 8782.746918877187,
-      "session_cost": 28320.6012
+      "session_cost": 28320.6012,
+      "cost_approximate": true
     },
     {
       "session_id": "58b7fa75-a18b-4753-94e0-70809d917f96",
@@ -228,7 +244,8 @@
       "detail": "Session cost $16551.95 exceeds project baseline μ+2σ = $12499.68",
       "metric": 16551.954759999993,
       "threshold": 12499.682868751142,
-      "session_cost": 16551.954759999993
+      "session_cost": 16551.954759999993,
+      "cost_approximate": true
     },
     {
       "session_id": "68bb8ddf-aad8-415c-9ce1-1d5a1ed8ef27",
@@ -238,7 +255,8 @@
       "detail": "Session cost $15182.69 exceeds project baseline μ+2σ = $12499.68",
       "metric": 15182.69370000001,
       "threshold": 12499.682868751142,
-      "session_cost": 15182.69370000001
+      "session_cost": 15182.69370000001,
+      "cost_approximate": true
     },
     {
       "session_id": "68fa0d19-cdac-4fe2-834f-5b7d885add34",
@@ -248,7 +266,8 @@
       "detail": "Session cost $9584.63 exceeds project baseline μ+2σ = $8782.75",
       "metric": 9584.631599999999,
       "threshold": 8782.746918877187,
-      "session_cost": 9584.631599999999
+      "session_cost": 9584.631599999999,
+      "cost_approximate": true
     },
     {
       "session_id": "6f92b0fa-46ed-4303-8f1b-2797bbbf6ce2",
@@ -258,7 +277,8 @@
       "detail": "Session cost $9109.56 exceeds project baseline μ+2σ = $8782.75",
       "metric": 9109.561200000002,
       "threshold": 8782.746918877187,
-      "session_cost": 9109.561200000002
+      "session_cost": 9109.561200000002,
+      "cost_approximate": true
     },
     {
       "session_id": "70c668d8-a33c-4b44-8b5a-b6fef16856cb",
@@ -268,7 +288,8 @@
       "detail": "Session cost $11764.04 exceeds project baseline μ+2σ = $8782.75",
       "metric": 11764.039360000006,
       "threshold": 8782.746918877187,
-      "session_cost": 11764.039360000006
+      "session_cost": 11764.039360000006,
+      "cost_approximate": true
     },
     {
       "session_id": "79645d09-62ea-4b8f-ad92-99cfa4d5687a",
@@ -278,7 +299,8 @@
       "detail": "Session cost $28489.53 exceeds project baseline μ+2σ = $18105.42",
       "metric": 28489.52644,
       "threshold": 18105.42135986517,
-      "session_cost": 28489.52644
+      "session_cost": 28489.52644,
+      "cost_approximate": true
     },
     {
       "session_id": "840038cd-f09b-48bd-85c2-9b8242df4bdc",
@@ -288,7 +310,8 @@
       "detail": "Session cost $20859.85 exceeds project baseline μ+2σ = $12499.68",
       "metric": 20859.849479999986,
       "threshold": 12499.682868751142,
-      "session_cost": 20859.849479999986
+      "session_cost": 20859.849479999986,
+      "cost_approximate": true
     },
     {
       "session_id": "92b2750d-f72c-4ed7-b4de-a865490efc4b",
@@ -298,7 +321,8 @@
       "detail": "Session cost $9614.74 exceeds project baseline μ+2σ = $8782.75",
       "metric": 9614.73570000001,
       "threshold": 8782.746918877187,
-      "session_cost": 9614.73570000001
+      "session_cost": 9614.73570000001,
+      "cost_approximate": true
     },
     {
       "session_id": "93c1fb84-305f-484b-b787-d48e78aee3ba",
@@ -308,7 +332,8 @@
       "detail": "Session cost $732.72 exceeds project baseline μ+2σ = $722.01",
       "metric": 732.7168499999999,
       "threshold": 722.0091104919513,
-      "session_cost": 732.7168499999999
+      "session_cost": 732.7168499999999,
+      "cost_approximate": true
     },
     {
       "session_id": "99fc0590-e235-4363-894d-1673f490392f",
@@ -318,7 +343,8 @@
       "detail": "Session cost $10427.59 exceeds project baseline μ+2σ = $8782.75",
       "metric": 10427.591600000003,
       "threshold": 8782.746918877187,
-      "session_cost": 10427.591600000003
+      "session_cost": 10427.591600000003,
+      "cost_approximate": true
     },
     {
       "session_id": "9bb7a461-f536-42d1-80f2-bd8d5a363005",
@@ -328,7 +354,8 @@
       "detail": "Session cost $40228.67 exceeds project baseline μ+2σ = $18105.42",
       "metric": 40228.67339999995,
       "threshold": 18105.42135986517,
-      "session_cost": 40228.67339999995
+      "session_cost": 40228.67339999995,
+      "cost_approximate": true
     },
     {
       "session_id": "a34c35e2-5072-45bc-9a36-92a86e37dcec",
@@ -338,7 +365,8 @@
       "detail": "Session cost $15276.44 exceeds project baseline μ+2σ = $12499.68",
       "metric": 15276.441260000009,
       "threshold": 12499.682868751142,
-      "session_cost": 15276.441260000009
+      "session_cost": 15276.441260000009,
+      "cost_approximate": true
     },
     {
       "session_id": "aa723c3f-86f9-4081-9fc5-0662758ad737",
@@ -348,7 +376,8 @@
       "detail": "Session cost $15440.45 exceeds project baseline μ+2σ = $8782.75",
       "metric": 15440.453700000002,
       "threshold": 8782.746918877187,
-      "session_cost": 15440.453700000002
+      "session_cost": 15440.453700000002,
+      "cost_approximate": true
     },
     {
       "session_id": "bf48e097-e3a2-4678-81b7-091d55c93367",
@@ -358,7 +387,8 @@
       "detail": "Session cost $15412.17 exceeds project baseline μ+2σ = $12499.68",
       "metric": 15412.171199999997,
       "threshold": 12499.682868751142,
-      "session_cost": 15412.171199999997
+      "session_cost": 15412.171199999997,
+      "cost_approximate": true
     },
     {
       "session_id": "c9d7da23-8e25-4e21-ad97-e45219004566",
@@ -368,7 +398,8 @@
       "detail": "Session cost $89194.53 exceeds project baseline μ+2σ = $12499.68",
       "metric": 89194.53307999998,
       "threshold": 12499.682868751142,
-      "session_cost": 89194.53307999998
+      "session_cost": 89194.53307999998,
+      "cost_approximate": true
     },
     {
       "session_id": "e22c2d24-9da8-4a46-8d7a-484584e0f00a",
@@ -378,7 +409,8 @@
       "detail": "Session cost $39159.24 exceeds project baseline μ+2σ = $18105.42",
       "metric": 39159.23859999997,
       "threshold": 18105.42135986517,
-      "session_cost": 39159.23859999997
+      "session_cost": 39159.23859999997,
+      "cost_approximate": true
     },
     {
       "session_id": "e8132be0-9bc0-4d2a-bb13-eb926b72cbb6",
@@ -388,7 +420,8 @@
       "detail": "Session cost $12961.80 exceeds project baseline μ+2σ = $8782.75",
       "metric": 12961.795199999993,
       "threshold": 8782.746918877187,
-      "session_cost": 12961.795199999993
+      "session_cost": 12961.795199999993,
+      "cost_approximate": true
     },
     {
       "session_id": "ea459dc9-1bb7-432b-9daa-bf53c4fd8d23",
@@ -398,7 +431,8 @@
       "detail": "Session cost $10130.00 exceeds project baseline μ+2σ = $8782.75",
       "metric": 10130.000459999997,
       "threshold": 8782.746918877187,
-      "session_cost": 10130.000459999997
+      "session_cost": 10130.000459999997,
+      "cost_approximate": true
     },
     {
       "session_id": "f49c015c-21dc-46f7-9739-db7baa62c7f9",
@@ -408,7 +442,8 @@
       "detail": "Session cost $12943.72 exceeds project baseline μ+2σ = $12499.68",
       "metric": 12943.7157,
       "threshold": 12499.682868751142,
-      "session_cost": 12943.7157
+      "session_cost": 12943.7157,
+      "cost_approximate": true
     },
     {
       "session_id": "f6f2d0a7-c41a-4532-b2b4-9ed65bc71ce6",
@@ -418,7 +453,8 @@
       "detail": "Session cost $47576.21 exceeds project baseline μ+2σ = $8782.75",
       "metric": 47576.21240000001,
       "threshold": 8782.746918877187,
-      "session_cost": 47576.21240000001
+      "session_cost": 47576.21240000001,
+      "cost_approximate": true
     },
     {
       "session_id": "06a6e9eb-2f94-4927-b419-2d48818320b9",
@@ -428,7 +464,8 @@
       "detail": "Output/input ratio 1.6355 below global P10 (1.6552)",
       "metric": 1.635526611273299,
       "threshold": 1.655197845085111,
-      "session_cost": 1806.0067399999996
+      "session_cost": 1806.0067399999996,
+      "cost_approximate": true
     },
     {
       "session_id": "1eff5092-7bf3-4d35-9b2f-9d22eef34af5",
@@ -438,7 +475,8 @@
       "detail": "Output/input ratio 0.9384 below global P10 (1.6552)",
       "metric": 0.938408611696815,
       "threshold": 1.655197845085111,
-      "session_cost": 6975.49458
+      "session_cost": 6975.49458,
+      "cost_approximate": true
     },
     {
       "session_id": "3a041979-3da7-49b4-96fd-cd4aad6eecad",
@@ -448,7 +486,8 @@
       "detail": "Output/input ratio 0.9415 below global P10 (1.6552)",
       "metric": 0.9414803998652139,
       "threshold": 1.655197845085111,
-      "session_cost": 2595.221699999999
+      "session_cost": 2595.221699999999,
+      "cost_approximate": true
     },
     {
       "session_id": "3bb1af14-7906-45c3-8377-ae8f7ee624ac",
@@ -458,7 +497,8 @@
       "detail": "Output/input ratio 1.1008 below global P10 (1.6552)",
       "metric": 1.1007967623624637,
       "threshold": 1.655197845085111,
-      "session_cost": 1585.3695199999986
+      "session_cost": 1585.3695199999986,
+      "cost_approximate": true
     },
     {
       "session_id": "4e749183-6430-4406-890f-2722fb2016d1",
@@ -468,7 +508,8 @@
       "detail": "Output/input ratio 1.3333 below global P10 (1.6552)",
       "metric": 1.3333333333333333,
       "threshold": 1.655197845085111,
-      "session_cost": 310.34549999999996
+      "session_cost": 310.34549999999996,
+      "cost_approximate": true
     },
     {
       "session_id": "5e741d83-cc03-4fe9-8771-47b3a8d9fd7a",
@@ -478,7 +519,8 @@
       "detail": "Output/input ratio 0.6803 below global P10 (1.6552)",
       "metric": 0.6803110282264437,
       "threshold": 1.655197845085111,
-      "session_cost": 5832.804460000001
+      "session_cost": 5832.804460000001,
+      "cost_approximate": true
     },
     {
       "session_id": "62d39460-8302-4b81-a398-5fdfbca38bd5",
@@ -488,7 +530,8 @@
       "detail": "Output/input ratio 0.8260 below global P10 (1.6552)",
       "metric": 0.826045170591062,
       "threshold": 1.655197845085111,
-      "session_cost": 1424.2756400000007
+      "session_cost": 1424.2756400000007,
+      "cost_approximate": true
     },
     {
       "session_id": "67624aa0-c689-48aa-aba3-c1ac2cd0ea06",
@@ -498,7 +541,8 @@
       "detail": "Output/input ratio 0.5043 below global P10 (1.6552)",
       "metric": 0.5042865737491227,
       "threshold": 1.655197845085111,
-      "session_cost": 4871.7568599999995
+      "session_cost": 4871.7568599999995,
+      "cost_approximate": true
     },
     {
       "session_id": "7571f13b-5be9-4299-845d-31dcfb9927e3",
@@ -508,7 +552,8 @@
       "detail": "Output/input ratio 1.4275 below global P10 (1.6552)",
       "metric": 1.4275206482780116,
       "threshold": 1.655197845085111,
-      "session_cost": 9721.769400000005
+      "session_cost": 9721.769400000005,
+      "cost_approximate": true
     },
     {
       "session_id": "9423c77b-3f51-43ea-98fd-7f43866d9f0a",
@@ -518,7 +563,8 @@
       "detail": "Output/input ratio 0.3419 below global P10 (1.6552)",
       "metric": 0.34190303989151316,
       "threshold": 1.655197845085111,
-      "session_cost": 5944.814940000002
+      "session_cost": 5944.814940000002,
+      "cost_approximate": true
     },
     {
       "session_id": "a06ade04-07f1-4fb4-93db-cc3a175c99ca",
@@ -528,7 +574,8 @@
       "detail": "Output/input ratio 0.0996 below global P10 (1.6552)",
       "metric": 0.0995642288745737,
       "threshold": 1.655197845085111,
-      "session_cost": 835.1835000000001
+      "session_cost": 835.1835000000001,
+      "cost_approximate": true
     },
     {
       "session_id": "a1720f4f-0039-4656-a96e-bef66e1ee1c4",
@@ -538,7 +585,8 @@
       "detail": "Output/input ratio 0.8771 below global P10 (1.6552)",
       "metric": 0.8771068141867439,
       "threshold": 1.655197845085111,
-      "session_cost": 6328.656479999999
+      "session_cost": 6328.656479999999,
+      "cost_approximate": true
     },
     {
       "session_id": "a309aed3-58d9-4acc-8ca8-7b0a2baeded9",
@@ -548,7 +596,8 @@
       "detail": "Output/input ratio 0.7263 below global P10 (1.6552)",
       "metric": 0.7262607146832907,
       "threshold": 1.655197845085111,
-      "session_cost": 12031.88696
+      "session_cost": 12031.88696,
+      "cost_approximate": true
     },
     {
       "session_id": "a5349bf5-ef33-4ce4-8bae-4f988b55057f",
@@ -558,7 +607,8 @@
       "detail": "Output/input ratio 0.3799 below global P10 (1.6552)",
       "metric": 0.3798988040478381,
       "threshold": 1.655197845085111,
-      "session_cost": 3120.5771400000003
+      "session_cost": 3120.5771400000003,
+      "cost_approximate": true
     },
     {
       "session_id": "ad94fd96-8c9c-42ec-b747-1ab65d0578fd",
@@ -568,7 +618,8 @@
       "detail": "Output/input ratio 1.2688 below global P10 (1.6552)",
       "metric": 1.268773725037135,
       "threshold": 1.655197845085111,
-      "session_cost": 6984.398399999998
+      "session_cost": 6984.398399999998,
+      "cost_approximate": true
     },
     {
       "session_id": "bb21e559-c110-4bc7-815b-6600a92bab6e",
@@ -578,7 +629,8 @@
       "detail": "Output/input ratio 0.4479 below global P10 (1.6552)",
       "metric": 0.4478523397831755,
       "threshold": 1.655197845085111,
-      "session_cost": 1714.1353400000005
+      "session_cost": 1714.1353400000005,
+      "cost_approximate": true
     },
     {
       "session_id": "c7bdcf17-fa79-48ed-8501-fe0b8dbf9dce",
@@ -588,7 +640,8 @@
       "detail": "Output/input ratio 0.5162 below global P10 (1.6552)",
       "metric": 0.5162379674925044,
       "threshold": 1.655197845085111,
-      "session_cost": 5073.279960000001
+      "session_cost": 5073.279960000001,
+      "cost_approximate": true
     },
     {
       "session_id": "c9f81af2-5497-42d6-aa1f-466e5cd7e0f2",
@@ -598,7 +651,8 @@
       "detail": "Output/input ratio 1.5961 below global P10 (1.6552)",
       "metric": 1.596079139940374,
       "threshold": 1.655197845085111,
-      "session_cost": 7447.667700000001
+      "session_cost": 7447.667700000001,
+      "cost_approximate": true
     },
     {
       "session_id": "ccf25aae-4012-443f-9ee4-12e1b37c3cc8",
@@ -608,7 +662,8 @@
       "detail": "Output/input ratio 1.4592 below global P10 (1.6552)",
       "metric": 1.4592198581560283,
       "threshold": 1.655197845085111,
-      "session_cost": 4283.179980000002
+      "session_cost": 4283.179980000002,
+      "cost_approximate": true
     },
     {
       "session_id": "d30ea534-6f65-4ce7-a0de-ab56f718def5",
@@ -618,7 +673,8 @@
       "detail": "Output/input ratio 0.9757 below global P10 (1.6552)",
       "metric": 0.9757390289301827,
       "threshold": 1.655197845085111,
-      "session_cost": 5336.454900000001
+      "session_cost": 5336.454900000001,
+      "cost_approximate": true
     },
     {
       "session_id": "d37eace6-23f9-4c5d-9d0c-2496bf4f013d",
@@ -628,7 +684,8 @@
       "detail": "Output/input ratio 0.9390 below global P10 (1.6552)",
       "metric": 0.9389736477115118,
       "threshold": 1.655197845085111,
-      "session_cost": 1853.0309199999997
+      "session_cost": 1853.0309199999997,
+      "cost_approximate": true
     },
     {
       "session_id": "fbc4166c-a5f4-4405-b09f-f170ca6f6f1f",
@@ -638,7 +695,8 @@
       "detail": "Output/input ratio 1.5420 below global P10 (1.6552)",
       "metric": 1.5420135527589545,
       "threshold": 1.655197845085111,
-      "session_cost": 2939.1712499999994
+      "session_cost": 2939.1712499999994,
+      "cost_approximate": true
     },
     {
       "session_id": "ses_2160cb748ffeT2ysB2AwrOJ8VN",
@@ -748,7 +806,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 257.8341
+      "session_cost": 257.8341,
+      "cost_approximate": true
     },
     {
       "session_id": "0aabc4e4-edc8-4be4-a265-758827cb646a",
@@ -758,7 +817,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 9773.885000000004
+      "session_cost": 9773.885000000004,
+      "cost_approximate": true
     },
     {
       "session_id": "0ffdd08e-42db-4ff5-a9b2-b47c72f63f58",
@@ -768,7 +828,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
       "metric": 8,
       "threshold": 2,
-      "session_cost": 15229.6062
+      "session_cost": 15229.6062,
+      "cost_approximate": true
     },
     {
       "session_id": "192f7180-83b1-4eb3-b9a8-6b290cb482db",
@@ -778,7 +839,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 136.74705
+      "session_cost": 136.74705,
+      "cost_approximate": true
     },
     {
       "session_id": "1e07909e-38bf-40f2-9967-fbf50f442414",
@@ -788,7 +850,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 1445.36835
+      "session_cost": 1445.36835,
+      "cost_approximate": true
     },
     {
       "session_id": "1e525cdb-1a84-4115-8437-b1d85d8e3aa6",
@@ -798,7 +861,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 10446.095260000002
+      "session_cost": 10446.095260000002,
+      "cost_approximate": true
     },
     {
       "session_id": "201f7630-32f4-4e76-b63d-a53512b3b3c3",
@@ -808,7 +872,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 254.92815000000002
+      "session_cost": 254.92815000000002,
+      "cost_approximate": true
     },
     {
       "session_id": "24c51ee8-8144-4c90-a0ed-224ae4c024d8",
@@ -818,7 +883,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 253.58339999999998
+      "session_cost": 253.58339999999998,
+      "cost_approximate": true
     },
     {
       "session_id": "2d3300ca-911f-4a7d-a3dc-dd0055b78a33",
@@ -828,7 +894,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 263.12595
+      "session_cost": 263.12595,
+      "cost_approximate": true
     },
     {
       "session_id": "32ab81f2-91b8-4cc5-bd47-97629f23f6a5",
@@ -838,7 +905,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
       "metric": 8,
       "threshold": 2,
-      "session_cost": 1532.62905
+      "session_cost": 1532.62905,
+      "cost_approximate": true
     },
     {
       "session_id": "34fee292-8021-4695-812c-ffe030f4cba1",
@@ -848,7 +916,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 6253.204200000003
+      "session_cost": 6253.204200000003,
+      "cost_approximate": true
     },
     {
       "session_id": "422b9440-271e-4407-8278-e3368c439352",
@@ -858,7 +927,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 136.80705
+      "session_cost": 136.80705,
+      "cost_approximate": true
     },
     {
       "session_id": "46ab494f-50ff-4332-b7b3-cc52b9ca3310",
@@ -868,7 +938,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 267.37185
+      "session_cost": 267.37185,
+      "cost_approximate": true
     },
     {
       "session_id": "49caf039-de8e-4039-8e66-1653a11a8e74",
@@ -878,7 +949,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 1442.4625599999995
+      "session_cost": 1442.4625599999995,
+      "cost_approximate": true
     },
     {
       "session_id": "4de5e937-9ba3-4144-9b99-d9beda362279",
@@ -888,7 +960,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 257.99895
+      "session_cost": 257.99895,
+      "cost_approximate": true
     },
     {
       "session_id": "4e099894-7249-4d8b-93b9-63fa4f939253",
@@ -898,7 +971,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 4951.106850000001
+      "session_cost": 4951.106850000001,
+      "cost_approximate": true
     },
     {
       "session_id": "529972ce-9233-45a3-ac93-532f6901ca32",
@@ -908,7 +982,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 2801.155199999999
+      "session_cost": 2801.155199999999,
+      "cost_approximate": true
     },
     {
       "session_id": "535cdc6f-c88d-4471-9bd8-97584900e33d",
@@ -918,7 +993,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
       "metric": 8,
       "threshold": 2,
-      "session_cost": 1904.8997999999997
+      "session_cost": 1904.8997999999997,
+      "cost_approximate": true
     },
     {
       "session_id": "554c73f1-a1aa-459f-b5d1-2c1d22e82344",
@@ -928,7 +1004,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 357.1458
+      "session_cost": 357.1458,
+      "cost_approximate": true
     },
     {
       "session_id": "73c5bc34-02b5-48ce-b7e0-4081743943e9",
@@ -938,7 +1015,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 153.39780000000002
+      "session_cost": 153.39780000000002,
+      "cost_approximate": true
     },
     {
       "session_id": "7d88e28a-61d3-450e-bb71-342ef032cf5b",
@@ -948,7 +1026,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 3031.90836
+      "session_cost": 3031.90836,
+      "cost_approximate": true
     },
     {
       "session_id": "8604b62e-fae4-4967-a56e-e54e61130c90",
@@ -958,7 +1037,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 3160.0042499999977
+      "session_cost": 3160.0042499999977,
+      "cost_approximate": true
     },
     {
       "session_id": "a16f7849-fa52-4629-a44c-e39b002a75a7",
@@ -968,7 +1048,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
       "metric": 8,
       "threshold": 2,
-      "session_cost": 1631.4995999999999
+      "session_cost": 1631.4995999999999,
+      "cost_approximate": true
     },
     {
       "session_id": "aae8041b-5b97-4b98-b1ca-1e13deccd62c",
@@ -978,7 +1059,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 5427.557100000001
+      "session_cost": 5427.557100000001,
+      "cost_approximate": true
     },
     {
       "session_id": "ac903ff2-a27a-4c86-92df-e84edff2b85a",
@@ -988,7 +1070,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 133.7568
+      "session_cost": 133.7568,
+      "cost_approximate": true
     },
     {
       "session_id": "bd2af046-2b5b-49fb-8537-64d20fa740dc",
@@ -998,7 +1081,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
       "metric": 8,
       "threshold": 2,
-      "session_cost": 10274.695500000002
+      "session_cost": 10274.695500000002,
+      "cost_approximate": true
     },
     {
       "session_id": "bddb200a-b959-4085-9fe8-8074c78143d4",
@@ -1008,7 +1092,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 2690.9496
+      "session_cost": 2690.9496,
+      "cost_approximate": true
     },
     {
       "session_id": "c8495667-14a9-4daf-acdb-4e3b68833062",
@@ -1018,7 +1103,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 4808.698049999999
+      "session_cost": 4808.698049999999,
+      "cost_approximate": true
     },
     {
       "session_id": "c9f81af2-5497-42d6-aa1f-466e5cd7e0f2",
@@ -1028,7 +1114,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
       "metric": 8,
       "threshold": 2,
-      "session_cost": 7447.667700000001
+      "session_cost": 7447.667700000001,
+      "cost_approximate": true
     },
     {
       "session_id": "cb720934-844d-4347-b177-c9c30f353313",
@@ -1038,7 +1125,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 3057.795740000001
+      "session_cost": 3057.795740000001,
+      "cost_approximate": true
     },
     {
       "session_id": "d5e1e64f-d370-483e-8b50-6db1366f4562",
@@ -1048,7 +1136,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 3002.0469399999984
+      "session_cost": 3002.0469399999984,
+      "cost_approximate": true
     },
     {
       "session_id": "de254f17-910c-4829-a666-44963a155d4b",
@@ -1058,7 +1147,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 136.80705
+      "session_cost": 136.80705,
+      "cost_approximate": true
     },
     {
       "session_id": "e7196433-c550-44f6-8a4b-0769365e4c2c",
@@ -1068,7 +1158,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
       "metric": 8,
       "threshold": 2,
-      "session_cost": 740.6600999999999
+      "session_cost": 740.6600999999999,
+      "cost_approximate": true
     },
     {
       "session_id": "ec5a462b-ef4d-4606-888b-60bc1e56fa1f",
@@ -1078,7 +1169,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 869.25915
+      "session_cost": 869.25915,
+      "cost_approximate": true
     },
     {
       "session_id": "efb2f02c-ca22-4022-b260-6d74eb81f4ea",
@@ -1088,7 +1180,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 10742.383620000004
+      "session_cost": 10742.383620000004,
+      "cost_approximate": true
     },
     {
       "session_id": "f6907b96-a566-4756-a9e1-4425f2f0f2d2",
@@ -1098,7 +1191,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 29 sessions on 2026-04-07, all below mean ratio (222.6726)",
       "metric": 29,
       "threshold": 2,
-      "session_cost": 369.64425000000006
+      "session_cost": 369.64425000000006,
+      "cost_approximate": true
     },
     {
       "session_id": "fd45656f-02b4-4654-a32a-e6e6db0876f2",
@@ -1108,7 +1202,8 @@
       "detail": "Project Users/hoang/lilysbeauty had 8 sessions on 2026-04-10, all below mean ratio (222.6726)",
       "metric": 8,
       "threshold": 2,
-      "session_cost": 2734.155750000001
+      "session_cost": 2734.155750000001,
+      "cost_approximate": true
     },
     {
       "session_id": "0091f8f8-6d91-46ad-9dfe-977b1e38e352",
@@ -1118,7 +1213,8 @@
       "detail": "Cache hit rate 0.4764 below global P10 (0.5665)",
       "metric": 0.4763756858058558,
       "threshold": 0.5665426156395104,
-      "session_cost": 1135.53345
+      "session_cost": 1135.53345,
+      "cost_approximate": true
     },
     {
       "session_id": "043c97db-4b38-4ce6-bf57-131df322f180",
@@ -1128,7 +1224,8 @@
       "detail": "Cache hit rate 0.5624 below global P10 (0.5665)",
       "metric": 0.5624354859235587,
       "threshold": 0.5665426156395104,
-      "session_cost": 257.8341
+      "session_cost": 257.8341,
+      "cost_approximate": true
     },
     {
       "session_id": "06bc9d57-d9a1-46cb-8bcf-0040dbe395d8",
@@ -1148,7 +1245,8 @@
       "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
       "metric": 0,
       "threshold": 0.5665426156395104,
-      "session_cost": 175.6515
+      "session_cost": 175.6515,
+      "cost_approximate": true
     },
     {
       "session_id": "1c9d0b66-284d-42e0-aa07-6ed4645e7d22",
@@ -1158,7 +1256,8 @@
       "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
       "metric": 0,
       "threshold": 0.5665426156395104,
-      "session_cost": 444.4455
+      "session_cost": 444.4455,
+      "cost_approximate": true
     },
     {
       "session_id": "1fbe4fc2-cff3-4d7c-972e-2be9011ae925",
@@ -1168,7 +1267,8 @@
       "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
       "metric": 0,
       "threshold": 0.5665426156395104,
-      "session_cost": 357.408
+      "session_cost": 357.408,
+      "cost_approximate": true
     },
     {
       "session_id": "201f7630-32f4-4e76-b63d-a53512b3b3c3",
@@ -1178,7 +1278,8 @@
       "detail": "Cache hit rate 0.5644 below global P10 (0.5665)",
       "metric": 0.5643788146711539,
       "threshold": 0.5665426156395104,
-      "session_cost": 254.92815000000002
+      "session_cost": 254.92815000000002,
+      "cost_approximate": true
     },
     {
       "session_id": "24c51ee8-8144-4c90-a0ed-224ae4c024d8",
@@ -1188,7 +1289,8 @@
       "detail": "Cache hit rate 0.5649 below global P10 (0.5665)",
       "metric": 0.564934044103986,
       "threshold": 0.5665426156395104,
-      "session_cost": 253.58339999999998
+      "session_cost": 253.58339999999998,
+      "cost_approximate": true
     },
     {
       "session_id": "28126ce0-6027-406d-ae89-2b64af6247a0",
@@ -1198,7 +1300,8 @@
       "detail": "Cache hit rate 0.5654 below global P10 (0.5665)",
       "metric": 0.5654157089357192,
       "threshold": 0.5665426156395104,
-      "session_cost": 253.60485
+      "session_cost": 253.60485,
+      "cost_approximate": true
     },
     {
       "session_id": "2d3300ca-911f-4a7d-a3dc-dd0055b78a33",
@@ -1208,7 +1311,8 @@
       "detail": "Cache hit rate 0.5593 below global P10 (0.5665)",
       "metric": 0.5592987496600442,
       "threshold": 0.5665426156395104,
-      "session_cost": 263.12595
+      "session_cost": 263.12595,
+      "cost_approximate": true
     },
     {
       "session_id": "32013b84-6b5e-4e04-b372-b8caa5b56957",
@@ -1218,7 +1322,8 @@
       "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
       "metric": 0,
       "threshold": 0.5665426156395104,
-      "session_cost": 352.488
+      "session_cost": 352.488,
+      "cost_approximate": true
     },
     {
       "session_id": "344c98f5-e7d0-4a8f-9c53-590aa7b4a5eb",
@@ -1228,7 +1333,8 @@
       "detail": "Cache hit rate 0.3525 below global P10 (0.5665)",
       "metric": 0.35245712366437854,
       "threshold": 0.5665426156395104,
-      "session_cost": 371.74275
+      "session_cost": 371.74275,
+      "cost_approximate": true
     },
     {
       "session_id": "46ab494f-50ff-4332-b7b3-cc52b9ca3310",
@@ -1238,7 +1344,8 @@
       "detail": "Cache hit rate 0.5554 below global P10 (0.5665)",
       "metric": 0.5554187706046823,
       "threshold": 0.5665426156395104,
-      "session_cost": 267.37185
+      "session_cost": 267.37185,
+      "cost_approximate": true
     },
     {
       "session_id": "49effeda-d768-4353-aece-b635d7eb54d9",
@@ -1248,7 +1355,8 @@
       "detail": "Cache hit rate 0.5065 below global P10 (0.5665)",
       "metric": 0.5064765745413086,
       "threshold": 0.5665426156395104,
-      "session_cost": 385.80315
+      "session_cost": 385.80315,
+      "cost_approximate": true
     },
     {
       "session_id": "4de5e937-9ba3-4144-9b99-d9beda362279",
@@ -1258,7 +1366,8 @@
       "detail": "Cache hit rate 0.5624 below global P10 (0.5665)",
       "metric": 0.5623652645938324,
       "threshold": 0.5665426156395104,
-      "session_cost": 257.99895
+      "session_cost": 257.99895,
+      "cost_approximate": true
     },
     {
       "session_id": "4e749183-6430-4406-890f-2722fb2016d1",
@@ -1268,7 +1377,8 @@
       "detail": "Cache hit rate 0.0000 below global P10 (0.5665)",
       "metric": 0,
       "threshold": 0.5665426156395104,
-      "session_cost": 310.34549999999996
+      "session_cost": 310.34549999999996,
+      "cost_approximate": true
     },
     {
       "session_id": "611dec0c-3baa-4bf1-907e-e6b08c845501",
@@ -1278,7 +1388,8 @@
       "detail": "Cache hit rate 0.4678 below global P10 (0.5665)",
       "metric": 0.4678011449883114,
       "threshold": 0.5665426156395104,
-      "session_cost": 478.3206
+      "session_cost": 478.3206,
+      "cost_approximate": true
     },
     {
       "session_id": "642aec52-96c1-45d8-8e98-38cdb089a989",
@@ -1288,7 +1399,8 @@
       "detail": "Cache hit rate 0.4218 below global P10 (0.5665)",
       "metric": 0.421828941554192,
       "threshold": 0.5665426156395104,
-      "session_cost": 869.6930799999999
+      "session_cost": 869.6930799999999,
+      "cost_approximate": true
     },
     {
       "session_id": "6d92a6a5-1ab6-4ace-9f1f-c94e769beab7",
@@ -1298,7 +1410,8 @@
       "detail": "Cache hit rate 0.4997 below global P10 (0.5665)",
       "metric": 0.49967781651650617,
       "threshold": 0.5665426156395104,
-      "session_cost": 356.28555000000006
+      "session_cost": 356.28555000000006,
+      "cost_approximate": true
     },
     {
       "session_id": "705dccf4-4f38-40c9-9412-fb1facd4a170",
@@ -1308,7 +1421,8 @@
       "detail": "Cache hit rate 0.4459 below global P10 (0.5665)",
       "metric": 0.4459345970313501,
       "threshold": 0.5665426156395104,
-      "session_cost": 1640.1123
+      "session_cost": 1640.1123,
+      "cost_approximate": true
     },
     {
       "session_id": "7bcf966e-3f8b-41c8-ad69-e334fcaab522",
@@ -1318,7 +1432,8 @@
       "detail": "Cache hit rate 0.2664 below global P10 (0.5665)",
       "metric": 0.266369219117865,
       "threshold": 0.5665426156395104,
-      "session_cost": 1296.1302
+      "session_cost": 1296.1302,
+      "cost_approximate": true
     },
     {
       "session_id": "93c1fb84-305f-484b-b787-d48e78aee3ba",
@@ -1328,7 +1443,8 @@
       "detail": "Cache hit rate 0.1922 below global P10 (0.5665)",
       "metric": 0.192190703743243,
       "threshold": 0.5665426156395104,
-      "session_cost": 732.7168499999999
+      "session_cost": 732.7168499999999,
+      "cost_approximate": true
     },
     {
       "session_id": "951b436e-aac2-4e5c-8211-75c3ef62e13b",
@@ -1338,7 +1454,8 @@
       "detail": "Cache hit rate 0.5026 below global P10 (0.5665)",
       "metric": 0.5026499551611436,
       "threshold": 0.5665426156395104,
-      "session_cost": 2935.7346
+      "session_cost": 2935.7346,
+      "cost_approximate": true
     },
     {
       "session_id": "d28107ab-6dfc-47d9-aaea-dceaee190788",
@@ -1348,7 +1465,8 @@
       "detail": "Cache hit rate 0.3173 below global P10 (0.5665)",
       "metric": 0.31728483776463434,
       "threshold": 0.5665426156395104,
-      "session_cost": 197.856
+      "session_cost": 197.856,
+      "cost_approximate": true
     },
     {
       "session_id": "dbbcb1ca-d8a6-4896-ab00-c37a26c593c1",
@@ -1358,7 +1476,8 @@
       "detail": "Cache hit rate 0.5064 below global P10 (0.5665)",
       "metric": 0.5063927363691111,
       "threshold": 0.5665426156395104,
-      "session_cost": 462.6666
+      "session_cost": 462.6666,
+      "cost_approximate": true
     },
     {
       "session_id": "dc707dfa-bc8d-475e-a790-675e870660c6",
@@ -1368,7 +1487,8 @@
       "detail": "Cache hit rate 0.5358 below global P10 (0.5665)",
       "metric": 0.535764507359145,
       "threshold": 0.5665426156395104,
-      "session_cost": 307.25249999999994
+      "session_cost": 307.25249999999994,
+      "cost_approximate": true
     },
     {
       "session_id": "e81a2d03-8807-48a3-858f-214aad2c54de",
@@ -1378,7 +1498,8 @@
       "detail": "Cache hit rate 0.5395 below global P10 (0.5665)",
       "metric": 0.5395183197956508,
       "threshold": 0.5665426156395104,
-      "session_cost": 294.86895000000004
+      "session_cost": 294.86895000000004,
+      "cost_approximate": true
     },
     {
       "session_id": "ec57a273-543d-476a-a6f1-b8d00eda810a",
@@ -1388,7 +1509,8 @@
       "detail": "Cache hit rate 0.4943 below global P10 (0.5665)",
       "metric": 0.494325552999662,
       "threshold": 0.5665426156395104,
-      "session_cost": 392.15580000000006
+      "session_cost": 392.15580000000006,
+      "cost_approximate": true
     },
     {
       "session_id": "ecb14e58-6fb3-436f-976f-c912570cb310",
@@ -1398,7 +1520,8 @@
       "detail": "Cache hit rate 0.3309 below global P10 (0.5665)",
       "metric": 0.3309315910524923,
       "threshold": 0.5665426156395104,
-      "session_cost": 261.9774
+      "session_cost": 261.9774,
+      "cost_approximate": true
     },
     {
       "session_id": "ed2fd2ac-62e1-4c3f-8205-25abe4b3567f",
@@ -1408,7 +1531,8 @@
       "detail": "Cache hit rate 0.5354 below global P10 (0.5665)",
       "metric": 0.5353926554990435,
       "threshold": 0.5665426156395104,
-      "session_cost": 83.7699
+      "session_cost": 83.7699,
+      "cost_approximate": true
     },
     {
       "session_id": "f1cde1aa-e8ba-4dbf-aedf-8c803bee925e",
@@ -1418,7 +1542,8 @@
       "detail": "Cache hit rate 0.5487 below global P10 (0.5665)",
       "metric": 0.5487400139959953,
       "threshold": 0.5665426156395104,
-      "session_cost": 275.72415
+      "session_cost": 275.72415,
+      "cost_approximate": true
     },
     {
       "session_id": "f6907b96-a566-4756-a9e1-4425f2f0f2d2",
@@ -1428,7 +1553,8 @@
       "detail": "Cache hit rate 0.3329 below global P10 (0.5665)",
       "metric": 0.3329209233270883,
       "threshold": 0.5665426156395104,
-      "session_cost": 369.64425000000006
+      "session_cost": 369.64425000000006,
+      "cost_approximate": true
     }
   ],
   "subagent_trees": [

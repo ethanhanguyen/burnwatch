@@ -28,14 +28,15 @@ type JSONProject struct {
 }
 
 type JSONWasteSignal struct {
-	SessionID   string  `json:"session_id"`
-	Project     string  `json:"project"`
-	Severity    string  `json:"severity"`
-	Reason      string  `json:"reason"`
-	Detail      string  `json:"detail"`
-	Metric      float64 `json:"metric"`
-	Threshold   float64 `json:"threshold"`
-	SessionCost float64 `json:"session_cost,omitempty"`
+	SessionID       string  `json:"session_id"`
+	Project         string  `json:"project"`
+	Severity        string  `json:"severity"`
+	Reason          string  `json:"reason"`
+	Detail          string  `json:"detail"`
+	Metric          float64 `json:"metric"`
+	Threshold       float64 `json:"threshold"`
+	SessionCost     float64 `json:"session_cost,omitempty"`
+	CostApproximate bool    `json:"cost_approximate,omitempty"`
 }
 
 type JSONSubagentNode struct {
@@ -86,14 +87,15 @@ func FormatJSON(
 
 	for _, s := range signals {
 		report.WasteSignals = append(report.WasteSignals, JSONWasteSignal{
-			SessionID:   s.SessionID,
-			Project:     s.Project,
-			Severity:    s.Severity,
-			Reason:      s.Reason,
-			Detail:      s.Detail,
-			Metric:      s.Metric,
-			Threshold:   s.Threshold,
-			SessionCost: s.SessionCost,
+			SessionID:       s.SessionID,
+			Project:         s.Project,
+			Severity:        s.Severity,
+			Reason:          s.Reason,
+			Detail:          s.Detail,
+			Metric:          s.Metric,
+			Threshold:       s.Threshold,
+			SessionCost:     s.SessionCost,
+			CostApproximate: s.CostApproximate,
 		})
 	}
 
