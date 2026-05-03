@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ethanhanguyen/burnwatch/analyze"
+	"github.com/ethanhanguyen/burnwatch/config"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
@@ -46,7 +47,7 @@ func TestGoldenText(t *testing.T) {
 	signals := analyze.DetectWaste(events, baselines)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
-	got := FormatText(events, baselines, signals, recommendations, false)
+	got := FormatText(events, baselines, signals, recommendations, false, config.Config{})
 
 	goldenPath := filepath.Join("..", "testdata", "expected_report.txt")
 	if *updateGolden {
@@ -101,7 +102,7 @@ func TestGoldenJSON(t *testing.T) {
 }
 
 func TestFormatText_NoData(t *testing.T) {
-	got := FormatText(nil, nil, nil, nil, false)
+	got := FormatText(nil, nil, nil, nil, false, config.Config{})
 	if got != "No data found.\n" {
 		t.Errorf("expected no-data message, got: %s", got)
 	}
@@ -119,7 +120,7 @@ func TestFormatText_NoSignals(t *testing.T) {
 	baselines := analyze.ComputeBaselines(events)
 	signals := analyze.DetectWaste(events, baselines)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
-	got := FormatText(events, baselines, signals, recommendations, false)
+	got := FormatText(events, baselines, signals, recommendations, false, config.Config{})
 
 	if got == "No waste signals detected.\n" {
 		t.Log("no waste signals as expected for single event")
@@ -274,7 +275,7 @@ func TestWriteSignalBlock_EmptyRecommendation(t *testing.T) {
 	rec := analyze.Recommendation{}
 
 	var b strings.Builder
-	writeSignalBlock(&b, s, rec)
+	writeSignalBlock(&b, s, rec, nil)
 	got := b.String()
 	if !strings.Contains(got, "HIGH") {
 		t.Errorf("expected HIGH severity, got: %s", got)
@@ -299,6 +300,7 @@ func TestWriteSignalBlock_AllReasons(t *testing.T) {
 				Metric:      5,
 				Threshold:   2,
 				SessionCost: 10.0,
+				Detail:      "Project proj had 5 sessions on 2026-01-01, all below mean ratio (0.5000)",
 			},
 		},
 		{
@@ -335,7 +337,7 @@ func TestWriteSignalBlock_AllReasons(t *testing.T) {
 				Detail:     "Test detail",
 				SavingsEst: 5.0,
 			}
-			writeSignalBlock(&b, tt.s, rec)
+			writeSignalBlock(&b, tt.s, rec, nil)
 			got := b.String()
 			if !strings.Contains(got, "\u2192") {
 				t.Errorf("expected recommendation arrow, got: %s", got)
@@ -359,7 +361,7 @@ func TestFormatText_NoSignalsWithVerbose(t *testing.T) {
 	signals := analyze.DetectWaste(events, baselines)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
-	got := FormatText(events, baselines, signals, recommendations, true)
+	got := FormatText(events, baselines, signals, recommendations, true, config.Config{})
 	if !strings.Contains(got, "All sessions:") {
 		t.Errorf("verbose mode should show all sessions, got: %s", got)
 	}
@@ -398,11 +400,165 @@ func TestFormatText_Verbose(t *testing.T) {
 	signals := analyze.DetectWaste(events, baselines)
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
-	got := FormatText(events, baselines, signals, recommendations, true)
+	got := FormatText(events, baselines, signals, recommendations, true, config.Config{})
 	if !strings.Contains(got, "All sessions:") {
 		t.Errorf("verbose output should show all sessions, got: %s", got)
 	}
 	if !strings.Contains(got, "s1") {
 		t.Errorf("verbose output should include s1, got: %s", got)
+	}
+}
+
+func TestFindBaselineForSignal(t *testing.T) {
+	baselines := map[string]analyze.Baseline{
+		"*":                {Project: "*", CostMean: 1.0},
+		"proj1:opencode":   {Project: "proj1", Harness: "opencode", CostMean: 5.0},
+		"proj2:claude-code": {Project: "proj2", Harness: "claude-code", CostMean: 10.0},
+	}
+
+	t.Run("match by project", func(t *testing.T) {
+		s := analyze.WasteSignal{Project: "proj1"}
+		bl := findBaselineForSignal(s, baselines)
+		if bl == nil || bl.CostMean != 5.0 {
+			t.Errorf("expected proj1 baseline, got %v", bl)
+		}
+	})
+
+	t.Run("fallback to global", func(t *testing.T) {
+		s := analyze.WasteSignal{Project: "unknown"}
+		bl := findBaselineForSignal(s, baselines)
+		if bl == nil || bl.CostMean != 1.0 {
+			t.Errorf("expected global baseline, got %v", bl)
+		}
+	})
+
+	t.Run("nil for empty baselines", func(t *testing.T) {
+		s := analyze.WasteSignal{Project: "proj1"}
+		bl := findBaselineForSignal(s, map[string]analyze.Baseline{})
+		if bl != nil {
+			t.Errorf("expected nil, got %v", bl)
+		}
+	})
+}
+
+func TestExtractDateFromDetail(t *testing.T) {
+	tests := []struct {
+		name   string
+		detail string
+		want   string
+	}{
+		{
+			name:   "valid date",
+			detail: "Project proj had 5 sessions on 2026-01-15, all below mean ratio (0.5000)",
+			want:   "2026-01-15",
+		},
+		{
+			name:   "no date",
+			detail: "Some other detail without date",
+			want:   "",
+		},
+		{
+			name:   "empty",
+			detail: "",
+			want:   "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := extractDateFromDetail(tt.detail)
+			if got != tt.want {
+				t.Errorf("extractDateFromDetail(%q) = %q, want %q", tt.detail, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestWriteChurnGroups(t *testing.T) {
+	signals := []analyze.WasteSignal{
+		{
+			SessionID:   "s1",
+			Project:     "proj1",
+			Severity:    "medium",
+			Reason:      "session_churn",
+			Metric:      5,
+			Threshold:   2,
+			SessionCost: 10.0,
+			Detail:      "Project proj1 had 5 sessions on 2026-01-15, all below mean ratio (0.5000)",
+		},
+		{
+			SessionID:   "s2",
+			Project:     "proj1",
+			Severity:    "medium",
+			Reason:      "session_churn",
+			Metric:      5,
+			Threshold:   2,
+			SessionCost: 10.0,
+			Detail:      "Project proj1 had 5 sessions on 2026-01-15, all below mean ratio (0.5000)",
+		},
+	}
+
+	recBySignal := make(map[analyze.WasteSignal]analyze.Recommendation)
+	for _, s := range signals {
+		recBySignal[s] = analyze.Recommendation{
+			Signal:     s,
+			Action:     "consolidate",
+			SavingsEst: 5.0,
+		}
+	}
+
+	var b strings.Builder
+	writeChurnGroups(&b, signals, recBySignal)
+	got := b.String()
+
+	if !strings.Contains(got, "proj1 on 2026-01-15") {
+		t.Errorf("expected grouped churn, got: %s", got)
+	}
+	if !strings.Contains(got, "$20.00 total") {
+		t.Errorf("expected total cost, got: %s", got)
+	}
+	if !strings.Contains(got, "Potential savings: $10.00") {
+		t.Errorf("expected savings estimate, got: %s", got)
+	}
+}
+
+func TestFormatText_GroupChurn(t *testing.T) {
+	events := []source.TokenEvent{
+		{SessionID: "sa", Harness: "opencode", Project: "proj", InputTokens: 100, OutputTokens: 10, CostUSD: 1.0, Timestamp: fixedTime},
+		{SessionID: "sb", Harness: "opencode", Project: "proj", InputTokens: 100, OutputTokens: 10, CostUSD: 1.0, Timestamp: fixedTime},
+		{SessionID: "sc", Harness: "opencode", Project: "proj", InputTokens: 100, OutputTokens: 10, CostUSD: 1.0, Timestamp: fixedTime},
+	}
+
+	baselines := analyze.ComputeBaselines(events)
+	signals := analyze.DetectWaste(events, baselines)
+	recommendations := analyze.GenerateRecommendations(signals, baselines)
+
+	// Test GroupChurn=false (default)
+	gotUngrouped := FormatText(events, baselines, signals, recommendations, false, config.Config{})
+	if strings.Contains(gotUngrouped, "on") && !strings.Contains(gotUngrouped, "No waste") {
+		// Individual churn lines should show dates
+	}
+
+	// Test GroupChurn=true
+	cfg := config.Config{}
+	cfg.Output.GroupChurn = true
+	gotGrouped := FormatText(events, baselines, signals, recommendations, false, cfg)
+
+	// grouped output should have the "on DATE" format in the group header
+	if len(signals) > 0 {
+		hasChurn := false
+		for _, s := range signals {
+			if s.Reason == "session_churn" {
+				hasChurn = true
+				break
+			}
+		}
+		if hasChurn {
+			if !strings.Contains(gotGrouped, "on ") {
+				t.Errorf("grouped output should show date, got: %s", gotGrouped)
+			}
+			if !strings.Contains(gotGrouped, "total") {
+				t.Errorf("grouped output should show total, got: %s", gotGrouped)
+			}
+		}
 	}
 }

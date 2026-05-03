@@ -10,29 +10,29 @@ Project project-b: $532.50 (median $32.50/session)
 Project project-c: $147.50 (median $147.50/session)
 
 Waste signals:
-  HIGH 08f6e729-29ac-4473-b (Users/hoang/reka/travel): $11104.44 — 1.3x project baseline
+  HIGH 08f6e729-29ac-4473-b (Users/hoang/reka/travel): $11104.44 — 4.3x project baseline (μ = $2606.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $8497.95
-  HIGH 1f766932-f7d1-4a04-8 (Users/hoang/lilysbeauty): $47255.39 — 3.8x project baseline
+  HIGH 1f766932-f7d1-4a04-8 (Users/hoang/lilysbeauty): $47255.39 — 16.6x project baseline (μ = $2844.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $44410.91
-  HIGH 20834312-69fa-4496-8 (Users/hoang/lilysbeauty): $13791.28 — 1.1x project baseline
+  HIGH 20834312-69fa-4496-8 (Users/hoang/lilysbeauty): $13791.28 — 4.8x project baseline (μ = $2844.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $10946.79
-  HIGH 327cb18e-fe6e-4018-a (Users/hoang/reka/travel): $10898.63 — 1.2x project baseline
+  HIGH 327cb18e-fe6e-4018-a (Users/hoang/reka/travel): $10898.63 — 4.2x project baseline (μ = $2606.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $8292.14
-  HIGH 44d7a535-2a37-4e2b-8 (Users/hoang/lilysbeauty): $19878.58 — 1.6x project baseline
+  HIGH 44d7a535-2a37-4e2b-8 (Users/hoang/lilysbeauty): $19878.58 — 7.0x project baseline (μ = $2844.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $17034.09
-  HIGH 4785a17e-808f-4c9b-9 (Users/hoang/reka/travel): $10403.78 — 1.2x project baseline
+  HIGH 4785a17e-808f-4c9b-9 (Users/hoang/reka/travel): $10403.78 — 4.0x project baseline (μ = $2606.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $7797.29
-  HIGH 50b18c47-d85a-404d-9 (Users/hoang/reka/travel): $14160.30 — 1.6x project baseline
+  HIGH 50b18c47-d85a-404d-9 (Users/hoang/reka/travel): $14160.30 — 5.4x project baseline (μ = $2606.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $11553.81
-  HIGH 93c1fb84-305f-484b-b (Users/hoang): $732.72 — 1.0x project baseline
+  HIGH 93c1fb84-305f-484b-b (Users/hoang): $732.72 — 2.2x project baseline (μ = $327.36)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $405.35
-  HIGH 9bb7a461-f536-42d1-8 (Users/hoang/reka/ads): $20114.34 — 1.1x project baseline
+  HIGH 9bb7a461-f536-42d1-8 (Users/hoang/reka/ads): $20114.34 — 3.4x project baseline (μ = $5953.90)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $14160.44
-  HIGH c9d7da23-8e25-4e21-a (Users/hoang/lilysbeauty): $44597.27 — 3.6x project baseline
+  HIGH c9d7da23-8e25-4e21-a (Users/hoang/lilysbeauty): $44597.27 — 15.7x project baseline (μ = $2844.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $41752.78
-  HIGH e22c2d24-9da8-4a46-8 (Users/hoang/reka/ads): $19579.62 — 1.1x project baseline
+  HIGH e22c2d24-9da8-4a46-8 (Users/hoang/reka/ads): $19579.62 — 3.3x project baseline (μ = $5953.90)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $13625.72
-  HIGH f6f2d0a7-c41a-4532-b (Users/hoang/reka/travel): $23788.11 — 2.7x project baseline
+  HIGH f6f2d0a7-c41a-4532-b (Users/hoang/reka/travel): $23788.11 — 9.1x project baseline (μ = $2606.49)
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $21181.62
   MEDIUM 06a6e9eb-2f94-4927-b (Users/hoang/lilysbeauty): $903.00 — output/input ratio 1.6355 (P10 = 1.6552)
     → Consider whether this task needed full agent interaction. Potential savings: $451.50
@@ -98,79 +98,79 @@ Waste signals:
     → Consider whether this task needed full agent interaction. Potential savings: $16.25
   MEDIUM ses_21a7c9142ffezkLH (project-b): $32.50 — output/input ratio 0.1372 (P10 = 1.6552)
     → Consider whether this task needed full agent interaction. Potential savings: $16.25
-  MEDIUM 043c97db-4b38-4ce6-b (Users/hoang/lilysbeauty): $257.83 — 29 sessions below mean ratio
+  MEDIUM 043c97db-4b38-4ce6-b (Users/hoang/lilysbeauty): $257.83 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $257.83
-  MEDIUM 0aabc4e4-edc8-4be4-a (Users/hoang/lilysbeauty): $4886.94 — 29 sessions below mean ratio
+  MEDIUM 0aabc4e4-edc8-4be4-a (Users/hoang/lilysbeauty): $4886.94 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $4886.94
-  MEDIUM 0ffdd08e-42db-4ff5-a (Users/hoang/lilysbeauty): $7614.80 — 8 sessions below mean ratio
+  MEDIUM 0ffdd08e-42db-4ff5-a (Users/hoang/lilysbeauty): $7614.80 — 8 sessions below mean ratio (2026-04-10)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $7614.80
-  MEDIUM 192f7180-83b1-4eb3-b (Users/hoang/lilysbeauty): $136.75 — 29 sessions below mean ratio
+  MEDIUM 192f7180-83b1-4eb3-b (Users/hoang/lilysbeauty): $136.75 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $136.75
-  MEDIUM 1e07909e-38bf-40f2-9 (Users/hoang/lilysbeauty): $1445.37 — 29 sessions below mean ratio
+  MEDIUM 1e07909e-38bf-40f2-9 (Users/hoang/lilysbeauty): $1445.37 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1445.37
-  MEDIUM 1e525cdb-1a84-4115-8 (Users/hoang/lilysbeauty): $5223.05 — 29 sessions below mean ratio
+  MEDIUM 1e525cdb-1a84-4115-8 (Users/hoang/lilysbeauty): $5223.05 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $5223.05
-  MEDIUM 201f7630-32f4-4e76-b (Users/hoang/lilysbeauty): $254.93 — 29 sessions below mean ratio
+  MEDIUM 201f7630-32f4-4e76-b (Users/hoang/lilysbeauty): $254.93 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $254.93
-  MEDIUM 24c51ee8-8144-4c90-a (Users/hoang/lilysbeauty): $253.58 — 29 sessions below mean ratio
+  MEDIUM 24c51ee8-8144-4c90-a (Users/hoang/lilysbeauty): $253.58 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $253.58
-  MEDIUM 2d3300ca-911f-4a7d-a (Users/hoang/lilysbeauty): $263.13 — 29 sessions below mean ratio
+  MEDIUM 2d3300ca-911f-4a7d-a (Users/hoang/lilysbeauty): $263.13 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $263.13
-  MEDIUM 32ab81f2-91b8-4cc5-b (Users/hoang/lilysbeauty): $1532.63 — 8 sessions below mean ratio
+  MEDIUM 32ab81f2-91b8-4cc5-b (Users/hoang/lilysbeauty): $1532.63 — 8 sessions below mean ratio (2026-04-10)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1532.63
-  MEDIUM 34fee292-8021-4695-8 (Users/hoang/lilysbeauty): $3126.60 — 29 sessions below mean ratio
+  MEDIUM 34fee292-8021-4695-8 (Users/hoang/lilysbeauty): $3126.60 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $3126.60
-  MEDIUM 422b9440-271e-4407-8 (Users/hoang/lilysbeauty): $136.81 — 29 sessions below mean ratio
+  MEDIUM 422b9440-271e-4407-8 (Users/hoang/lilysbeauty): $136.81 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $136.81
-  MEDIUM 46ab494f-50ff-4332-b (Users/hoang/lilysbeauty): $267.37 — 29 sessions below mean ratio
+  MEDIUM 46ab494f-50ff-4332-b (Users/hoang/lilysbeauty): $267.37 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $267.37
-  MEDIUM 49caf039-de8e-4039-8 (Users/hoang/lilysbeauty): $721.23 — 29 sessions below mean ratio
+  MEDIUM 49caf039-de8e-4039-8 (Users/hoang/lilysbeauty): $721.23 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $721.23
-  MEDIUM 4de5e937-9ba3-4144-9 (Users/hoang/lilysbeauty): $258.00 — 29 sessions below mean ratio
+  MEDIUM 4de5e937-9ba3-4144-9 (Users/hoang/lilysbeauty): $258.00 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $258.00
-  MEDIUM 4e099894-7249-4d8b-9 (Users/hoang/lilysbeauty): $4951.11 — 29 sessions below mean ratio
+  MEDIUM 4e099894-7249-4d8b-9 (Users/hoang/lilysbeauty): $4951.11 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $4951.11
-  MEDIUM 529972ce-9233-45a3-a (Users/hoang/lilysbeauty): $2801.16 — 29 sessions below mean ratio
+  MEDIUM 529972ce-9233-45a3-a (Users/hoang/lilysbeauty): $2801.16 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $2801.16
-  MEDIUM 535cdc6f-c88d-4471-9 (Users/hoang/lilysbeauty): $1904.90 — 8 sessions below mean ratio
+  MEDIUM 535cdc6f-c88d-4471-9 (Users/hoang/lilysbeauty): $1904.90 — 8 sessions below mean ratio (2026-04-10)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1904.90
-  MEDIUM 554c73f1-a1aa-459f-b (Users/hoang/lilysbeauty): $357.15 — 29 sessions below mean ratio
+  MEDIUM 554c73f1-a1aa-459f-b (Users/hoang/lilysbeauty): $357.15 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $357.15
-  MEDIUM 73c5bc34-02b5-48ce-b (Users/hoang/lilysbeauty): $153.40 — 29 sessions below mean ratio
+  MEDIUM 73c5bc34-02b5-48ce-b (Users/hoang/lilysbeauty): $153.40 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $153.40
-  MEDIUM 7d88e28a-61d3-450e-b (Users/hoang/lilysbeauty): $1515.95 — 29 sessions below mean ratio
+  MEDIUM 7d88e28a-61d3-450e-b (Users/hoang/lilysbeauty): $1515.95 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1515.95
-  MEDIUM 8604b62e-fae4-4967-a (Users/hoang/lilysbeauty): $3160.00 — 29 sessions below mean ratio
+  MEDIUM 8604b62e-fae4-4967-a (Users/hoang/lilysbeauty): $3160.00 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $3160.00
-  MEDIUM a16f7849-fa52-4629-a (Users/hoang/lilysbeauty): $1631.50 — 8 sessions below mean ratio
+  MEDIUM a16f7849-fa52-4629-a (Users/hoang/lilysbeauty): $1631.50 — 8 sessions below mean ratio (2026-04-10)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1631.50
-  MEDIUM aae8041b-5b97-4b98-b (Users/hoang/lilysbeauty): $2713.78 — 29 sessions below mean ratio
+  MEDIUM aae8041b-5b97-4b98-b (Users/hoang/lilysbeauty): $2713.78 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $2713.78
-  MEDIUM ac903ff2-a27a-4c86-9 (Users/hoang/lilysbeauty): $133.76 — 29 sessions below mean ratio
+  MEDIUM ac903ff2-a27a-4c86-9 (Users/hoang/lilysbeauty): $133.76 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $133.76
-  MEDIUM bd2af046-2b5b-49fb-8 (Users/hoang/lilysbeauty): $5137.35 — 8 sessions below mean ratio
+  MEDIUM bd2af046-2b5b-49fb-8 (Users/hoang/lilysbeauty): $5137.35 — 8 sessions below mean ratio (2026-04-10)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $5137.35
-  MEDIUM bddb200a-b959-4085-9 (Users/hoang/lilysbeauty): $1345.47 — 29 sessions below mean ratio
+  MEDIUM bddb200a-b959-4085-9 (Users/hoang/lilysbeauty): $1345.47 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1345.47
-  MEDIUM c8495667-14a9-4daf-a (Users/hoang/lilysbeauty): $4808.70 — 29 sessions below mean ratio
+  MEDIUM c8495667-14a9-4daf-a (Users/hoang/lilysbeauty): $4808.70 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $4808.70
-  MEDIUM c9f81af2-5497-42d6-a (Users/hoang/lilysbeauty): $3723.83 — 8 sessions below mean ratio
+  MEDIUM c9f81af2-5497-42d6-a (Users/hoang/lilysbeauty): $3723.83 — 8 sessions below mean ratio (2026-04-10)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $3723.83
-  MEDIUM cb720934-844d-4347-b (Users/hoang/lilysbeauty): $1528.90 — 29 sessions below mean ratio
+  MEDIUM cb720934-844d-4347-b (Users/hoang/lilysbeauty): $1528.90 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1528.90
-  MEDIUM d5e1e64f-d370-483e-8 (Users/hoang/lilysbeauty): $1501.02 — 29 sessions below mean ratio
+  MEDIUM d5e1e64f-d370-483e-8 (Users/hoang/lilysbeauty): $1501.02 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $1501.02
-  MEDIUM de254f17-910c-4829-a (Users/hoang/lilysbeauty): $136.81 — 29 sessions below mean ratio
+  MEDIUM de254f17-910c-4829-a (Users/hoang/lilysbeauty): $136.81 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $136.81
-  MEDIUM e7196433-c550-44f6-8 (Users/hoang/lilysbeauty): $740.66 — 8 sessions below mean ratio
+  MEDIUM e7196433-c550-44f6-8 (Users/hoang/lilysbeauty): $740.66 — 8 sessions below mean ratio (2026-04-10)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $740.66
-  MEDIUM ec5a462b-ef4d-4606-8 (Users/hoang/lilysbeauty): $869.26 — 29 sessions below mean ratio
+  MEDIUM ec5a462b-ef4d-4606-8 (Users/hoang/lilysbeauty): $869.26 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $869.26
-  MEDIUM efb2f02c-ca22-4022-b (Users/hoang/lilysbeauty): $5371.19 — 29 sessions below mean ratio
+  MEDIUM efb2f02c-ca22-4022-b (Users/hoang/lilysbeauty): $5371.19 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $5371.19
-  MEDIUM f6907b96-a566-4756-a (Users/hoang/lilysbeauty): $369.64 — 29 sessions below mean ratio
+  MEDIUM f6907b96-a566-4756-a (Users/hoang/lilysbeauty): $369.64 — 29 sessions below mean ratio (2026-04-07)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $369.64
-  MEDIUM fd45656f-02b4-4654-a (Users/hoang/lilysbeauty): $2734.16 — 8 sessions below mean ratio
+  MEDIUM fd45656f-02b4-4654-a (Users/hoang/lilysbeauty): $2734.16 — 8 sessions below mean ratio (2026-04-10)
     → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $2734.16
   LOW 0091f8f8-6d91-46ad-9 (Users/hoang/lilysbeauty): $1135.53 — cache hit rate 47.6% (P10 = 56.7%)
     → Consider CLAUDE.md / skills optimization for better caching. Potential savings: $227.11

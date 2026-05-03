@@ -96,7 +96,7 @@ func Execute() {
 		}
 		fmt.Println(string(jsonBytes))
 	} else {
-		text := output.FormatText(events, baselines, signals, recommendations, flags.Verbose)
+		text := output.FormatText(events, baselines, signals, recommendations, flags.Verbose, cfg)
 		fmt.Print(text)
 	}
 }
