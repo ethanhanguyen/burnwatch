@@ -67,15 +67,21 @@ Today: $X (N sessions) | This week: $Y (M sessions)
 Project A: $total (median $med/session)
 Project B: $total (median $med/session)
 
+Trends:  (when --show-trends)
+  Cost:    $A/wk → $B/wk (↓ C%)
+  Sessions: N/wk → M/wk (↑ P%)
+  Output/input ratio: X.XX → Y.YY (↓ Z%)
+
 Waste signals:
   HIGH ses_id slug (project): $cost — detail
+    Model: model-name, tokens in / tokens out
     → Recommendation. Potential savings: $amount
   MED  ses_id slug (project): detail
     → Recommendation. Potential savings: $amount
   LOW  Project project: detail
     → Recommendation. Potential savings: $amount
 
-Summary: N waste signals found. Potential savings: $amount / day
+Summary: N waste signals found. Potential savings: $amount
 ```
 
 ### JSON
@@ -95,12 +101,48 @@ Summary: N waste signals found. Potential savings: $amount / day
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--db` | `~/.local/share/opencode/opencode.db` | OpenCode DB path |
+| `--db` | (auto-detect) | OpenCode DB path |
 | `--harness` | `all` | Filter: `all`, `opencode`, `claude-code` |
 | `--project` | (none) | Filter to specific project |
 | `--json` | `false` | Output JSON instead of text |
-| `--days` | `1` | Lookback window (1=today, 7=week, 30=month) |
+| `--days` | `0` | Lookback window in days (0 = all time) |
 | `--verbose` | `false` | Show all sessions, not just waste signals |
+| `--config` | `.burnwatch.toml` | Config file path (TOML) |
+| `--print-config` | `false` | Print effective config and exit |
+| `--min-cost` | `0` | Hide waste signals below this dollar amount |
+| `--show-trends` | `false` | Show time-trend summary between projects and waste signals |
+| `--no-cost-outlier` | `false` | Disable cost outlier detection |
+| `--no-low-signal` | `false` | Disable low output/input ratio detection |
+| `--no-subagent-overhead` | `false` | Disable subagent overhead detection |
+| `--no-cache-underutil` | `false` | Disable cache underutilization detection |
+| `--no-churn` | `false` | Disable session churn detection |
+
+## Configuration
+
+Optional TOML config file (`.burnwatch.toml` or `~/.config/burnwatch/config.toml`):
+
+```toml
+[thresholds]
+cost_outlier_sigma = 2.0
+low_signal_percentile = 10.0
+
+[signals]
+cost_outlier = true
+low_signal = true
+subagent_overhead = true
+cache_underutilized = true
+session_churn = true
+
+[filters]
+min_cost = 0
+deduplicate = false
+
+[output]
+group_churn = false
+show_trends = false
+```
+
+CLI flags override config values at runtime.
 
 ## Pricing
 

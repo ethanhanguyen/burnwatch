@@ -23,13 +23,22 @@
      │ analyze/baseline.go │  → μ, σ, percentiles per project
      └──────────┬──────────┘
                 ▼
-     ┌─────────────────────┐
-     │ analyze/waste.go    │  → 5 heuristics, flag outliers
-     └──────────┬──────────┘
-                ▼
-     ┌─────────────────────┐
-     │ analyze/subagent.go │  → cost tree, overhead %
-     └──────────┬──────────┘
+      ┌─────────────────────┐
+      │ analyze/waste.go    │  → 5 heuristics, flag outliers
+      └──────────┬──────────┘
+                 ▼
+      ┌─────────────────────┐
+      │ analyze/trend.go    │  → weekly cost/ratio trends
+      └──────────┬──────────┘
+                 ▼
+      ┌─────────────────────┐
+      │ analyze/signal_     │  → min-cost filter, dedup
+      │ filter.go           │
+      └──────────┬──────────┘
+                 ▼
+      ┌─────────────────────┐
+      │ analyze/subagent.go │  → cost tree, overhead %
+      └──────────┬──────────┘
                 ▼
      ┌─────────────────────┐
      │ analyze/recommend.go│  → waste → actionable text
@@ -56,7 +65,9 @@
 ### `analyze/` — Waste detection
 
 - `baseline.go`: Groups events by project+harness. Computes µ, σ for costs, percentiles (P10, P50, P90) for ratios and cache rates.
-- `waste.go`: 5 heuristics using statistical thresholds. Returns `[]WasteSignal`.
+- `waste.go`: 5 heuristics using statistical thresholds. Returns `[]WasteSignal`. Accepts `SignalToggles` for per-signal on/off gating.
+- `trend.go`: Groups events by week, compares first vs last week for cost, sessions, and output/input ratio direction.
+- `signal_filter.go`: `FilterByMinCost` and `Deduplicate` post-processing steps.
 - `subagent.go`: Builds parent-child cost tree from `ParentSessionID` links. Computes overhead percentage.
 - `recommend.go`: Maps `WasteSignal` → human-readable `Recommendation` with savings estimates.
 
@@ -67,7 +78,7 @@
 
 ### `cmd/` — CLI
 
-- `root.go`: Flag parsing (`--harness`, `--project`, `--json`, `--days`, `--verbose`), dispatch pipeline.
+- `root.go`: Flag parsing (`--harness`, `--project`, `--json`, `--days`, `--verbose`, `--min-cost`, `--show-trends`, `--no-*`), config loading, pipeline dispatch.
 
 ## Concurrency model
 

@@ -30,6 +30,20 @@ burnwatch --harness opencode    # filter to one harness
 burnwatch --project reka-travel # filter to specific project
 burnwatch --days 7              # look back 7 days
 burnwatch --verbose             # show all sessions, not just waste
+burnwatch --min-cost 5          # hide signals below $5
+burnwatch --show-trends         # show time-trend direction (↑↓)
+burnwatch --no-churn            # disable session churn detection
+burnwatch --config ./my.toml    # custom config path
+```
+
+### Signal toggles
+
+```bash
+burnwatch --no-cost-outlier       # disable cost outlier detection
+burnwatch --no-low-signal         # disable low output/input ratio detection
+burnwatch --no-subagent-overhead  # disable subagent overhead detection
+burnwatch --no-cache-underutil    # disable cache underutilization detection
+burnwatch --no-churn              # disable session churn detection
 ```
 
 ## Interpreting output
@@ -39,15 +53,34 @@ $ burnwatch
 OpenCode: 42 sessions, 8 subagent sessions
 Today: $2.34 (8 sessions) | This week: $14.21 (37 sessions)
 
+Project lilysbeauty: $24.50 (median $0.88/session)
+
 Waste signals:
-  HIGH ses_abc Bright-Butterfly (lilysbeauty): $1.86 — 3.4x project median ($0.55)
+  HIGH ses_abc Bright-Butterfly (lilysbeauty): $1.86 — 3.4x project baseline (μ = $0.55)
+    Model: claude-sonnet-4-6, 12.3K in / 150.0K out
     → Investigate session for unnecessary loops or re-prompts. Potential savings: $1.31
   MED  ses_def Cool-Ocean (reka-travel): 87% subagent overhead ($0.82 / $0.94)
     → Evaluate whether subagent delegation was necessary vs inline. Potential savings: $0.57
   LOW  Project lilysbeauty: Cache hit rate 12% (P10 = 25%)
     → Consider CLAUDE.md optimization for better caching. Potential savings: $2.48
 
-Summary: 3 waste signals found. Potential savings: $4.36 / day
+Summary: 3 waste signals found. Potential savings: $4.36
+```
+
+With `--show-trends`:
+
+```
+$ burnwatch --show-trends
+...
+Project lilysbeauty: $24.50 (median $0.88/session)
+
+Trends:
+  Cost:    $12.34/wk → $8.76/wk (↓ 29%)
+  Sessions: 18/wk → 14/wk (↓ 22%)
+  Output/input ratio: 0.12 → 0.18 (↑ 50%)
+
+Waste signals:
+...
 ```
 
 Three severity levels:
