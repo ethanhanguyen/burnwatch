@@ -62,6 +62,15 @@ func setupTestEnv(t *testing.T) {
 		t.Skipf("sample DB not found at %s", dbPath)
 	}
 	t.Setenv("BURNWATCH_OPENCODE_DB", dbPath)
+
+	claudePath, err := filepath.Abs(filepath.Join("..", "testdata", "claude_projects"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(claudePath); os.IsNotExist(err) {
+		t.Skipf("claude projects fixture not found at %s", claudePath)
+	}
+	t.Setenv("BURNWATCH_CLAUDE_PROJECTS", claudePath)
 }
 
 func collectTestEvents(t *testing.T) []source.TokenEvent {

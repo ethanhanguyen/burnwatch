@@ -27,7 +27,7 @@ func TestClaudeSource_Events(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	src, err := os.ReadFile(filepath.Join("..", "testdata", "claude_sample.jsonl"))
+	src, err := os.ReadFile(filepath.Join("..", "testdata", "claude_projects", "sample-project", "20834312-69fa-4496-8627-64c1865e9bcf.jsonl"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,7 +35,7 @@ func TestClaudeSource_Events(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	subSrc, err := os.ReadFile(filepath.Join("..", "testdata", "claude_subagents", "agent-aa46fa6e6b4c8fb82.jsonl"))
+	subSrc, err := os.ReadFile(filepath.Join("..", "testdata", "claude_projects", "sample-project", "20834312-69fa-4496-8627-64c1865e9bcf", "subagents", "agent-aa46fa6e6b4c8fb82.jsonl"))
 	if err != nil {
 		t.Fatal(err)
 	}
