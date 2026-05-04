@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -21,12 +22,46 @@ var pricing = []struct {
 	key string
 	p   priceEntry
 }{
-	{"claude-sonnet-4-5", priceEntry{3.00, 15.00, 0.30, 3.75}},
+	{"claude-opus-4-7", priceEntry{15.00, 75.00, 1.50, 18.75}},
+	{"claude-opus-4-6", priceEntry{15.00, 75.00, 1.50, 18.75}},
 	{"claude-opus-4-5", priceEntry{15.00, 75.00, 1.50, 18.75}},
+	{"claude-sonnet-4-6", priceEntry{3.00, 15.00, 0.30, 3.75}},
+	{"claude-sonnet-4-5", priceEntry{3.00, 15.00, 0.30, 3.75}},
 	{"claude-haiku-4-5", priceEntry{0.80, 4.00, 0.08, 1.00}},
+	{"claude-3-5-haiku", priceEntry{0.80, 4.00, 0.08, 1.00}},
+	{"gemini-3.1-pro", priceEntry{1.25, 5.00, 0, 0}},
 	{"gemini-3-pro", priceEntry{1.25, 5.00, 0, 0}},
 	{"gemini-2.5-pro", priceEntry{1.25, 5.00, 0, 0}},
 	{"gemini-2.5-flash", priceEntry{0.15, 0.60, 0, 0}},
+	{"gpt-5.4-pro", priceEntry{15.00, 75.00, 0, 0}},
+	{"gpt-5.4-nano", priceEntry{0.15, 0.60, 0, 0}},
+	{"gpt-5.4", priceEntry{2.50, 10.00, 0, 0}},
+	{"gpt-5-nano", priceEntry{0.15, 0.60, 0, 0}},
+	{"deepseek-v4-pro", priceEntry{2.50, 8.00, 0, 0}},
+	{"deepseek-v4-flash", priceEntry{0.27, 1.10, 0, 0}},
+	{"grok-4.20-multi-agent", priceEntry{3.00, 15.00, 0, 0}},
+	{"grok-4.20-reasoning", priceEntry{8.00, 20.00, 0, 0}},
+	{"grok-4.20", priceEntry{2.00, 8.00, 0, 0}},
+	{"kimi-k2.6", priceEntry{0.40, 2.00, 0, 0}},
+	{"kimi-k2.5", priceEntry{0.40, 2.00, 0, 0}},
+	{"gemma-4-31b", priceEntry{0.15, 0.60, 0, 0}},
+	{"gemma-4-26b", priceEntry{0.10, 0.40, 0, 0}},
+	{"qwen3.6-plus", priceEntry{0.80, 3.20, 0, 0}},
+	{"qwen3.6", priceEntry{0.40, 0.80, 0, 0}},
+	{"minimax-m2.7", priceEntry{0.30, 1.20, 0, 0}},
+	{"claude-opus", priceEntry{15.00, 75.00, 1.50, 18.75}},
+	{"claude-sonnet", priceEntry{3.00, 15.00, 0.30, 3.75}},
+	{"claude-haiku", priceEntry{0.80, 4.00, 0.08, 1.00}},
+	{"gemini-pro", priceEntry{1.25, 5.00, 0, 0}},
+	{"gemini-flash", priceEntry{0.15, 0.60, 0, 0}},
+	{"deepseek", priceEntry{1.25, 5.00, 0, 0}},
+	{"gpt", priceEntry{2.50, 10.00, 0, 0}},
+	{"grok", priceEntry{2.00, 8.00, 0, 0}},
+	{"kimi", priceEntry{0.40, 2.00, 0, 0}},
+	{"gemma", priceEntry{0.15, 0.60, 0, 0}},
+	{"qwen", priceEntry{0.40, 0.80, 0, 0}},
+	{"minimax", priceEntry{0.30, 1.20, 0, 0}},
+	{"gemini", priceEntry{1.25, 5.00, 0, 0}},
 }
 
 var fetchedPricing []PricingEntry
@@ -100,6 +135,8 @@ func CostForModel(model string, inputTokens, outputTokens, cacheRead, cacheWrite
 }
 
 func lookupPrice(modelLower string) (priceEntry, bool, bool) {
+	normalized := normalizeModelForLookup(modelLower)
+
 	bestMatch := ""
 	bestLen := 0
 	for _, e := range fetchedPricing {
@@ -122,10 +159,23 @@ func lookupPrice(modelLower string) (priceEntry, bool, bool) {
 	}
 
 	for _, entry := range pricing {
-		if strings.Contains(modelLower, entry.key) {
+		if strings.Contains(normalized, entry.key) {
 			return entry.p, false, false
 		}
 	}
 
 	return priceEntry{}, false, true
+}
+
+func normalizeModelForLookup(model string) string {
+	s := strings.ToLower(model)
+	if idx := strings.LastIndex(s, "/"); idx >= 0 {
+		s = s[idx+1:]
+	}
+	if len(s) > 9 && s[len(s)-9] == '-' {
+		if _, err := strconv.Atoi(s[len(s)-8:]); err == nil {
+			s = s[:len(s)-9]
+		}
+	}
+	return s
 }

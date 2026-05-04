@@ -86,6 +86,10 @@ func Defaults() Config {
 			InputOverconsumption: true,
 			OutputExplosion:      true,
 			TokenEfficiency:      true,
+			ToolLoop:             true,
+			FileReread:           true,
+			SubagentOverlap:      true,
+			SessionRestart:       true,
 		},
 		Filters: Filters{
 			MinCost:     0,
@@ -230,11 +234,11 @@ input_overconsumption = true
 output_explosion = true
 token_efficiency = true
 
-# v3 behavioral signals (default off — opt in)
-tool_loop = false
-file_reread = false
-subagent_overlap = false
-session_restart = false
+# v3 behavioral signals (default on)
+tool_loop = true
+file_reread = true
+subagent_overlap = true
+session_restart = true
 
 [filters]
 # Exclude sessions costing less than this (USD). 0 = include all.

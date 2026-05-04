@@ -1,18 +1,24 @@
 Claude Code: 1 sessions, 1 subagent sessions | OpenCode: 7 sessions, 3 subagent sessions
 Today: $0.00 (0 sessions) | This week: $0.00 (0 sessions)
 
+Project project-a: $2.00 (median $0.39/session)
+Project project-b: $1.86 (median $0.23/session)
 Project sample/project: $1.25 (median $1.25/session)
-Project project-a: $0.00 (median $0.00/session)
-Project project-b: $0.00 (median $0.00/session)
-Project project-c: $0.00 (median $0.00/session)
+Project project-c: $0.92 (median $0.92/session)
 
 Waste signals:
-  MEDIUM ses_2160cb748ffeT2ys (project-a): $?0.00 — output/input ratio 0.0107 (P10 = 0.0519)
-    → Consider whether this task needed full agent interaction. Potential savings: $0.00
+  MEDIUM ses_2163602ddffeCM8K (project-a): $0.65 — Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $0.45
+  MEDIUM ses_21644a56effeG9LM (project-a): $1.12 — Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $0.79
+  MEDIUM ses_21a27e8c8ffehXZT (project-b): $1.15 — Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6
+    → Consolidate fragmented sessions — fewer, longer sessions cache better. Potential savings: $0.80
+  MEDIUM ses_2160cb748ffeT2ys (project-a): $0.09 — output/input ratio 0.0107 (P10 = 0.0519)
+    → Consider whether this task needed full agent interaction. Potential savings: $0.05
   LOW 20834312-69fa-4496-8 (sample/project): $1.25 — cache hit rate 35.3% (P10 = 100.0%)
     → Consider CLAUDE.md / skills optimization for better caching. Potential savings: $0.25
-  LOW ses_2160cb748ffeT2ys (project-a): $0.00 — TER = 0.29 (P10 = 0.56)
+  LOW ses_2160cb748ffeT2ys (project-a): $0.09 — TER = 0.29 (P10 = 0.56)
     Model: deepseek/deepseek-v4-pro, 35.2K in / 376 out
-    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $0.00
+    → Low useful output per token consumed. Consider consolidating or using a cheaper model. Potential savings: $0.02
 
-Summary: 3 waste signals found. Potential savings: $0.25
+Summary: 6 waste signals found. Potential savings: $2.34

@@ -982,10 +982,7 @@ func renderFooter(version, generated string) string {
 	if !ts.IsZero() {
 		tsStr = ts.Format("2006-01-02")
 	}
-	ver := version
-	if strings.HasPrefix(ver, "v") {
-		ver = ver[1:]
-	}
+	ver := strings.TrimPrefix(version, "v")
 	var b strings.Builder
 	b.WriteString(`<footer>
 `)

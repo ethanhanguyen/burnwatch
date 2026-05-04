@@ -3,12 +3,26 @@
     "opencode_sessions": 7,
     "opencode_subagent_sessions": 3,
     "claude_sessions": 2,
-    "today_cost": 1.2468909000000001,
+    "today_cost": 6.028477399999999,
     "today_sessions": 11,
-    "week_cost": 1.2468909000000001,
+    "week_cost": 6.028477399999999,
     "week_sessions": 11
   },
   "projects": [
+    {
+      "name": "project-a",
+      "harness": "opencode",
+      "session_count": 4,
+      "total_cost": 2.0009985,
+      "median_cost": 0.39403275000000004
+    },
+    {
+      "name": "project-b",
+      "harness": "opencode",
+      "session_count": 5,
+      "total_cost": 1.8631755,
+      "median_cost": 0.22874500000000003
+    },
     {
       "name": "sample/project",
       "harness": "claude-code",
@@ -17,28 +31,44 @@
       "median_cost": 1.2468909000000001
     },
     {
-      "name": "project-a",
-      "harness": "opencode",
-      "session_count": 4,
-      "total_cost": 0,
-      "median_cost": 0
-    },
-    {
-      "name": "project-b",
-      "harness": "opencode",
-      "session_count": 5,
-      "total_cost": 0,
-      "median_cost": 0
-    },
-    {
       "name": "project-c",
       "harness": "opencode",
       "session_count": 1,
-      "total_cost": 0,
-      "median_cost": 0
+      "total_cost": 0.9174124999999997,
+      "median_cost": 0.9174124999999997
     }
   ],
   "waste_signals": [
+    {
+      "session_id": "ses_2163602ddffeCM8KK2Jy77DleX",
+      "project": "project-a",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4",
+      "metric": 3.426931951943193,
+      "threshold": 3,
+      "session_cost": 0.6497440000000001
+    },
+    {
+      "session_id": "ses_21644a56effeG9LMru0WbS4dPQ",
+      "project": "project-a",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-a had 4 sessions on 2026-05-01, fragmentation index = 3.4",
+      "metric": 3.426931951943193,
+      "threshold": 3,
+      "session_cost": 1.1220400000000001
+    },
+    {
+      "session_id": "ses_21a27e8c8ffehXZT2LL6U1Uo4J",
+      "project": "project-b",
+      "severity": "medium",
+      "reason": "fragmentation_index",
+      "detail": "Project project-b had 4 sessions on 2026-04-30, fragmentation index = 3.6",
+      "metric": 3.564804525939533,
+      "threshold": 3,
+      "session_cost": 1.1478760000000001
+    },
     {
       "session_id": "ses_2160cb748ffeT2ysB2AwrOJ8VN",
       "project": "project-a",
@@ -47,7 +77,7 @@
       "detail": "Output/input ratio 0.0107 below global P10 (0.0519, median=0.1238)",
       "metric": 0.010695795642032201,
       "threshold": 0.05192125936239189,
-      "cost_unknown": true
+      "session_cost": 0.09089299999999999
     },
     {
       "session_id": "20834312-69fa-4496-8627-64c1865e9bcf",
@@ -66,7 +96,8 @@
       "reason": "low_token_efficiency",
       "detail": "TER = 0.29 (P10 = 0.56)",
       "metric": 0.28742106161461,
-      "threshold": 0.5619022365268913
+      "threshold": 0.5619022365268913,
+      "session_cost": 0.09089299999999999
     }
   ],
   "subagent_trees": [
@@ -85,71 +116,89 @@
     },
     {
       "session_id": "ses_2160cb748ffeT2ysB2AwrOJ8VN",
-      "total_cost": 0,
+      "total_cost": 0.09089299999999999,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_21610e477ffeUfpaHqZg55fCaZ",
-      "total_cost": 0,
+      "total_cost": 0.1383215,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_2163602ddffeCM8KK2Jy77DleX",
-      "total_cost": 0,
+      "total_cost": 0.6497440000000001,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_21644a56effeG9LMru0WbS4dPQ",
-      "total_cost": 0,
+      "total_cost": 1.1220400000000001,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_21680ec1fffe70T0fGz9NCcryC",
-      "total_cost": 0,
+      "total_cost": 0.9174124999999997,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_219b8d87fffeqawBevAc6m1k6q",
-      "total_cost": 0,
+      "total_cost": 0.0909035,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_21a27e8c8ffehXZT2LL6U1Uo4J",
-      "total_cost": 0,
+      "total_cost": 1.1478760000000001,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_21a7b82c3ffeV787gAwsr4mM1w",
-      "total_cost": 0,
+      "total_cost": 0.22874500000000003,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_21a7ba13dffeTlqH5XX8DVmMRG",
-      "total_cost": 0,
+      "total_cost": 0.2868695,
       "subagent_cost": 0,
       "overhead_pct": 0
     },
     {
       "session_id": "ses_21a7c9142ffezkLHtS4eBMmO43",
-      "total_cost": 0,
+      "total_cost": 0.1087815,
       "subagent_cost": 0,
       "overhead_pct": 0
     }
   ],
   "recommendations": [
     {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "3 sessions in one project on the same day with high fragmentation (index = 3.4).",
+      "savings_est": 0.4548208
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "3 sessions in one project on the same day with high fragmentation (index = 3.4).",
+      "savings_est": 0.785428
+    },
+    {
+      "signal": "fragmentation_index",
+      "action": "Consolidate fragmented sessions — fewer, longer sessions cache better",
+      "detail": "4 sessions in one project on the same day with high fragmentation (index = 3.6).",
+      "savings_est": 0.8035132
+    },
+    {
       "signal": "low_signal",
       "action": "Consider whether this task needed full agent interaction",
       "detail": "Output/input ratio 0.0107 is below P10 (0.0519). The agent consumed context without producing meaningful output.",
-      "savings_est": 0
+      "savings_est": 0.045446499999999994
     },
     {
       "signal": "cache_underutilized",
@@ -161,9 +210,9 @@
       "signal": "low_token_efficiency",
       "action": "Low useful output per token consumed. Consider consolidating or using a cheaper model",
       "detail": "TER = 0.29 is below P10 (0.56). Session produced very little output relative to context consumed.",
-      "savings_est": 0
+      "savings_est": 0.0181786
     }
   ],
-  "potential_savings": 0.24937818000000003,
-  "unique_savings": 0.24937818000000003
+  "potential_savings": 2.3567652800000003,
+  "unique_savings": 2.33858668
 }

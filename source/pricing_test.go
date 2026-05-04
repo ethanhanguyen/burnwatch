@@ -158,7 +158,7 @@ func TestCostForModel_EmptyFetchedPricing(t *testing.T) {
 	fetchedPricing = nil
 	pricingInitialized = true
 
-	_, _, unknown := CostForModel("deepseek-v4-pro", 1000, 0, 0, 0)
+	_, _, unknown := CostForModel("nonexistent-model-fallback-xyz", 1000, 0, 0, 0)
 	if !unknown {
 		t.Error("expected costUnknown for model not in embedded pricing")
 	}
@@ -236,6 +236,35 @@ func TestRefreshPricing_NoNetwork(t *testing.T) {
 	}
 	if !pricingInitialized {
 		t.Error("RefreshPricing should set pricingInitialized even on error")
+	}
+}
+
+func TestNormalizeModelForLookup(t *testing.T) {
+	tests := []struct {
+		in   string
+		want string
+	}{
+		{"claude-sonnet-4-5-20250929", "claude-sonnet-4-5"},
+		{"claude-sonnet-4-5", "claude-sonnet-4-5"},
+		{"openai/gpt-5.4", "gpt-5.4"},
+		{"vercel/deepseek/deepseek-v4-pro", "deepseek-v4-pro"},
+		{"google/gemini-3-pro-preview", "gemini-3-pro-preview"},
+		{"naked-model", "naked-model"},
+		{"x-42", "x-42"},
+		{"claude-3-5-haiku-20241022", "claude-3-5-haiku"},
+		{"claude-opus-4-5-20250305", "claude-opus-4-5"},
+		{"claude-haiku-4-5-20251001", "claude-haiku-4-5"},
+		{"model-with-dash-suffix-123", "model-with-dash-suffix-123"},
+		{"deepseek-v4-pro-a1b2c3d4", "deepseek-v4-pro-a1b2c3d4"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.in, func(t *testing.T) {
+			got := normalizeModelForLookup(tt.in)
+			if got != tt.want {
+				t.Errorf("normalizeModelForLookup(%q) = %q, want %q", tt.in, got, tt.want)
+			}
+		})
 	}
 }
 

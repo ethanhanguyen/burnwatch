@@ -39,11 +39,15 @@ burnwatch --config ./my.toml    # custom config path
 ### Signal toggles
 
 ```bash
-burnwatch --no-cost-outlier       # disable cost outlier detection
-burnwatch --no-low-signal         # disable low output/input ratio detection
-burnwatch --no-subagent-overhead  # disable subagent overhead detection
-burnwatch --no-cache-underutil    # disable cache underutilization detection
-burnwatch --no-churn              # disable session churn detection
+burnwatch --no-cost-outlier          # disable cost outlier detection
+burnwatch --no-low-signal            # disable low output/input ratio detection
+burnwatch --no-subagent-overhead     # disable subagent overhead detection
+burnwatch --no-cache-underutil       # disable cache underutilization detection
+burnwatch --no-churn                 # disable session churn detection
+burnwatch --no-tool-loop             # disable tool call loop detection
+burnwatch --no-file-reread           # disable file re-read detection
+burnwatch --no-subagent-overlap      # disable subagent overlap detection
+burnwatch --no-session-restart       # disable session restart detection
 ```
 
 ## Interpreting output
@@ -84,9 +88,9 @@ Waste signals:
 ```
 
 Three severity levels:
-- **HIGH**: Cost outlier — session costs >2σ above project median. Check for agent loops, unnecessary re-prompts, or wrong model choice.
-- **MEDIUM**: Low signal or subagent overhead. The agent is spending time/money but not producing output, or delegating too much.
-- **LOW**: Cache underutilization or session churn. Optimization opportunities.
+- **HIGH**: Cost outlier, input overconsumption, or tool call loops. Session costs or input tokens significantly above project baseline. Check for agent loops, unnecessary re-prompts, or wrong model choice.
+- **MEDIUM**: Low signal, subagent overhead, output explosion, file re-reads, subagent overlap, or session restarts. The agent is spending resources without producing output, or duplicating work across sessions.
+- **LOW**: Cache underutilization, session churn, or token efficiency issues. Optimization opportunities.
 
 ## Piping to jq
 
@@ -98,11 +102,7 @@ burnwatch --json | jq '.projects[] | {name, total_cost}'
 
 ## Updating prices
 
-Burnwatch embeds a pricing table for Anthropic and Google/Gemini models. Update it when prices change:
-
-```bash
-burnwatch update-prices --help   # (planned for v1.1)
-```
+Burnwatch embeds a pricing table covering Anthropic, Google/Gemini, OpenAI/GPT, DeepSeek, xAI/Grok, MoonshotAI/Kimi, Qwen, and other providers. Instance-specific prices are fetched from OpenRouter on startup. Use `--no-fetch-pricing` to skip the network call and rely on embedded pricing alone.
 
 ## Privacy
 

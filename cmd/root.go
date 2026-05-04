@@ -532,9 +532,78 @@ func handleReport(extraArgs []string, flags struct {
 
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
 	trees := analyze.BuildSubagentTree(events)
-	cfg := config.Defaults()
+	cfg, err := config.Load(flags.ConfigPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
+		os.Exit(1)
+	}
+	if flags.NoCostOutlier {
+		cfg.Signals.CostOutlier = false
+	}
+	if flags.NoLowSignal {
+		cfg.Signals.LowSignal = false
+	}
+	if flags.NoSubagentOverhead {
+		cfg.Signals.SubagentOverhead = false
+	}
+	if flags.NoCacheUnderutil {
+		cfg.Signals.CacheUnderutilized = false
+	}
+	if flags.NoFragmentationIndex {
+		cfg.Signals.FragmentationIndex = false
+	}
+	if flags.NoInputOverconsumption {
+		cfg.Signals.InputOverconsumption = false
+	}
+	if flags.NoOutputExplosion {
+		cfg.Signals.OutputExplosion = false
+	}
+	if flags.NoTokenEfficiency {
+		cfg.Signals.TokenEfficiency = false
+	}
+	if flags.NoToolLoop {
+		cfg.Signals.ToolLoop = false
+	}
+	if flags.NoFileReread {
+		cfg.Signals.FileReread = false
+	}
+	if flags.NoSubagentOverlap {
+		cfg.Signals.SubagentOverlap = false
+	}
+	if flags.NoSessionRestart {
+		cfg.Signals.SessionRestart = false
+	}
+	if flags.ShowTrends {
+		cfg.Output.ShowTrends = true
+	}
+	if flags.InputOverconsumptionSigma > 0 {
+		cfg.Thresholds.InputOverconsumptionSigma = flags.InputOverconsumptionSigma
+	}
+	if flags.OutputExplosionSigma > 0 {
+		cfg.Thresholds.OutputExplosionSigma = flags.OutputExplosionSigma
+	}
+	if flags.TokenEfficiencyPercentile > 0 {
+		cfg.Thresholds.TokenEfficiencyPercentile = flags.TokenEfficiencyPercentile
+	}
+	if flags.FragmentationThreshold > 0 {
+		cfg.Thresholds.FragmentationIndexThreshold = flags.FragmentationThreshold
+	}
+	if flags.SubagentOverheadPct > 0 {
+		cfg.Thresholds.SubagentOverheadPct = flags.SubagentOverheadPct
+	}
 	signals := analyze.DetectWaste(events, baselines, trees, cfg)
 	recs := analyze.GenerateRecommendations(signals, baselines)
+
+	minCost := cfg.Filters.MinCost
+	if flags.MinCost > 0 {
+		minCost = flags.MinCost
+	}
+	if minCost > 0 {
+		signals = analyze.FilterByMinCost(signals, minCost)
+	}
+	if cfg.Filters.Deduplicate {
+		signals = analyze.Deduplicate(signals)
+	}
 
 	if rf.reportJSON {
 		jsonData, err := report.FormatReportJSON(events, baselines, signals, trees, version, time.Now())
