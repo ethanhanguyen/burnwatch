@@ -2,13 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 2/4 complete (v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 2/5 complete (v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
 v2.5  ████████████████████████████████████████ 3/3 merged
-v3    ████████████████████░░░░░░░░░░░░░░░░░░░░ 2/4
+v3    ██████████████████░░░░░░░░░░░░░░░░░░░░ 2/5
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -34,41 +34,11 @@ N1   ██████████████████████ Data Mod
 N2   ██████████████████████ Loop + Re-read (H10,H11)
 N3   ····················· Subagent Overlap + Restart (H12,H13)
 N4   ····················· Polish + Calibration
+N5   ····················· Session Drill-Down (--explain)
 
 PR18 ····················· Unsupervised Anomaly Detection (DEFERRED)
 PR19 ····················· LLM Verification (DEFERRED)
 PR20 ····················· ML Pipeline (DEFERRED)
-```
-v1    ████████████████████████████████████████ 10/10 merged
-v2    ████████████████████████████████████████ 4/4 merged
-v2.5  ████████████████████████████████████████ 2/2 (critical fixes)
-v3    ██████████████████░░░░░░░░░░░░░░░░░░░░░░ 2/4 (features)
-
-PR1  ██████████████████████ Foundation
-PR2  ██████████████████████ OpenCode Source
-PR3  ██████████████████████ Claude Code Source
-PR4  ██████████████████████ Analysis Engine
-PR5  ██████████████████████ CLI + Output + Wiring
-PR6  ██████████████████████ Docs + CI + Release
-PR7  ██████████████████████ Config File
-PR8  ██████████████████████ Phase A — Display Fixes
-PR9  ██████████████████████ Phase B — Noise Reduction
-PR10 ██████████████████████ Phase C — Deeper Insights
-
-PR11 ██████████████████████ Dynamic Pricing (OpenRouter)
-PR12 ██████████████████████ Token Baselines
-PR13 ██████████████████████ Token-Based Heuristics
-PR14 ██████████████████████ Config-Wired Thresholds
-
-PR15 ██████████████████████ Fix Pricing + Uncosted
-PR16 ██████████████████████ Output Quality Fixes
-
-PR17 ██████████████████████ Calibration Mode
-PR18 ····················· Unsupervised Anomaly Detection
-PR19 ····················· LLM Verification
-PR20 ····················· ML Pipeline (experimental)
-```
-
 ## PR Status
 
 | PR | Branch | Status | Started | Merged | Notes |
@@ -97,20 +67,29 @@ PR20 ····················· ML Pipeline (experimental)
 | N2 | `n2-loop-reread` | **merged** | 2026-05-03 | 2026-05-03 | H10, H11 — loop + file re-read detection |
 | N3 | `n3-overlap-restart` | **planned** | — | — | H12, H13 — subagent overlap + session restart |
 | N4 | `n4-polish` | **planned** | — | — | Performance, calibration, path normalization |
+| N5 | `n5-explain` | **planned** | — | — | --explain <id>: annotated session timeline |
 
 ## Blockers
 
-**PR15 (critical):** Embedded pricing table uses $/MTok values but treated as $/1K — all costs inflated 1000x. $963K reported should be ~$963. All analysis and downstream PRs blocked until fixed.
+None.
 
 ## Dependency graph
 
 ```
-v3 (Event-Level Waste Detection — 4 PRs)
+v3 (Event-Level Waste Detection — 5 PRs)
   N1 ─── N2
   │       │
-  │       └── N4
+  │       ├── N4
+  │       │
+  │       └── N5 (--explain)
   │
-  └────── N3 ─── N4
+  └────── N3 ─── N4 ─── N5
+
+  N5 depends on N2 (needs H10/H11 signals for annotation).
+  N5 is parallel-safe with N3 and N4 (reads the same data model, adds new output formatting).
+
+UX (Phase II-III)
+  N5 ─── Report (HTML) ─── Watch (TUI live monitoring)
 
 Phase 2 (Deferred — post v3)
   N4 ─── PR19 (LLM verification)
