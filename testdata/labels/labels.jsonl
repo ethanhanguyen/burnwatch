@@ -64,3 +64,11 @@
 {"session_id":"ses_reread_mixed_w","verdict":"waste","reason":"config/base.json re-read 4 times without cache","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
 {"session_id":"ses_reread_below_threshold","verdict":"not_waste","reason":"file read only twice, below threshold","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
 {"session_id":"ses_reread_cached","verdict":"not_waste","reason":"re-reads with cache hits between","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
+{"session_id":"ses_overlap_parent","verdict":"waste","reason":"subagent re-read 2 of 4 parent files","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
+{"session_id":"ses_overlap_sub","verdict":"waste","reason":"re-did parent work (overlap)","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
+{"session_id":"ses_overlap_normal_01","verdict":"not_waste","reason":"normal session, no subagents","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
+{"session_id":"ses_overlap_normal_02","verdict":"not_waste","reason":"normal session, no subagents","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
+{"session_id":"ses_restart_a","verdict":"not_waste","reason":"first session, nothing to compare","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
+{"session_id":"ses_restart_b","verdict":"waste","reason":"80% initial file overlap with prior session","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
+{"session_id":"ses_restart_continued","verdict":"not_waste","reason":"continued from prior session (1 shared file)","source":"scenario","created_at":"2026-05-03T00:00:00Z"}
+{"session_id":"ses_restart_standalone","verdict":"not_waste","reason":"different project/context, fresh start","source":"scenario","created_at":"2026-05-03T00:00:00Z"}

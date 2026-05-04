@@ -89,6 +89,14 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 
 - Behavioral heuristics (H10+) operate on raw `[]source.TokenEvent`, not `sessionAgg`. They need `EventIndex` for ordering and `ToolCalls`/`FileOps` for analysis. Scenario test fixtures MUST have `EventIndex` set correctly — the loader (`output/scenario_test.go:assignEventIndex`) sets it per-session in load order. Adding new signal reasons requires updating: `signalRank` in `signal_filter.go`, `writeSignalBlock` in `output/text.go`, and `recommendForSignal` in `recommend.go`. Default-off signals still need their config thresholds validated and test-covered. `analyze/loop.go:11`, `analyze/reread.go:10`
 
+- `detectSubagentOverlap` uses Jaccard index to compare parent and subagent read paths. Threshold check uses `>=` not `>` because scenario data may produce exact-threshold matches (e.g., 4 parent files, 2 subagent files = exactly 50%). Using `>` causes false negatives at the threshold boundary. `analyze/overlap.go:55`
+
+- `detectSessionRestarts` requires `len(shared) >= 2` to avoid false positives on single-file continuations. A session that reads only 1 file that was also in the prior session's initial reads is not a restart — it's a continuation. Without this guard, any single-file overlap produces 100% overlap with `min()` denominator. `analyze/restart.go:60`
+
+- Scenario tests for behavioral heuristics need `cfg.Signals.<signal> = true` and matching `cfg.Thresholds.<threshold>` set explicitly. Using `allCfg` won't work because v3 signals default to `false`. The `v3Cfg()` pattern (defining a test-local helper) is the convention. `output/scenario_test.go:472-478,600-607`
+
+- H12 need `BuildSubagentTree` passed as `trees` parameter to `DetectWaste`. Scenario tests for H12 must call `analyze.BuildSubagentTree(events)` and pass the result — passing `nil` produces no subagent overlap signals. `analyze/waste.go:187-189`
+
 ## Rules
 
 These govern how this file is maintained. Violating them makes the file less useful over time.

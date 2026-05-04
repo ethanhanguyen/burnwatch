@@ -575,3 +575,76 @@ func TestScenario_FileReReadMixed(t *testing.T) {
 		t.Errorf("ses_reread_cached (cached reads) should not be flagged")
 	}
 }
+
+func v3FullCfg() config.Config {
+	cfg := config.Config{Signals: config.Signals{
+		ToolLoop:        true,
+		FileReread:      true,
+		SubagentOverlap: true,
+		SessionRestart:  true,
+	}}
+	useDefaults(&cfg)
+	return cfg
+}
+
+func TestScenario_SubagentOverlap(t *testing.T) {
+	events := loadScenarioJSONL(t, "subagent_overlap.jsonl")
+	assignEventIndex(events)
+	trees := analyze.BuildSubagentTree(events)
+	cfg := v3FullCfg()
+	cfg.Thresholds.SubagentOverlapPct = 50.0
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	signals := analyze.DetectWaste(events, baselines, trees, cfg)
+
+	sig := findSignalByID(signals, "ses_overlap_parent")
+	if sig == nil {
+		var reasons []string
+		for _, s := range signals {
+			reasons = append(reasons, s.Reason)
+		}
+		t.Fatalf("expected ses_overlap_parent to be flagged as subagent_overlap, got signals: %v", reasons)
+	}
+	if sig.Reason != "subagent_overlap" {
+		t.Errorf("expected reason subagent_overlap, got %s", sig.Reason)
+	}
+	if sig.Severity != "high" {
+		t.Errorf("expected severity high, got %s", sig.Severity)
+	}
+
+	for _, id := range []string{"ses_overlap_normal_01", "ses_overlap_normal_02"} {
+		if s := findSignalByID(signals, id); s != nil && s.Reason == "subagent_overlap" {
+			t.Errorf("normal session %s was flagged as subagent_overlap", id)
+		}
+	}
+}
+
+func TestScenario_SessionRestart(t *testing.T) {
+	events := loadScenarioJSONL(t, "session_restart.jsonl")
+	assignEventIndex(events)
+	cfg := v3FullCfg()
+	cfg.Thresholds.SessionRestartPct = 80.0
+	cfg.Thresholds.SessionRestartInitialOps = 10
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	signals := analyze.DetectWaste(events, baselines, nil, cfg)
+
+	sig := findSignalByID(signals, "ses_restart_b")
+	if sig == nil {
+		var reasons []string
+		for _, s := range signals {
+			reasons = append(reasons, s.Reason)
+		}
+		t.Fatalf("expected ses_restart_b to be flagged as session_restart, got signals: %v", reasons)
+	}
+	if sig.Reason != "session_restart" {
+		t.Errorf("expected reason session_restart, got %s", sig.Reason)
+	}
+	if sig.Severity != "medium" {
+		t.Errorf("expected severity medium, got %s", sig.Severity)
+	}
+
+	if s := findSignalByID(signals, "ses_restart_continued"); s != nil && s.Reason == "session_restart" {
+		t.Errorf("ses_restart_continued was flagged unexpectedly as session_restart")
+	}
+}

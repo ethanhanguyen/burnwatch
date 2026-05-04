@@ -187,6 +187,12 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 	if cfg.Signals.FileReread {
 		signals = append(signals, detectFileReReads(events, cfg.Thresholds.FileRereadMinCount)...)
 	}
+	if cfg.Signals.SubagentOverlap {
+		signals = append(signals, detectSubagentOverlap(events, trees, cfg.Thresholds.SubagentOverlapPct)...)
+	}
+	if cfg.Signals.SessionRestart {
+		signals = append(signals, detectSessionRestarts(events, cfg.Thresholds.SessionRestartPct, cfg.Thresholds.SessionRestartInitialOps)...)
+	}
 
 	sortSignals(signals)
 

@@ -28,6 +28,9 @@ type Thresholds struct {
 	FragmentationMinCost         float64 `toml:"fragmentation_min_cost"`
 	ToolLoopMaxRepeats           int     `toml:"tool_loop_max_repeats"`
 	FileRereadMinCount           int     `toml:"file_reread_min_count"`
+	SubagentOverlapPct           float64 `toml:"subagent_overlap_pct"`
+	SessionRestartPct            float64 `toml:"session_restart_pct"`
+	SessionRestartInitialOps     int     `toml:"session_restart_initial_ops"`
 }
 
 type Signals struct {
@@ -70,6 +73,9 @@ func Defaults() Config {
 			FragmentationMinCost:         0.50,
 			ToolLoopMaxRepeats:           5,
 			FileRereadMinCount:           3,
+			SubagentOverlapPct:           50.0,
+			SessionRestartPct:            80.0,
+			SessionRestartInitialOps:     10,
 		},
 		Signals: Signals{
 			CostOutlier:          true,
@@ -201,6 +207,18 @@ tool_loop_max_repeats = 5
 # Range: 2–10. Default 3.
 file_reread_min_count = 3
 
+# Subagent overlap: flag subagents whose file ops overlap > N% with parent.
+# Range: 30–100. Default 50.
+subagent_overlap_pct = 50.0
+
+# Session restart: flag sessions whose first-N file reads overlap > N% with prior session.
+# Range: 50–100. Default 80.
+session_restart_pct = 80.0
+
+# Session restart: number of initial file ops to compare.
+# Range: 3–30. Default 10.
+session_restart_initial_ops = 10
+
 [signals]
 # Enable/disable individual waste signals.
 cost_outlier = true
@@ -267,6 +285,15 @@ func Validate(cfg Config) error {
 	}
 	if cfg.Thresholds.FileRereadMinCount < 2 {
 		return fmt.Errorf("file_reread_min_count must be >= 2, got %d", cfg.Thresholds.FileRereadMinCount)
+	}
+	if cfg.Thresholds.SubagentOverlapPct <= 0 || cfg.Thresholds.SubagentOverlapPct > 100 {
+		return fmt.Errorf("subagent_overlap_pct must be in (0, 100], got %f", cfg.Thresholds.SubagentOverlapPct)
+	}
+	if cfg.Thresholds.SessionRestartPct <= 0 || cfg.Thresholds.SessionRestartPct > 100 {
+		return fmt.Errorf("session_restart_pct must be in (0, 100], got %f", cfg.Thresholds.SessionRestartPct)
+	}
+	if cfg.Thresholds.SessionRestartInitialOps < 2 {
+		return fmt.Errorf("session_restart_initial_ops must be >= 2, got %d", cfg.Thresholds.SessionRestartInitialOps)
 	}
 	return nil
 }
