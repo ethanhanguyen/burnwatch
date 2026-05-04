@@ -29,6 +29,16 @@ Token efficiency ratio:
   P10=0.32  P25=0.50  P50=0.50  P75=0.67  P90=0.87  P95=0.93  P99=0.99
   min=0.20  max=1.00
 
+Max consecutive tool repeats per session:
+  n=5 (sessions with tool calls)
+  P10=0  P25=0  P50=0  P75=0  P90=0  P95=0  P99=0
+  min=0  max=0
+
+Max file re-read count per session:
+  n=5 (sessions with file reads)
+  P10=0  P25=0  P50=0  P75=0  P90=0  P95=0  P99=0
+  min=0  max=0
+
 
 Suggested thresholds (for .burnwatch.toml):
   [thresholds]
@@ -37,3 +47,5 @@ Suggested thresholds (for .burnwatch.toml):
   output_explosion_sigma = 1.8  # flags ~20% of sessions as output explosion
   low_signal_percentile = 5.0  # stricter than default P10 — only flags bottom 5% of ratios
   token_efficiency_percentile = 5.0  # flags bottom 5% of token efficiency ratios
+  tool_loop_max_repeats = 5.0  # P95 of consecutive same-tool repeats is 0 — flag sessions exceeding this
+  file_reread_min_count = 3.0  # P95 of file re-read count per session is 0 — flag sessions exceeding this

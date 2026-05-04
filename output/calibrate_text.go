@@ -29,6 +29,26 @@ func FormatCalibrationText(report analyze.CalibrationReport) string {
 			" (sessions with subagents)")
 	}
 
+	if report.ToolLoopMaxRepeats.Count > 0 {
+		writeDistSectionWithNote(&b, "Max consecutive tool repeats per session:", report.ToolLoopMaxRepeats, formatToken, false, false,
+			" (sessions with tool calls)")
+	}
+
+	if report.FileReReadMaxCount.Count > 0 {
+		writeDistSectionWithNote(&b, "Max file re-read count per session:", report.FileReReadMaxCount, formatToken, false, false,
+			" (sessions with file reads)")
+	}
+
+	if report.SubagentOverlapPcts.Count > 0 {
+		writeDistSectionWithNote(&b, "Subagent-parent file overlap (%):", report.SubagentOverlapPcts, formatPercent, false, false,
+			" (subagent-parent pairs)")
+	}
+
+	if report.RestartOverlapPcts.Count > 0 {
+		writeDistSectionWithNote(&b, "Session restart overlap (%):", report.RestartOverlapPcts, formatPercent, false, false,
+			" (consecutive session pairs)")
+	}
+
 	if len(report.Suggestions) > 0 {
 		fmt.Fprintln(&b)
 		fmt.Fprintln(&b, "Suggested thresholds (for .burnwatch.toml):")
