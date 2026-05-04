@@ -2,13 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 2/5 complete (v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 3/5 complete (v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
 v2.5  ████████████████████████████████████████ 3/3 merged
-v3    ██████████████████░░░░░░░░░░░░░░░░░░░░ 2/5
+v3    ███████████████████████████░░░░░░░░░░░░ 3/5
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -32,7 +32,7 @@ PR17 ██████████████████████ Calibrat
 
 N1   ██████████████████████ Data Model Expansion
 N2   ██████████████████████ Loop + Re-read (H10,H11)
-N3   ····················· Subagent Overlap + Restart (H12,H13)
+N3   ██████████████████████ Subagent Overlap + Restart (H12,H13)
 N4   ····················· Polish + Calibration
 N5   ····················· Session Drill-Down (--explain)
 
@@ -65,7 +65,7 @@ PR20 ····················· ML Pipeline (DEFERRED)
 | PR20 | `pr20-ml-pipeline` | **deferred** | — | — | Replaced by behavioral detection |
 | N1 | `n1-data-model-expansion` | **merged** | 2026-05-03 | 2026-05-03 | ToolCall + FileOp in TokenEvent |
 | N2 | `n2-loop-reread` | **merged** | 2026-05-03 | 2026-05-03 | H10, H11 — loop + file re-read detection |
-| N3 | `n3-overlap-restart` | **planned** | — | — | H12, H13 — subagent overlap + session restart |
+| N3 | `n3-overlap-restart` | **merged** | 2026-05-03 | 2026-05-03 | H12, H13 — subagent overlap + session restart |
 | N4 | `n4-polish` | **planned** | — | — | Performance, calibration, path normalization |
 | N5 | `n5-explain` | **planned** | — | — | --explain <id>: annotated session timeline |
 
