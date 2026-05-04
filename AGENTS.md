@@ -20,7 +20,7 @@ Burnwatch is a single-binary Go tool that reads local session data from AI agent
 ### PR workflow
 
 When executing a PR prompt from `docs/plans/`:
-- Use `docs/plans/PR-template.md` as the canonical workflow
+- Use `docs/PR-template.md` as the canonical workflow
 - Follow the exit criteria checklist exactly
 
 ---
