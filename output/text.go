@@ -346,6 +346,20 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 		}
 	case "fragmentation_index":
 		fmt.Fprintf(b, " — %s\n", s.Detail)
+	case "tool_call_loop":
+		fmt.Fprintf(b, " — tool call loop detected\n")
+		if s.Model != "" {
+			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
+				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
+		}
+		fmt.Fprintf(b, "    → %s\n", s.Detail)
+	case "file_reread":
+		fmt.Fprintf(b, " — file re-read without cache\n")
+		if s.Model != "" {
+			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
+				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
+		}
+		fmt.Fprintf(b, "    → %s\n", s.Detail)
 	default:
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 	}

@@ -471,6 +471,76 @@ func TestLoad_EmptyStringResolves(t *testing.T) {
 	}
 }
 
+func TestValidate_ToolLoopMaxRepeats(t *testing.T) {
+	cfg := Defaults()
+	cfg.Thresholds.ToolLoopMaxRepeats = 1
+	if err := Validate(cfg); err == nil {
+		t.Error("expected error for tool_loop_max_repeats < 2")
+	}
+	cfg.Thresholds.ToolLoopMaxRepeats = 2
+	if err := Validate(cfg); err != nil {
+		t.Errorf("expected no error, got: %v", err)
+	}
+}
+
+func TestValidate_FileRereadMinCount(t *testing.T) {
+	cfg := Defaults()
+	cfg.Thresholds.FileRereadMinCount = 1
+	if err := Validate(cfg); err == nil {
+		t.Error("expected error for file_reread_min_count < 2")
+	}
+	cfg.Thresholds.FileRereadMinCount = 2
+	if err := Validate(cfg); err != nil {
+		t.Errorf("expected no error, got: %v", err)
+	}
+}
+
+func TestValidate_DefaultBehavioralThresholds(t *testing.T) {
+	cfg := Defaults()
+	if cfg.Thresholds.ToolLoopMaxRepeats != 5 {
+		t.Errorf("expected ToolLoopMaxRepeats=5, got %d", cfg.Thresholds.ToolLoopMaxRepeats)
+	}
+	if cfg.Thresholds.FileRereadMinCount != 3 {
+		t.Errorf("expected FileRereadMinCount=3, got %d", cfg.Thresholds.FileRereadMinCount)
+	}
+	if cfg.Signals.ToolLoop {
+		t.Error("expected ToolLoop default false")
+	}
+	if cfg.Signals.FileReread {
+		t.Error("expected FileReread default false")
+	}
+}
+
+func TestLoad_BehavioralThresholds(t *testing.T) {
+	path := writeTempFile(t, `
+[thresholds]
+tool_loop_max_repeats = 7
+file_reread_min_count = 5
+
+[signals]
+tool_loop = true
+file_reread = true
+`)
+	defer func() { _ = os.Remove(path) }()
+
+	cfg, err := Load(path)
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+	if cfg.Thresholds.ToolLoopMaxRepeats != 7 {
+		t.Errorf("expected ToolLoopMaxRepeats=7, got %d", cfg.Thresholds.ToolLoopMaxRepeats)
+	}
+	if cfg.Thresholds.FileRereadMinCount != 5 {
+		t.Errorf("expected FileRereadMinCount=5, got %d", cfg.Thresholds.FileRereadMinCount)
+	}
+	if !cfg.Signals.ToolLoop {
+		t.Error("expected ToolLoop=true")
+	}
+	if !cfg.Signals.FileReread {
+		t.Error("expected FileReread=true")
+	}
+}
+
 func writeTempFile(t *testing.T, content string) string {
 	t.Helper()
 	f, err := os.CreateTemp("", "burnwatch-config-test-*.toml")

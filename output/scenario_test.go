@@ -186,8 +186,16 @@ func findSignalByID(signals []analyze.WasteSignal, sessionID string) *analyze.Wa
 	return nil
 }
 
+func assignEventIndex(events []source.TokenEvent) {
+	idxs := make(map[string]int)
+	for i := range events {
+		idxs[events[i].SessionID]++
+		events[i].EventIndex = idxs[events[i].SessionID]
+	}
+}
 
 func runScenarioPipeline(t *testing.T, events []source.TokenEvent) ([]analyze.WasteSignal, map[string]analyze.Baseline) {
+	assignEventIndex(events)
 	t.Helper()
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
 	if len(baselines) == 0 {
@@ -198,6 +206,7 @@ func runScenarioPipeline(t *testing.T, events []source.TokenEvent) ([]analyze.Wa
 }
 
 func runPipelineWithSignals(t *testing.T, events []source.TokenEvent, cfg config.Config) []analyze.WasteSignal {
+	assignEventIndex(events)
 	t.Helper()
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
 	if len(baselines) == 0 {
@@ -449,6 +458,7 @@ func TestScenario_MultiSignal(t *testing.T) {
 
 func TestScenario_AllClean(t *testing.T) {
 	events := loadScenarioJSONL(t, "all_clean.jsonl")
+	assignEventIndex(events)
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
 	signals := analyze.DetectWaste(events, baselines, nil, v1Cfg)
 
@@ -456,5 +466,112 @@ func TestScenario_AllClean(t *testing.T) {
 		if strings.HasPrefix(s.SessionID, "ses_clean_") {
 			t.Errorf("clean session %s flagged with reason=%s", s.SessionID, s.Reason)
 		}
+	}
+}
+
+func v3Cfg() config.Config {
+	cfg := config.Config{Signals: config.Signals{
+		ToolLoop:   true,
+		FileReread: true,
+	}}
+	useDefaults(&cfg)
+	return cfg
+}
+
+func TestScenario_ToolLoop(t *testing.T) {
+	events := loadScenarioJSONL(t, "tool_loop_edge.jsonl")
+	assignEventIndex(events)
+	cfg := v3Cfg()
+	cfg.Thresholds.ToolLoopMaxRepeats = 5
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	signals := analyze.DetectWaste(events, baselines, nil, cfg)
+
+	sig := findSignalByID(signals, "ses_loop_edge_5")
+	if sig == nil {
+		var reasons []string
+		for _, s := range signals {
+			reasons = append(reasons, s.Reason)
+		}
+		t.Fatalf("expected ses_loop_edge_5 to be flagged as tool_call_loop, got signals: %v", reasons)
+	}
+	if sig.Reason != "tool_call_loop" {
+		t.Errorf("expected reason tool_call_loop, got %s", sig.Reason)
+	}
+	if sig.Severity != "high" {
+		t.Errorf("expected severity high, got %s", sig.Severity)
+	}
+
+	if s := findSignalByID(signals, "ses_loop_no_repeat"); s != nil && s.Reason == "tool_call_loop" {
+		t.Errorf("ses_loop_no_repeat should not be flagged as tool_call_loop")
+	}
+	if s := findSignalByID(signals, "ses_loop_normal_03"); s != nil && s.Reason == "tool_call_loop" {
+		t.Errorf("ses_loop_normal_03 should not be flagged as tool_call_loop")
+	}
+}
+
+func TestScenario_FileReRead(t *testing.T) {
+	events := loadScenarioJSONL(t, "file_reread.jsonl")
+	assignEventIndex(events)
+	cfg := v3Cfg()
+	cfg.Thresholds.FileRereadMinCount = 3
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	signals := analyze.DetectWaste(events, baselines, nil, cfg)
+
+	sig := findSignalByID(signals, "ses_reread_waste")
+	if sig == nil {
+		var reasons []string
+		for _, s := range signals {
+			reasons = append(reasons, s.Reason)
+		}
+		t.Fatalf("expected ses_reread_waste to be flagged as file_reread, got signals: %v", reasons)
+	}
+	if sig.Reason != "file_reread" {
+		t.Errorf("expected reason file_reread, got %s", sig.Reason)
+	}
+	if sig.Severity != "medium" {
+		t.Errorf("expected severity medium, got %s", sig.Severity)
+	}
+	if !strings.Contains(sig.Detail, "config/settings.json") {
+		t.Errorf("expected Detail to mention config/settings.json, got %s", sig.Detail)
+	}
+
+	for _, id := range []string{"ses_reread_normal_01", "ses_reread_normal_02"} {
+		if s := findSignalByID(signals, id); s != nil && s.Reason == "file_reread" {
+			t.Errorf("normal session %s was flagged unexpectedly (reason=%s)", id, s.Reason)
+		}
+	}
+}
+
+func TestScenario_FileReReadMixed(t *testing.T) {
+	events := loadScenarioJSONL(t, "file_reread_mixed.jsonl")
+	assignEventIndex(events)
+	cfg := v3Cfg()
+	cfg.Thresholds.FileRereadMinCount = 3
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	signals := analyze.DetectWaste(events, baselines, nil, cfg)
+
+	sig := findSignalByID(signals, "ses_reread_mixed_w")
+	if sig == nil {
+		var reasons []string
+		for _, s := range signals {
+			reasons = append(reasons, s.Reason)
+		}
+		t.Fatalf("expected ses_reread_mixed_w to be flagged as file_reread, got signals: %v", reasons)
+	}
+	if sig.Reason != "file_reread" {
+		t.Errorf("expected reason file_reread, got %s", sig.Reason)
+	}
+	if !strings.Contains(sig.Detail, "config/base.json") {
+		t.Errorf("expected Detail to mention config/base.json, got %s", sig.Detail)
+	}
+
+	if s := findSignalByID(signals, "ses_reread_below_threshold"); s != nil && s.Reason == "file_reread" {
+		t.Errorf("ses_reread_below_threshold (2 reads) should not be flagged")
+	}
+	if s := findSignalByID(signals, "ses_reread_cached"); s != nil && s.Reason == "file_reread" {
+		t.Errorf("ses_reread_cached (cached reads) should not be flagged")
 	}
 }

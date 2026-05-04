@@ -78,6 +78,18 @@ func recommendForSignal(s WasteSignal, baselines map[string]Baseline) Recommenda
 		r.Detail = fmt.Sprintf("%.0f sessions in one project on the same day with high fragmentation (index = %.1f).", s.Metric, s.Metric)
 		r.SavingsEst = s.SessionCost * 0.7
 
+	case "tool_call_loop":
+		r.Action = "Investigate repeated tool calls — agent may be stuck in a loop"
+		r.Detail = s.Detail
+		r.SavingsEst = s.SessionCost * 0.5
+
+	case "file_reread":
+		r.Action = "Enable prompt caching to avoid re-reading unchanged files"
+		r.Detail = s.Detail
+		if s.SessionCost > 0 && s.Metric > 0 {
+			r.SavingsEst = s.SessionCost * (s.Metric - 1) / s.Metric * 0.5
+		}
+
 	default:
 		r.Action = "Review this session for optimization opportunities"
 		r.Detail = s.Detail

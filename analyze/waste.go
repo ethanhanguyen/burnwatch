@@ -181,6 +181,13 @@ func DetectWaste(events []source.TokenEvent, baselines map[string]Baseline,
 		signals = append(signals, checkFragmentationIndex(agg, cfg.Thresholds.FragmentationIndexThreshold, cfg.Thresholds.ChurnMinSessions, cfg.Thresholds.FragmentationMinCost)...)
 	}
 
+	if cfg.Signals.ToolLoop {
+		signals = append(signals, detectToolCallLoops(events, cfg.Thresholds.ToolLoopMaxRepeats)...)
+	}
+	if cfg.Signals.FileReread {
+		signals = append(signals, detectFileReReads(events, cfg.Thresholds.FileRereadMinCount)...)
+	}
+
 	sortSignals(signals)
 
 	return signals

@@ -87,6 +87,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 
 - Changing `ComputeBaselines` or `DetectWaste` function signatures requires updating every call site: `cmd/root.go`, `output/text.go`, `output/bench_test.go`, `cmd/root_test.go`, `analyze/baseline_test.go`, `analyze/waste_test.go`, `output/scenario_test.go`, `output/output_test.go`. Use `replaceAll` with precise old/new strings for mechanical edits, but always review diff manually. `analyze/baseline.go:41`, `analyze/waste.go:56`
 
+- Behavioral heuristics (H10+) operate on raw `[]source.TokenEvent`, not `sessionAgg`. They need `EventIndex` for ordering and `ToolCalls`/`FileOps` for analysis. Scenario test fixtures MUST have `EventIndex` set correctly — the loader (`output/scenario_test.go:assignEventIndex`) sets it per-session in load order. Adding new signal reasons requires updating: `signalRank` in `signal_filter.go`, `writeSignalBlock` in `output/text.go`, and `recommendForSignal` in `recommend.go`. Default-off signals still need their config thresholds validated and test-covered. `analyze/loop.go:11`, `analyze/reread.go:10`
+
 ## Rules
 
 These govern how this file is maintained. Violating them makes the file less useful over time.

@@ -26,6 +26,8 @@ type Thresholds struct {
 	OutputExplosionSigma         float64 `toml:"output_explosion_sigma"`
 	TokenEfficiencyPercentile    float64 `toml:"token_efficiency_percentile"`
 	FragmentationMinCost         float64 `toml:"fragmentation_min_cost"`
+	ToolLoopMaxRepeats           int     `toml:"tool_loop_max_repeats"`
+	FileRereadMinCount           int     `toml:"file_reread_min_count"`
 }
 
 type Signals struct {
@@ -66,6 +68,8 @@ func Defaults() Config {
 			OutputExplosionSigma:         2.0,
 			TokenEfficiencyPercentile:    10.0,
 			FragmentationMinCost:         0.50,
+			ToolLoopMaxRepeats:           5,
+			FileRereadMinCount:           3,
 		},
 		Signals: Signals{
 			CostOutlier:          true,
@@ -189,6 +193,14 @@ token_efficiency_percentile = 10.0
 # Set to 0 to include all. Default 0.50.
 fragmentation_min_cost = 0.50
 
+# Tool loop: flag sessions with >= N consecutive identical tool calls.
+# Range: 2–20. Default 5.
+tool_loop_max_repeats = 5
+
+# File re-read: flag files read >= N times without cache hits between reads.
+# Range: 2–10. Default 3.
+file_reread_min_count = 3
+
 [signals]
 # Enable/disable individual waste signals.
 cost_outlier = true
@@ -249,6 +261,12 @@ func Validate(cfg Config) error {
 	}
 	if cfg.Filters.MinCost < 0 {
 		return fmt.Errorf("min_cost must be >= 0, got %f", cfg.Filters.MinCost)
+	}
+	if cfg.Thresholds.ToolLoopMaxRepeats < 2 {
+		return fmt.Errorf("tool_loop_max_repeats must be >= 2, got %d", cfg.Thresholds.ToolLoopMaxRepeats)
+	}
+	if cfg.Thresholds.FileRereadMinCount < 2 {
+		return fmt.Errorf("file_reread_min_count must be >= 2, got %d", cfg.Thresholds.FileRereadMinCount)
 	}
 	return nil
 }
