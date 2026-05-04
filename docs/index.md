@@ -22,42 +22,7 @@ Start here. This file stays short on purpose.
 - [specs/source-interface.md](./specs/source-interface.md) — `Source` interface contract, `TokenEvent` schema, how to add a harness
 - [specs/scenario-tef-format.md](./specs/scenario-tef-format.md) — Token Event Format (TEF): harness-agnostic scenario JSONL spec
 
-## Design specs
-
-- [questui-DESIGN.md](./questui-DESIGN.md) — QuestUI fantasy-themed HTML component library (colors, typography, components)
-
-## Implementation plans
-
-- [plans/v2-implementation-plan.md](./plans/v2-implementation-plan.md) — v2 roadmap: pricing, token heuristics, calibration, anomaly detection, ML
-- [plans/v3-ux-plan.md](./plans/v3-ux-plan.md) — v3 UX: `--explain`, `burnwatch watch` (TUI), `burnwatch report` (HTML). **HTML design specs → [questui-DESIGN.md](./questui-DESIGN.md)**
-
-## Active PR prompts (v2.5)
-
-| PR | Prompt | Description |
-|----|--------|-------------|
-| ~~PR11~~ | [plans/PR11-prompt.md](./plans/PR11-prompt.md) | ~~Dynamic Pricing — OpenRouter API + cache~~ merged |
-| ~~PR12~~ | [plans/PR12-prompt.md](./plans/PR12-prompt.md) | ~~Token Baselines — input/output mean, std, percentiles~~ merged |
-| ~~PR13~~ | [plans/PR13-prompt.md](./plans/PR13-prompt.md) | ~~Token-Based Heuristics — H6–H9~~ merged |
-| ~~PR14~~ | [plans/PR14-prompt.md](./plans/PR14-prompt.md) | ~~Config-Wired Thresholds~~ merged |
-| ~~PR15~~ | [plans/PR15-prompt.md](./plans/PR15-prompt.md) | ~~Fix Pricing + Uncosted — 1000x bug, cache validation, fallback removal~~ merged |
-| ~~PR16~~ | [plans/PR16-prompt.md](./plans/PR16-prompt.md) | ~~Output Quality — fragment noise, savings dedup, config init~~ merged |
-| ~~PR17~~ | [plans/PR17-prompt.md](./plans/PR17-prompt.md) | ~~Calibration Mode~~ merged |
-
-### v3 — Event-Level Waste Detection (new direction)
-
-See [decisions/2026-05-03-event-level-waste-detection.md](./decisions/2026-05-03-event-level-waste-detection.md) for rationale.
-
-| PR | Prompt | Description | Depends on |
-|----|--------|-------------|-----------|
-| **N1** | [plans/N1-prompt.md](./plans/N1-prompt.md) | **Data model expansion — ToolCall + FileOp in TokenEvent** | PR17 |
-| **N2** | [plans/N2-prompt.md](./plans/N2-prompt.md) | **Loop + re-read detection (H10, H11)** | N1 |
-| **N3** | [plans/N3-prompt.md](./plans/N3-prompt.md) | **Subagent overlap + session restart (H12, H13)** | N1 |
-| **N4** | [plans/N4-prompt.md](./plans/N4-prompt.md) | **Performance, calibration, polish** | N2, N3 |
-| **N5** | [plans/N5-prompt.md](./plans/N5-prompt.md) | **Session drill-down — `--explain <id>`** | N2 |
-| **N6** | [plans/N6-prompt.md](./plans/N6-prompt.md) | **Static HTML report — `burnwatch report`** | N5 |
-| **N7** | [plans/N7-prompt.md](./plans/N7-prompt.md) | **Live monitoring TUI — `burnwatch watch`** | N5, N2 |
-
-### Deferred
+## Deferred PRs
 
 | PR | Description | Reason |
 |----|-------------|--------|
