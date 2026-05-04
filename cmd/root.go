@@ -230,6 +230,11 @@ func Execute() {
 		return
 	}
 
+	if len(flag.Args()) > 0 && flag.Args()[0] == "watch" {
+		handleWatchCmd(flag.Args()[1:], flags)
+		return
+	}
+
 	cfg, err := config.Load(flags.ConfigPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
@@ -578,4 +583,79 @@ func openBrowser(path string) error {
 	}
 	args = append(args, path)
 	return exec.Command(cmd, args...).Start()
+}
+
+type watchCmdFlags struct {
+	interval int
+}
+
+func parseWatchFlags(args []string) (*watchCmdFlags, []string) {
+	fs := flag.NewFlagSet("watch", flag.ExitOnError)
+	wf := &watchCmdFlags{}
+	fs.IntVar(&wf.interval, "interval", 5, "Poll interval in seconds")
+	_ = fs.Parse(args)
+	return wf, fs.Args()
+}
+
+func handleWatchCmd(extraArgs []string, flags struct {
+	DBPath      string
+	Harness     string
+	Project     string
+	JSON        bool
+	Days        int
+	Verbose     bool
+	ConfigPath  string
+	PrintConfig bool
+	MinCost     float64
+
+	NoCostOutlier          bool
+	NoLowSignal            bool
+	NoSubagentOverhead     bool
+	NoCacheUnderutil       bool
+	NoFragmentationIndex   bool
+	NoInputOverconsumption   bool
+	NoOutputExplosion        bool
+	NoTokenEfficiency        bool
+	NoToolLoop               bool
+	NoFileReread             bool
+	NoSubagentOverlap        bool
+	NoSessionRestart         bool
+	ShowTrends               bool
+
+	RefreshPricing bool
+	NoFetchPricing bool
+	Init           bool
+	Calibrate      bool
+
+	InputOverconsumptionSigma float64
+	OutputExplosionSigma      float64
+	TokenEfficiencyPercentile float64
+	FragmentationThreshold    float64
+	SubagentOverheadPct       float64
+}) {
+	wf, _ := parseWatchFlags(extraArgs)
+
+	if flags.DBPath != "" {
+		_ = os.Setenv("BURNWATCH_OPENCODE_DB", flags.DBPath)
+	}
+
+	if !flags.NoFetchPricing {
+		httpClient := &http.Client{Timeout: 10 * time.Second}
+		if flags.RefreshPricing {
+			_ = source.RefreshPricing(httpClient)
+		} else {
+			_ = source.InitPricing(httpClient)
+		}
+	}
+
+	sources := source.Discover()
+	if len(sources) == 0 {
+		fmt.Fprintln(os.Stderr, "No data sources found.")
+		os.Exit(1)
+	}
+
+	if err := handleWatch(sources, wf.interval); err != nil {
+		fmt.Fprintf(os.Stderr, "Watch error: %v\n", err)
+		os.Exit(1)
+	}
 }
