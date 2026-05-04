@@ -2,31 +2,9 @@ package analyze
 
 import (
 	"testing"
-	"time"
 
 	"github.com/ethanhanguyen/burnwatch/source"
 )
-
-func testTokens() func(in, out, cacheRead, cacheWrite int64, model string) source.TokenEvent {
-	idx := 0
-	ts := time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
-	return func(in, out, cacheRead, cacheWrite int64, model string) source.TokenEvent {
-		idx++
-		cost, _, _ := source.CostForModel(model, in, out, cacheRead, cacheWrite)
-		return source.TokenEvent{
-			SessionID:    "",
-			Model:        model,
-			Timestamp:    ts.Add(time.Duration(idx) * time.Minute),
-			InputTokens:  in,
-			OutputTokens: out,
-			CacheRead:    cacheRead,
-			CacheWrite:   cacheWrite,
-			CostUSD:      cost,
-			Project:      "test",
-			Harness:      "claude-code",
-		}
-	}
-}
 
 func mkRead(sessionID, path string) source.TokenEvent {
 	return source.TokenEvent{
@@ -34,17 +12,6 @@ func mkRead(sessionID, path string) source.TokenEvent {
 		Model:     "claude-sonnet-4-5-20250929",
 		Project:   "test",
 		Harness:   "claude-code",
-		FileOps:   []source.FileOp{{Path: path, Operation: "read"}},
-	}
-}
-
-func mkReadWithCost(sessionID, path string, cost float64) source.TokenEvent {
-	return source.TokenEvent{
-		SessionID: sessionID,
-		Model:     "claude-sonnet-4-5-20250929",
-		Project:   "test",
-		Harness:   "claude-code",
-		CostUSD:   cost,
 		FileOps:   []source.FileOp{{Path: path, Operation: "read"}},
 	}
 }

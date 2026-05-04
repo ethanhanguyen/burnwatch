@@ -52,10 +52,8 @@ func detectSubagentOverlap(events []source.TokenEvent, trees []SubagentTree, thr
 				sessionCost := collectSessionCost(subEvents)
 				model, inputSum, outputSum, costApprox, costUnknown := collectSessionMeta(subEvents)
 
-				shared := make([]string, 0, len(intersection))
-				for _, p := range intersection {
-					shared = append(shared, p)
-				}
+				shared := make([]string, len(intersection))
+				copy(shared, intersection)
 
 				detail := fmt.Sprintf(
 					"Parent session read %d unique files. Subagent \"%s\" read %d of the same %d.\nOverlap: %.0f%% (%d shared: %s)",
