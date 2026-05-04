@@ -90,6 +90,16 @@ func recommendForSignal(s WasteSignal, baselines map[string]Baseline) Recommenda
 			r.SavingsEst = s.SessionCost * (s.Metric - 1) / s.Metric * 0.5
 		}
 
+	case "subagent_overlap":
+		r.Action = "Consolidate subagent work — parent already read these files"
+		r.Detail = s.Detail
+		r.SavingsEst = s.SessionCost
+
+	case "session_restart":
+		r.Action = "Continue the prior session instead of starting fresh"
+		r.Detail = s.Detail
+		r.SavingsEst = s.SessionCost * 0.5
+
 	default:
 		r.Action = "Review this session for optimization opportunities"
 		r.Detail = s.Detail

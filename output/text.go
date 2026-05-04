@@ -360,6 +360,20 @@ func writeSignalBlock(b *strings.Builder, s analyze.WasteSignal, rec analyze.Rec
 				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
 		}
 		fmt.Fprintf(b, "    → %s\n", s.Detail)
+	case "subagent_overlap":
+		fmt.Fprintf(b, " — subagent re-did parent work\n")
+		if s.Model != "" {
+			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
+				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
+		}
+		fmt.Fprintf(b, "    → %s\n", s.Detail)
+	case "session_restart":
+		fmt.Fprintf(b, " — session restart detected\n")
+		if s.Model != "" {
+			fmt.Fprintf(b, "    Model: %s, %s in / %s out\n",
+				s.Model, analyze.FormatTokens(s.InputTokens), analyze.FormatTokens(s.OutputTokens))
+		}
+		fmt.Fprintf(b, "    → %s\n", s.Detail)
 	default:
 		fmt.Fprintf(b, " — %s\n", s.Detail)
 	}
