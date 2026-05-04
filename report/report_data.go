@@ -23,7 +23,11 @@ type reportData struct {
 
 type reportSummary struct {
 	TotalCost     float64 `json:"totalCost"`
+	TracedCost    float64 `json:"tracedCost"`
 	TotalSignals  int     `json:"totalSignals"`
+	HighSignals   int     `json:"highSignals"`
+	MediumSignals int     `json:"mediumSignals"`
+	LowSignals    int     `json:"lowSignals"`
 	ProjectCount  int     `json:"projectCount"`
 	Sessions      int     `json:"sessions"`
 	DateFrom      string  `json:"dateFrom"`
@@ -119,6 +123,10 @@ func computeReportSummary(events []source.TokenEvent, signals []analyze.WasteSig
 	}
 
 	var toolLoop, reRead, overlap, restart int
+	var tracedCost float64
+	highSignals := 0
+	mediumSignals := 0
+	lowSignals := 0
 	for _, s := range signals {
 		switch s.Reason {
 		case "tool_call_loop":
@@ -129,6 +137,15 @@ func computeReportSummary(events []source.TokenEvent, signals []analyze.WasteSig
 			overlap++
 		case "session_restart":
 			restart++
+		}
+		tracedCost += s.SessionCost
+		switch s.Severity {
+		case "high":
+			highSignals++
+		case "medium":
+			mediumSignals++
+		case "low":
+			lowSignals++
 		}
 	}
 
@@ -142,7 +159,11 @@ func computeReportSummary(events []source.TokenEvent, signals []analyze.WasteSig
 
 	return reportSummary{
 		TotalCost:     totalCost,
+		TracedCost:    round2(tracedCost),
 		TotalSignals:  len(signals),
+		HighSignals:   highSignals,
+		MediumSignals: mediumSignals,
+		LowSignals:    lowSignals,
 		ProjectCount:  len(projects),
 		Sessions:      len(sessions),
 		DateFrom:      minTime.Format("2006-01-02"),

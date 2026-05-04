@@ -6,6 +6,8 @@ burnwatch
 
 # Test binary, built with `go test -c`
 *.test
+.playwright-cli/
+output/
 
 # Output of the go coverage tool
 *.out
@@ -32,6 +34,9 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Claude Code
+.claude/
 
 # Archive (moved post-implementation plans)
 docs/archive/

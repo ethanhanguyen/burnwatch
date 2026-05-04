@@ -21,11 +21,11 @@ func TestFormatReport_Structure(t *testing.T) {
 		`<script src="https://cdn.jsdelivr.net/npm/chart.js@4">`,
 		"const REPORT = {",
 		"<footer>",
-		"#CA8A04",
-		"#1A0F0A",
+		"#ca8a04",
+		"#1a0f0a",
 		"Cinzel",
 		"Spectral",
-		"Fira Code",
+		"JetBrains Mono",
 	}
 	for _, c := range checks {
 		if !strings.Contains(report, c) {
