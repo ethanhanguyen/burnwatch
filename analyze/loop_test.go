@@ -1,6 +1,7 @@
 package analyze
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -9,9 +10,6 @@ import (
 
 func makeLoopEvents(sessionID string, toolCalls [][2]string, cost float64) []source.TokenEvent {
 	events := make([]source.TokenEvent, 0, len(toolCalls))
-	if cost == 0 {
-		cost = 0.01
-	}
 	for i, tc := range toolCalls {
 		events = append(events, source.TokenEvent{
 			SessionID:       sessionID,
@@ -89,10 +87,10 @@ func TestToolCallLoop_LongLoop(t *testing.T) {
 	if s.Reason != "tool_call_loop" {
 		t.Errorf("Reason = %s, want tool_call_loop", s.Reason)
 	}
-	if !contains(s.Detail, "read") {
+	if !strings.Contains(s.Detail, "read") {
 		t.Errorf("Detail missing tool name: %s", s.Detail)
 	}
-	if !contains(s.Detail, "a.go") {
+	if !strings.Contains(s.Detail, "a.go") {
 		t.Errorf("Detail missing file path: %s", s.Detail)
 	}
 }
@@ -150,7 +148,7 @@ func TestToolCallLoop_DifferentArgs(t *testing.T) {
 	if len(signals) == 0 {
 		t.Fatal("expected signal for last 3 reads of a.go")
 	}
-	if !contains(signals[0].Detail, "a.go") {
+	if !strings.Contains(signals[0].Detail, "a.go") {
 		t.Errorf("Detail should mention a.go: %s", signals[0].Detail)
 	}
 }
@@ -249,16 +247,4 @@ func adjustEventIndex(events []source.TokenEvent) {
 		sessionIdxs[events[i].SessionID]++
 		events[i].EventIndex = sessionIdxs[events[i].SessionID]
 	}
-}
-
-func contains(s, sub string) bool {
-	return len(s) >= len(sub) && (s == sub || len(sub) == 0 ||
-		func() bool {
-			for i := 0; i <= len(s)-len(sub); i++ {
-				if s[i:i+len(sub)] == sub {
-					return true
-				}
-			}
-			return false
-		}())
 }

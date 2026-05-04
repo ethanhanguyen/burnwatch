@@ -73,6 +73,10 @@ func detectSessionReReads(sessionID string, events []source.TokenEvent, minReRea
 		inputSum += ev.InputTokens
 		outputSum += ev.OutputTokens
 
+		// CacheRead is per-event, not per-file. A cache hit on one file
+		// shields all files whose read window includes this event.
+		// Conservative: fewer false positives, but may miss waste where
+		// file A is re-read without cache while file B hits cache.
 		if ev.CacheRead > 0 {
 			for _, st := range files {
 				if st.readCount >= minReReads && ev.EventIndex >= st.firstReadIdx && ev.EventIndex <= st.lastReadIdx {

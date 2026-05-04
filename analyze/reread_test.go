@@ -1,6 +1,7 @@
 package analyze
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -88,7 +89,7 @@ func TestFileReRead_ReReadNoCache(t *testing.T) {
 	if s.Reason != "file_reread" {
 		t.Errorf("Reason = %s, want file_reread", s.Reason)
 	}
-	if !contains(s.Detail, "config/settings.json") {
+	if !strings.Contains(s.Detail, "config/settings.json") {
 		t.Errorf("Detail missing file path: %s", s.Detail)
 	}
 }
@@ -107,10 +108,10 @@ func TestFileReRead_MixedFiles(t *testing.T) {
 	foundA := false
 	foundB := false
 	for _, s := range signals {
-		if contains(s.Detail, "a.go") {
+		if strings.Contains(s.Detail, "a.go") {
 			foundA = true
 		}
-		if contains(s.Detail, "b.go") {
+		if strings.Contains(s.Detail, "b.go") {
 			foundB = true
 		}
 	}
@@ -130,7 +131,6 @@ func TestFileReRead_WriteBetweenReads(t *testing.T) {
 		{{"src/handler.go", "read"}},
 	}, nil)
 
-	_ = events
 	signals := detectFileReReads(events, 3)
 	if len(signals) == 0 {
 		t.Fatal("expected signal for re-reads after write, cache=0")

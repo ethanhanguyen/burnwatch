@@ -25,6 +25,7 @@ Start here. This file stays short on purpose.
 ## Implementation plans
 
 - [plans/v2-implementation-plan.md](./plans/v2-implementation-plan.md) — v2 roadmap: pricing, token heuristics, calibration, anomaly detection, ML
+- [plans/v3-ux-plan.md](./plans/v3-ux-plan.md) — v3 UX: `--explain`, `burnwatch watch` (TUI), `burnwatch report` (HTML)
 
 ## Active PR prompts (v2.5)
 

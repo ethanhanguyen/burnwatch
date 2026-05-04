@@ -61,9 +61,11 @@ func detectSessionLoops(events []source.TokenEvent, maxRepeats int) []WasteSigna
 			repeatCount++
 			if repeatCount >= maxRepeats && loopedIdx == -1 {
 				loopedIdx = i
-				break
 			}
 		} else {
+			if loopedIdx >= 0 {
+				break
+			}
 			repeatCount = 1
 			prev = cur
 		}
@@ -119,6 +121,8 @@ func detectSessionLoops(events []source.TokenEvent, maxRepeats int) []WasteSigna
 	return []WasteSignal{signal}
 }
 
+// extractFilePath returns the first "file_path" value from JSON-like arguments.
+// Best-effort string scan, not a full JSON parse. Returns "" if no file_path found.
 func extractFilePath(arguments string) string {
 	idx := strings.Index(arguments, "\"file_path\"")
 	if idx < 0 {
