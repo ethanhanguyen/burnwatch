@@ -22,10 +22,14 @@ Start here. This file stays short on purpose.
 - [specs/source-interface.md](./specs/source-interface.md) — `Source` interface contract, `TokenEvent` schema, how to add a harness
 - [specs/scenario-tef-format.md](./specs/scenario-tef-format.md) — Token Event Format (TEF): harness-agnostic scenario JSONL spec
 
+## Design specs
+
+- [questui-DESIGN.md](./questui-DESIGN.md) — QuestUI fantasy-themed HTML component library (colors, typography, components)
+
 ## Implementation plans
 
 - [plans/v2-implementation-plan.md](./plans/v2-implementation-plan.md) — v2 roadmap: pricing, token heuristics, calibration, anomaly detection, ML
-- [plans/v3-ux-plan.md](./plans/v3-ux-plan.md) — v3 UX: `--explain`, `burnwatch watch` (TUI), `burnwatch report` (HTML)
+- [plans/v3-ux-plan.md](./plans/v3-ux-plan.md) — v3 UX: `--explain`, `burnwatch watch` (TUI), `burnwatch report` (HTML). **HTML design specs → [questui-DESIGN.md](./questui-DESIGN.md)**
 
 ## Active PR prompts (v2.5)
 

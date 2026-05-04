@@ -1,7 +1,7 @@
 # N5: Session Drill-Down — `--explain <session-id>`
 
 > **Workflow:** Follow `docs/PR-template.md`. Review `AGENTS.md` behavioral guidelines before implementing.
-> **UX spec:** `docs/plans/v3-ux-plan.md` Phase I
+> **UI design specs:** `docs/questui-DESIGN.md` — QuestUI fantasy-themed HTML component library
 
 ## Objective
 

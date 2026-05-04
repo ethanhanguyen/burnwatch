@@ -97,6 +97,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 
 - H12 need `BuildSubagentTree` passed as `trees` parameter to `DetectWaste`. Scenario tests for H12 must call `analyze.BuildSubagentTree(events)` and pass the result — passing `nil` produces no subagent overlap signals. `analyze/waste.go:187-189`
 
+- `checkTokenEfficiency` does not set `WasteSignal.CostUnknown` even though it sets `CostApproximate`. Cost-agnostic heuristics may flag uncosted sessions — the flag should be set for all heuristics that render on uncosted data. Pre-existing issue, not introduced by N3. `analyze/waste.go:357-381`
+
 ## Rules
 
 These govern how this file is maintained. Violating them makes the file less useful over time.

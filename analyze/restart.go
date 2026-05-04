@@ -9,10 +9,9 @@ import (
 )
 
 type sessionMeta struct {
-	sessionID  string
-	project    string
-	start      int64
-	startTime  string
+	sessionID string
+	project   string
+	start     int64
 }
 
 func detectSessionRestarts(events []source.TokenEvent, thresholdPct float64, initialOps int) []WasteSignal {
@@ -36,7 +35,6 @@ func detectSessionRestarts(events []source.TokenEvent, thresholdPct float64, ini
 			sessionID: sid,
 			project:   proj,
 			start:     minTS,
-			startTime: evs[0].Timestamp.Format("2006-01-02 15:04"),
 		})
 	}
 
