@@ -2,13 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 5/7 complete (v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 6/7 complete (v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
 v2.5  ████████████████████████████████████████ 3/3 merged
-v3    ██████████████████████████████████░░░░ 5/7
+v3    ████████████████████████████████████░░░ 6/7
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -35,7 +35,7 @@ N2   ██████████████████████ Loop + R
 N3   ██████████████████████ Subagent Overlap + Restart (H12,H13)
 N4   ██████████████████████ Polish + Calibration
 N5   ██████████████████████ Session Drill-Down (--explain)
-N6   ····················· Static HTML Report (report)
+N6   ██████████████████████ Static HTML Report (report)
 N7   ····················· Live Monitoring TUI (watch)
 
 PR18 ····················· Unsupervised Anomaly Detection (DEFERRED)
@@ -70,7 +70,7 @@ PR20 ····················· ML Pipeline (DEFERRED)
 | N3 | `n3-overlap-restart` | **merged** | 2026-05-03 | 2026-05-03 | H12, H13 — subagent overlap + session restart |
 | N4 | `n4-polish` | **merged** | 2026-05-03 | 2026-05-03 | Performance, calibration, path normalization |
 | N5 | `n5-explain` | **merged** | 2026-05-03 | 2026-05-03 | --explain flag, annotated timeline |
-| N6 | `n6-report` | **planned** | — | — | Static HTML report with Chart.js visualizations |
+| N6 | `n6-report` | **merged** | — | — | Static HTML report with Chart.js visualizations |
 | N7 | `n7-watch` | **planned** | — | — | Live monitoring TUI with incremental detection |
 
 ## Blockers

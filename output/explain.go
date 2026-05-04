@@ -11,7 +11,7 @@ import (
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
-type annotation struct {
+type Annotation struct {
 	EventIndex int
 	Text       string
 }
@@ -33,7 +33,7 @@ func FormatExplain(sessionID string, events []source.TokenEvent, signals []analy
 		b.WriteString("\n")
 	}
 
-	annotations := computeAnnotations(sorted, signals, trees)
+	annotations := ComputeAnnotations(sorted, signals, trees)
 	writeTimeline(&b, sorted, annotations)
 
 	writeSubagentBreakdown(&b, trees)
@@ -170,7 +170,7 @@ func severityRank(s string) int {
 	}
 }
 
-func writeTimeline(b *strings.Builder, events []source.TokenEvent, annotations []annotation) {
+func writeTimeline(b *strings.Builder, events []source.TokenEvent, annotations []Annotation) {
 	b.WriteString("─── Event Timeline ───\n\n")
 
 	annMap := make(map[int][]string)
@@ -333,7 +333,7 @@ func writeReReadBreakdown(b *strings.Builder, signals []analyze.WasteSignal, eve
 
 	b.WriteString("\n─── File Re-Read Breakdown ───\n\n")
 	for _, s := range reReadSignals {
-		path, readCount := parseRereadDetail(s.Detail)
+		path, readCount := ParseRereadDetail(s.Detail)
 		if path == "" {
 			continue
 		}
@@ -367,15 +367,15 @@ func writeReReadBreakdown(b *strings.Builder, signals []analyze.WasteSignal, eve
 	}
 }
 
-func computeAnnotations(events []source.TokenEvent, signals []analyze.WasteSignal, trees []analyze.SubagentTree) []annotation {
-	var anns []annotation
-	anns = append(anns, computeLoopAnnotations(events, signals)...)
-	anns = append(anns, computeReReadAnnotations(events, signals)...)
-	anns = append(anns, computeSubagentAnnotations(events, trees)...)
+func ComputeAnnotations(events []source.TokenEvent, signals []analyze.WasteSignal, trees []analyze.SubagentTree) []Annotation {
+	var anns []Annotation
+	anns = append(anns, ComputeLoopAnnotations(events, signals)...)
+	anns = append(anns, ComputeReReadAnnotations(events, signals)...)
+	anns = append(anns, ComputeSubagentAnnotations(events, trees)...)
 	return anns
 }
 
-func computeLoopAnnotations(events []source.TokenEvent, signals []analyze.WasteSignal) []annotation {
+func ComputeLoopAnnotations(events []source.TokenEvent, signals []analyze.WasteSignal) []Annotation {
 	sorted := sortedEvents(events)
 
 	type idxToolCall struct {
@@ -394,12 +394,12 @@ func computeLoopAnnotations(events []source.TokenEvent, signals []analyze.WasteS
 		}
 	}
 
-	var annotations []annotation
+	var annotations []Annotation
 	for _, s := range signals {
 		if s.Reason != "tool_call_loop" {
 			continue
 		}
-		toolName, filePath := parseLoopDetail(s.Detail)
+		toolName, filePath := ParseLoopDetail(s.Detail)
 		if toolName == "" {
 			continue
 		}
@@ -417,7 +417,7 @@ func computeLoopAnnotations(events []source.TokenEvent, signals []analyze.WasteS
 			run := j - i
 			if run > 1 {
 				for k := 0; k < run; k++ {
-					annotations = append(annotations, annotation{
+					annotations = append(annotations, Annotation{
 						EventIndex: flat[i+k].eventIdx,
 						Text:       fmt.Sprintf("← [LOOP REPEAT %d/%d]", k+1, run),
 					})
@@ -439,13 +439,13 @@ func toolsMatch(tcName, sigName, tcArgs, sigPath string) bool {
 	return strings.Contains(tcArgs, sigPath)
 }
 
-func computeReReadAnnotations(events []source.TokenEvent, signals []analyze.WasteSignal) []annotation {
-	var annotations []annotation
+func ComputeReReadAnnotations(events []source.TokenEvent, signals []analyze.WasteSignal) []Annotation {
+	var annotations []Annotation
 	for _, s := range signals {
 		if s.Reason != "file_reread" {
 			continue
 		}
-		path, _ := parseRereadDetail(s.Detail)
+		path, _ := ParseRereadDetail(s.Detail)
 		if path == "" {
 			continue
 		}
@@ -460,7 +460,7 @@ func computeReReadAnnotations(events []source.TokenEvent, signals []analyze.Wast
 		}
 
 		for i, idx := range matches {
-			annotations = append(annotations, annotation{
+			annotations = append(annotations, Annotation{
 				EventIndex: idx,
 				Text:       fmt.Sprintf("← [RE-READ %d/%d]", i+1, len(matches)),
 			})
@@ -469,7 +469,7 @@ func computeReReadAnnotations(events []source.TokenEvent, signals []analyze.Wast
 	return annotations
 }
 
-func computeSubagentAnnotations(events []source.TokenEvent, trees []analyze.SubagentTree) []annotation {
+func ComputeSubagentAnnotations(events []source.TokenEvent, trees []analyze.SubagentTree) []Annotation {
 	subagentMap := make(map[string]string)
 	var collect func(nodes []analyze.SubagentNode)
 	collect = func(nodes []analyze.SubagentNode) {
@@ -483,7 +483,7 @@ func computeSubagentAnnotations(events []source.TokenEvent, trees []analyze.Suba
 	}
 
 	firstBySession := make(map[string]bool)
-	var annotations []annotation
+	var annotations []Annotation
 	for _, ev := range events {
 		if !ev.IsSubagent {
 			continue
@@ -498,7 +498,7 @@ func computeSubagentAnnotations(events []source.TokenEvent, trees []analyze.Suba
 			at = ev.AgentType
 		}
 		if at != "" {
-			annotations = append(annotations, annotation{
+			annotations = append(annotations, Annotation{
 				EventIndex: ev.EventIndex,
 				Text:       "[SUBAGENT START]",
 			})
@@ -507,7 +507,7 @@ func computeSubagentAnnotations(events []source.TokenEvent, trees []analyze.Suba
 	return annotations
 }
 
-func parseLoopDetail(detail string) (toolName string, filePath string) {
+func ParseLoopDetail(detail string) (toolName string, filePath string) {
 	calledIdx := strings.Index(detail, " called ")
 	if calledIdx < 0 {
 		return "", ""
@@ -535,7 +535,7 @@ func parseLoopDetail(detail string) (toolName string, filePath string) {
 	return toolName, filePath
 }
 
-func parseRereadDetail(detail string) (path string, readCount int) {
+func ParseRereadDetail(detail string) (path string, readCount int) {
 	idx := strings.Index(detail, " read ")
 	if idx < 0 {
 		return "", 0

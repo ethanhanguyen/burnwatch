@@ -198,12 +198,12 @@ func TestParseLoopDetail(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.detail, func(t *testing.T) {
-			gotTool, gotPath := parseLoopDetail(tt.detail)
+			gotTool, gotPath := ParseLoopDetail(tt.detail)
 			if gotTool != tt.wantTool {
-				t.Errorf("parseLoopDetail toolName = %q, want %q", gotTool, tt.wantTool)
+				t.Errorf("ParseLoopDetail toolName = %q, want %q", gotTool, tt.wantTool)
 			}
 			if gotPath != tt.wantFilePath {
-				t.Errorf("parseLoopDetail filePath = %q, want %q", gotPath, tt.wantFilePath)
+				t.Errorf("ParseLoopDetail filePath = %q, want %q", gotPath, tt.wantFilePath)
 			}
 		})
 	}
@@ -222,12 +222,12 @@ func TestParseRereadDetail(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.detail, func(t *testing.T) {
-			gotPath, gotCount := parseRereadDetail(tt.detail)
+			gotPath, gotCount := ParseRereadDetail(tt.detail)
 			if gotPath != tt.wantPath {
-				t.Errorf("parseRereadDetail path = %q, want %q", gotPath, tt.wantPath)
+				t.Errorf("ParseRereadDetail path = %q, want %q", gotPath, tt.wantPath)
 			}
 			if gotCount != tt.wantCount {
-				t.Errorf("parseRereadDetail count = %d, want %d", gotCount, tt.wantCount)
+				t.Errorf("ParseRereadDetail count = %d, want %d", gotCount, tt.wantCount)
 			}
 		})
 	}

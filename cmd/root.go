@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/exec"
+	"runtime"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -223,6 +225,11 @@ func Execute() {
 		return
 	}
 
+	if len(flag.Args()) > 0 && flag.Args()[0] == "report" {
+		handleReport(flag.Args()[1:], flags)
+		return
+	}
+
 	cfg, err := config.Load(flags.ConfigPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
@@ -414,4 +421,160 @@ func hasSubagentForSession(n analyze.SubagentNode, sessionID string) bool {
 		}
 	}
 	return false
+}
+
+type reportFlags struct {
+	outputPath string
+	open       bool
+	days       int
+	reportJSON bool
+}
+
+func parseReportFlags(args []string) (*reportFlags, []string) {
+	fs := flag.NewFlagSet("report", flag.ExitOnError)
+	rf := &reportFlags{}
+	fs.StringVar(&rf.outputPath, "output", "", "Report output file path")
+	fs.BoolVar(&rf.open, "open", false, "Open report in browser after generation")
+	fs.IntVar(&rf.days, "days", 30, "Days of data for report")
+	fs.BoolVar(&rf.reportJSON, "report-json", false, "Output report JSON data (no HTML)")
+	_ = fs.Parse(args)
+	return rf, fs.Args()
+}
+
+func handleReport(extraArgs []string, flags struct {
+	DBPath      string
+	Harness     string
+	Project     string
+	JSON        bool
+	Days        int
+	Verbose     bool
+	ConfigPath  string
+	PrintConfig bool
+	MinCost     float64
+
+	NoCostOutlier          bool
+	NoLowSignal            bool
+	NoSubagentOverhead     bool
+	NoCacheUnderutil       bool
+	NoFragmentationIndex   bool
+	NoInputOverconsumption   bool
+	NoOutputExplosion        bool
+	NoTokenEfficiency        bool
+	NoToolLoop               bool
+	NoFileReread             bool
+	NoSubagentOverlap        bool
+	NoSessionRestart         bool
+	ShowTrends               bool
+
+	RefreshPricing bool
+	NoFetchPricing bool
+	Init           bool
+	Calibrate      bool
+
+	InputOverconsumptionSigma float64
+	OutputExplosionSigma      float64
+	TokenEfficiencyPercentile float64
+	FragmentationThreshold    float64
+	SubagentOverheadPct       float64
+}) {
+	rf, _ := parseReportFlags(extraArgs)
+
+	if flags.DBPath != "" {
+		_ = os.Setenv("BURNWATCH_OPENCODE_DB", flags.DBPath)
+	}
+
+	if !flags.NoFetchPricing {
+		httpClient := &http.Client{Timeout: 10 * time.Second}
+		if flags.RefreshPricing {
+			_ = source.RefreshPricing(httpClient)
+		} else {
+			_ = source.InitPricing(httpClient)
+		}
+	}
+
+	sources := source.Discover()
+	if len(sources) == 0 {
+		fmt.Fprintln(os.Stderr, "No data sources found.")
+		os.Exit(1)
+	}
+
+	events := output.CollectEvents(sources)
+	if len(events) == 0 {
+		fmt.Fprintln(os.Stderr, "No data found.")
+		os.Exit(1)
+	}
+
+	if flags.Harness != "" && flags.Harness != "all" {
+		events = filterByHarness(events, flags.Harness)
+	}
+
+	if flags.Project != "" {
+		events = filterByProject(events, flags.Project)
+	}
+
+	days := rf.days
+	if flags.Days > 0 {
+		days = flags.Days
+	}
+	if days > 0 {
+		events = filterByDays(events, days)
+	}
+
+	if len(events) == 0 {
+		fmt.Fprintln(os.Stderr, "No events after filtering.")
+		os.Exit(1)
+	}
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	trees := analyze.BuildSubagentTree(events)
+	cfg := config.Defaults()
+	signals := analyze.DetectWaste(events, baselines, trees, cfg)
+	recs := analyze.GenerateRecommendations(signals, baselines)
+
+	if rf.reportJSON {
+		jsonData, err := output.FormatReportJSON(events, baselines, signals, trees, version, time.Now())
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error formatting JSON: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println(string(jsonData))
+		return
+	}
+
+	report := output.FormatReport(events, baselines, signals, recs, trees, version, time.Now())
+
+	outputPath := rf.outputPath
+	if outputPath == "" {
+		outputPath = fmt.Sprintf("burnwatch-report-%s.html", time.Now().Format("2006-01-02"))
+	}
+
+	if err := os.WriteFile(outputPath, []byte(report), 0644); err != nil {
+		fmt.Fprintf(os.Stderr, "Error writing report: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("Report written to %s (%d KiB)\n", outputPath, len(report)/1024)
+
+	if rf.open {
+		if err := openBrowser(outputPath); err != nil {
+			fmt.Fprintf(os.Stderr, "Error opening browser: %v\n", err)
+		}
+	}
+}
+
+func openBrowser(path string) error {
+	var cmd string
+	var args []string
+	switch runtime.GOOS {
+	case "darwin":
+		cmd = "open"
+	case "linux":
+		cmd = "xdg-open"
+	case "windows":
+		cmd = "cmd"
+		args = []string{"/c", "start"}
+	default:
+		return fmt.Errorf("unsupported platform %s", runtime.GOOS)
+	}
+	args = append(args, path)
+	return exec.Command(cmd, args...).Start()
 }

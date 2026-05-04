@@ -118,6 +118,28 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 
 - Annotation computation functions (`computeLoopAnnotations`, `computeReReadAnnotations`) depend on signal `Detail` string format set by analyze package heuristics. Changes to H10/H11 Detail format break annotation parsing without compile error. `output/explain.go:517-543, 545-561`
 
+## N6 — HTML Report
+
+### Gotcha
+
+- `convertSubagentNode` already exists in `output/json.go:157` with a different return type (`JSONSubagentNode`). Naming collisions between the JSON output and report output packages require unique function names. Renamed to `convertSubagentNodeReport`. `output/report_data.go:313`
+
+- `computeTopFiles` must derive cost solely from signal `SessionCost`, not re-iterate raw events. Iterating events adds `e.CostUSD` for every read FileOp matching the file path, double-counting cost. `output/report_data.go:237-269`
+
+### Pattern
+
+- All dynamic strings in JS `innerHTML` assignments must pass through `escHtml()` to prevent XSS injection from untrusted sources (model names, session IDs, project names, file paths). `output/report.go:693-737`
+
+- Chart.js 4.x uses `Object.values(Chart.instances).forEach` for resize, not the deprecated `Chart.helpers.each`. `output/report.go:454`
+
+- `flag.NewFlagSet("report", flag.ExitOnError)` is the Go-canonical way to add subcommand-specific flags. The subcommand is detected via `flag.Args()[0] == "report"` after `flag.Parse()`. `cmd/root.go:231-244`
+
+### Hidden coupling
+
+- Report HTML template is a Go backtick string constant — all HTML/JS edits must be made in `output/report.go`, not in a separate `.html` file. QuestUI design tokens (colors, fonts, spacing) are defined as CSS custom properties in a `<style>` block. `output/report.go:34-296`
+
+- Signal timeline drill-down in the HTML table reuses `ComputeAnnotations` from `output/explain.go`. Any change to the annotation format in explain.go propagates to the report's expandable rows without compile error. `output/report_data.go:375-401`
+
 ## Rules
 
 These govern how this file is maintained. Violating them makes the file less useful over time.
