@@ -102,6 +102,22 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 
 - `checkTokenEfficiency` does not set `WasteSignal.CostUnknown` even though it sets `CostApproximate`. Cost-agnostic heuristics may flag uncosted sessions — the flag should be set for all heuristics that render on uncosted data. Pre-existing issue, not introduced by N3. `analyze/waste.go:357-381`
 
+### Mistake
+
+- `computeLoopAnnotations` initially matched tool names exactly, but scenario JSONL tool names are lowercased in `parseScenarioLine`. Use `strings.EqualFold` for case-insensitive matching. `output/explain.go:439-447`
+
+- `parseLoopDetail` must handle both `tool("path") called N times` and `Bash called N times` formats. The Detail string format from `analyze/loop.go:84-86` puts quotes inside parens: `read("src/main.go") called 12 times consecutively in session`. `output/explain.go:517-543`
+
+### Pattern
+
+- `--explain` flag handler skips config loading entirely. Uses `config.Defaults()` with all behavioral signals enabled. This ensures the full waste view regardless of `.burnwatch.toml` toggles. `cmd/root.go:175-228`
+
+- `FormatExplain` accepts pre-filtered events/signals/trees — the caller (cmd/root.go) handles session ID filtering and error handling (stderr + os.Exit for unknown session). This keeps the formatting function testable. `output/explain.go:19-43`
+
+### Hidden coupling
+
+- Annotation computation functions (`computeLoopAnnotations`, `computeReReadAnnotations`) depend on signal `Detail` string format set by analyze package heuristics. Changes to H10/H11 Detail format break annotation parsing without compile error. `output/explain.go:517-543, 545-561`
+
 ## Rules
 
 These govern how this file is maintained. Violating them makes the file less useful over time.

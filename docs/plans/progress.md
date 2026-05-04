@@ -2,13 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 4/7 complete (v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 5/7 complete (v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
 v2.5  ████████████████████████████████████████ 3/3 merged
-v3    ███████████████████████████░░░░░░░░░░░░ 4/7
+v3    ██████████████████████████████████░░░░ 5/7
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -34,7 +34,7 @@ N1   ██████████████████████ Data Mod
 N2   ██████████████████████ Loop + Re-read (H10,H11)
 N3   ██████████████████████ Subagent Overlap + Restart (H12,H13)
 N4   ██████████████████████ Polish + Calibration
-N5   ····················· Session Drill-Down (--explain)
+N5   ██████████████████████ Session Drill-Down (--explain)
 N6   ····················· Static HTML Report (report)
 N7   ····················· Live Monitoring TUI (watch)
 
@@ -69,7 +69,7 @@ PR20 ····················· ML Pipeline (DEFERRED)
 | N2 | `n2-loop-reread` | **merged** | 2026-05-03 | 2026-05-03 | H10, H11 — loop + file re-read detection |
 | N3 | `n3-overlap-restart` | **merged** | 2026-05-03 | 2026-05-03 | H12, H13 — subagent overlap + session restart |
 | N4 | `n4-polish` | **merged** | 2026-05-03 | 2026-05-03 | Performance, calibration, path normalization |
-| N5 | `n5-explain` | **planned** | — | — | --explain <id>: annotated session timeline |
+| N5 | `n5-explain` | **merged** | 2026-05-03 | 2026-05-03 | --explain flag, annotated timeline |
 | N6 | `n6-report` | **planned** | — | — | Static HTML report with Chart.js visualizations |
 | N7 | `n7-watch` | **planned** | — | — | Live monitoring TUI with incremental detection |
 
@@ -134,6 +134,13 @@ Each milestone requires a gate check before the next PR can start.
 ### Gate P19 (after PR19 merge) — DEFERRED (post-v3)
 
 - [ ] **P19.1 — Parse reliability:** Not applicable until behavioral signals ship and accumulate labels.
+
+### Gate N5 (after N5 merge)
+
+- [x] **N5.1 — Explain works:** `burnwatch --explain ses_abc` shows annotated timeline with header, waste summary, and timeline.
+- [x] **N5.2 — Unknown session:** `burnwatch --explain nonexistent` prints error to stderr, exits code 1.
+- [x] **N5.3 — Scenarios pass:** 4 scenario tests (loop, reread, mixed, clean) verify annotation correctness.
+- [x] **N5.4 — No config needed:** `--explain` skips `.burnwatch.toml`, runs with all signals enabled.
 
 ## Quality snapshot
 

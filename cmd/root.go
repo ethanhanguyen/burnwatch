@@ -86,6 +86,8 @@ func Execute() {
 	flag.BoolVar(&flags.Init, "init", false, "Write default .burnwatch.toml and exit")
 	flag.BoolVar(&flags.Calibrate, "calibrate", false, "Show data distribution and suggest thresholds")
 
+	explainID := flag.String("explain", "", "Show annotated timeline for session ID")
+
 	flag.Float64Var(&flags.InputOverconsumptionSigma, "input-sigma", 0, "Sigma for input overconsumption detection (0 = use config)")
 	flag.Float64Var(&flags.OutputExplosionSigma, "output-sigma", 0, "Sigma for output explosion detection (0 = use config)")
 	flag.Float64Var(&flags.TokenEfficiencyPercentile, "ter-percentile", 0, "Percentile for token efficiency threshold (0 = use config)")
@@ -169,6 +171,55 @@ func Execute() {
 			text := output.FormatCalibrationText(report)
 			fmt.Print(text)
 		}
+		return
+	}
+
+	if *explainID != "" {
+		sources := source.Discover()
+		if len(sources) == 0 {
+			fmt.Fprintln(os.Stderr, "No data sources found.")
+			os.Exit(1)
+		}
+		events := output.CollectEvents(sources)
+		var sessionEvents []source.TokenEvent
+		for _, e := range events {
+			if e.SessionID == *explainID {
+				sessionEvents = append(sessionEvents, e)
+			}
+		}
+		if len(sessionEvents) == 0 {
+			fmt.Fprintf(os.Stderr, "Session %q not found.\n", *explainID)
+			os.Exit(1)
+		}
+
+		baselines := analyze.ComputeBaselines(events, config.Defaults())
+		trees := analyze.BuildSubagentTree(events)
+		cfg := config.Defaults()
+		signals := analyze.DetectWaste(events, baselines, trees, cfg)
+
+		var sessionSignals []analyze.WasteSignal
+		for _, s := range signals {
+			if s.SessionID == *explainID {
+				sessionSignals = append(sessionSignals, s)
+			}
+		}
+
+		var sessionTrees []analyze.SubagentTree
+		for _, t := range trees {
+			if t.SessionID == *explainID {
+				sessionTrees = append(sessionTrees, t)
+			} else {
+				for _, n := range t.Subagents {
+					if hasSubagentForSession(n, *explainID) {
+						sessionTrees = append(sessionTrees, t)
+						break
+					}
+				}
+			}
+		}
+
+		text := output.FormatExplain(*explainID, sessionEvents, sessionSignals, sessionTrees)
+		fmt.Print(text)
 		return
 	}
 
@@ -351,4 +402,16 @@ func filterByDays(events []source.TokenEvent, days int) []source.TokenEvent {
 		}
 	}
 	return filtered
+}
+
+func hasSubagentForSession(n analyze.SubagentNode, sessionID string) bool {
+	if n.SessionID == sessionID {
+		return true
+	}
+	for _, c := range n.Children {
+		if hasSubagentForSession(c, sessionID) {
+			return true
+		}
+	}
+	return false
 }

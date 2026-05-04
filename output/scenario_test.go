@@ -648,3 +648,176 @@ func TestScenario_SessionRestart(t *testing.T) {
 		t.Errorf("ses_restart_continued was flagged unexpectedly as session_restart")
 	}
 }
+
+func allOnConfig() config.Config {
+	cfg := config.Config{Signals: config.Signals{
+		CostOutlier:          true,
+		LowSignal:            true,
+		SubagentOverhead:     true,
+		CacheUnderutilized:   true,
+		FragmentationIndex:   true,
+		InputOverconsumption: true,
+		OutputExplosion:      true,
+		TokenEfficiency:      true,
+		ToolLoop:             true,
+		FileReread:           true,
+		SubagentOverlap:      true,
+		SessionRestart:       true,
+	}}
+	useDefaults(&cfg)
+	return cfg
+}
+
+func findSignalsByReason(signals []analyze.WasteSignal, reason string) []analyze.WasteSignal {
+	var result []analyze.WasteSignal
+	for _, s := range signals {
+		if s.Reason == reason {
+			result = append(result, s)
+		}
+	}
+	return result
+}
+
+func filterEventsBySession(events []source.TokenEvent, sessionID string) []source.TokenEvent {
+	var result []source.TokenEvent
+	for _, e := range events {
+		if e.SessionID == sessionID {
+			result = append(result, e)
+		}
+	}
+	return result
+}
+
+func filterSignalsBySession(signals []analyze.WasteSignal, sessionID string) []analyze.WasteSignal {
+	var result []analyze.WasteSignal
+	for _, s := range signals {
+		if s.SessionID == sessionID {
+			result = append(result, s)
+		}
+	}
+	return result
+}
+
+func TestScenario_ExplainLoop(t *testing.T) {
+	events := loadScenarioJSONL(t, "explain_loop.jsonl")
+	assignEventIndex(events)
+	cfg := allOnConfig()
+	cfg.Thresholds.ToolLoopMaxRepeats = 5
+	cfg.Thresholds.FileRereadMinCount = 3
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	trees := analyze.BuildSubagentTree(events)
+	signals := analyze.DetectWaste(events, baselines, trees, cfg)
+
+	found := findSignalsByReason(signals, "tool_call_loop")
+	if len(found) == 0 {
+		t.Fatal("expected tool_call_loop signal, got none")
+	}
+
+	sessionSignals := filterSignalsBySession(signals, "ses_explain_loop")
+	sessionEvents := filterEventsBySession(events, "ses_explain_loop")
+	output := FormatExplain("ses_explain_loop", sessionEvents, sessionSignals, nil)
+
+	mustContainExplain(t, output, "ses_explain_loop")
+	mustContainExplain(t, output, "[LOOP REPEAT")
+	mustContainExplain(t, output, "tool_call_loop")
+	mustContainExplain(t, output, "LOOP REPEAT 1/6")
+	mustContainExplain(t, output, "LOOP REPEAT 6/6")
+}
+
+func TestScenario_ExplainReRead(t *testing.T) {
+	events := loadScenarioJSONL(t, "explain_reread.jsonl")
+	assignEventIndex(events)
+	cfg := allOnConfig()
+	cfg.Thresholds.ToolLoopMaxRepeats = 5
+	cfg.Thresholds.FileRereadMinCount = 3
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	trees := analyze.BuildSubagentTree(events)
+	signals := analyze.DetectWaste(events, baselines, trees, cfg)
+
+	found := findSignalsByReason(signals, "file_reread")
+	if len(found) == 0 {
+		t.Fatal("expected file_reread signal, got none")
+	}
+
+	sessionSignals := filterSignalsBySession(signals, "ses_explain_reread")
+	sessionEvents := filterEventsBySession(events, "ses_explain_reread")
+	output := FormatExplain("ses_explain_reread", sessionEvents, sessionSignals, nil)
+
+	mustContainExplain(t, output, "ses_explain_reread")
+	mustContainExplain(t, output, "[RE-READ")
+	mustContainExplain(t, output, "file_reread")
+	mustContainExplain(t, output, "config/settings.json")
+	mustContainExplain(t, output, "RE-READ 4/4")
+}
+
+func TestScenario_ExplainMixed(t *testing.T) {
+	events := loadScenarioJSONL(t, "explain_mixed.jsonl")
+	assignEventIndex(events)
+	cfg := allOnConfig()
+	cfg.Thresholds.ToolLoopMaxRepeats = 5
+	cfg.Thresholds.FileRereadMinCount = 3
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	trees := analyze.BuildSubagentTree(events)
+	signals := analyze.DetectWaste(events, baselines, trees, cfg)
+
+	loopSignals := findSignalsByReason(signals, "tool_call_loop")
+	rereadSignals := findSignalsByReason(signals, "file_reread")
+	if len(loopSignals) == 0 {
+		t.Fatal("expected tool_call_loop signal, got none")
+	}
+	if len(rereadSignals) == 0 {
+		t.Fatal("expected file_reread signal, got none")
+	}
+
+	sessionSignals := filterSignalsBySession(signals, "ses_explain_mixed")
+	sessionEvents := filterEventsBySession(events, "ses_explain_mixed")
+	output := FormatExplain("ses_explain_mixed", sessionEvents, sessionSignals, nil)
+
+	mustContainExplain(t, output, "ses_explain_mixed")
+	mustContainExplain(t, output, "[LOOP REPEAT")
+	mustContainExplain(t, output, "[RE-READ")
+	mustContainExplain(t, output, "tool_call_loop")
+	mustContainExplain(t, output, "file_reread")
+}
+
+func TestScenario_ExplainClean(t *testing.T) {
+	events := loadScenarioJSONL(t, "explain_clean.jsonl")
+	assignEventIndex(events)
+	cfg := allOnConfig()
+	cfg.Thresholds.ToolLoopMaxRepeats = 5
+	cfg.Thresholds.FileRereadMinCount = 3
+
+	baselines := analyze.ComputeBaselines(events, config.Defaults())
+	trees := analyze.BuildSubagentTree(events)
+	signals := analyze.DetectWaste(events, baselines, trees, cfg)
+
+	for _, s := range signals {
+		if s.SessionID == "ses_explain_clean" {
+			t.Errorf("clean session flagged with reason=%s", s.Reason)
+		}
+	}
+
+	sessionSignals := filterSignalsBySession(signals, "ses_explain_clean")
+	sessionEvents := filterEventsBySession(events, "ses_explain_clean")
+	output := FormatExplain("ses_explain_clean", sessionEvents, sessionSignals, nil)
+
+	mustContainExplain(t, output, "ses_explain_clean")
+	mustNotContainExplain(t, output, "Waste Signals")
+}
+
+func mustContainExplain(t *testing.T, haystack, needle string) {
+	t.Helper()
+	if !strings.Contains(haystack, needle) {
+		t.Errorf("expected output to contain %q", needle)
+	}
+}
+
+func mustNotContainExplain(t *testing.T, haystack, needle string) {
+	t.Helper()
+	if strings.Contains(haystack, needle) {
+		t.Errorf("expected output to NOT contain %q", needle)
+	}
+}
