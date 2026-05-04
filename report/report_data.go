@@ -1,4 +1,4 @@
-package output
+package report
 
 import (
 	"sort"
@@ -9,16 +9,16 @@ import (
 )
 
 type reportData struct {
-	Version         string
-	Generated       string
-	Summary         reportSummary
-	CostOverTime    []costOverTimePoint
-	WasteByType     []wasteByProject
-	TopFiles        []topFile
-	SubagentTree    reportTreeNode
-	ModelBreakdown  []modelBreakdown
-	Signals         []reportSignal
-	SignalTimelines map[string][]reportTimelineEvent
+	Version         string                           `json:"version"`
+	Generated       string                           `json:"generated"`
+	Summary         reportSummary                    `json:"summary"`
+	CostOverTime    []costOverTimePoint              `json:"costOverTime"`
+	WasteByType     []wasteByProject                 `json:"wasteByType"`
+	TopFiles        []topFile                        `json:"topFiles"`
+	SubagentTree    reportTreeNode                   `json:"subagentTree"`
+	ModelBreakdown  []modelBreakdown                 `json:"modelBreakdown"`
+	Signals         []reportSignal                   `json:"signals"`
+	SignalTimelines map[string][]reportTimelineEvent `json:"signalTimelines"`
 }
 
 type reportSummary struct {

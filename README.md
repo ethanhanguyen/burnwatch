@@ -39,15 +39,91 @@ burnwatch
 
 That's it. Burnwatch discovers your session data automatically and prints a waste report.
 
-### Common Options
+## Usage
 
 ```bash
-burnwatch                      # Today's waste across all agents
-burnwatch --days 7             # Last 7 days
-burnwatch --project my-app     # Single project
-burnwatch --harness claude-code  # One agent only
-burnwatch --json               # Machine-readable output
-burnwatch --verbose            # Show all sessions, not just waste
+burnwatch [flags]
+```
+
+### Base Options
+
+| Flag | Description |
+|------|-------------|
+| `--days <n>` | Lookback window in days (default: today) |
+| `--harness <name>` | Filter to `opencode`, `claude-code`, or `all` |
+| `--project <name>` | Filter to a single project path |
+| `--json` | Machine-readable JSON output |
+| `--verbose` | Show all sessions, not just waste |
+| `--min-cost <n>` | Hide waste signals below $n |
+| `--show-trends` | Include time-trend summary |
+| `--version` | Print version and exit |
+
+### Signal Toggles
+
+Disable specific detectors:
+
+```bash
+--no-cost-outlier        --no-low-signal
+--no-subagent-overhead   --no-cache-underutil
+--no-fragmentation-index --no-input-overconsumption
+--no-output-explosion    --no-token-efficiency
+--no-tool-loop           --no-file-reread
+--no-subagent-overlap    --no-session-restart
+```
+
+### Threshold Overrides
+
+| Flag | Applies to |
+|------|------------|
+| `--input-sigma <n>` | Input overconsumption sigma |
+| `--output-sigma <n>` | Output explosion sigma |
+| `--ter-percentile <n>` | Token efficiency ratio percentile |
+| `--fragmentation-threshold <n>` | Fragmentation index cutoff |
+| `--subagent-overhead <n>` | Subagent overhead percentage |
+
+### Calibration Mode
+
+See your data distribution and get suggested thresholds:
+
+```bash
+burnwatch --calibrate             # Text output
+burnwatch --calibrate --json      # Machine-readable
+burnwatch --calibrate --no-fetch-pricing  # Skip network call
+```
+
+### Session Drill-Down
+
+Annotated event timeline for a single session:
+
+```bash
+burnwatch --explain <session-id>
+```
+
+### HTML Report
+
+Generate a static HTML report:
+
+```bash
+burnwatch report                  # 30-day report, writes to reports/
+burnwatch report --days 7         # 7 days
+burnwatch report --output out.html  # Custom path
+burnwatch report --open           # Open in browser after generation
+burnwatch report --report-json    # JSON data only (no HTML)
+```
+
+### Pricing
+
+| Flag | Description |
+|------|-------------|
+| `--no-fetch-pricing` | Skip OpenRouter API call, use cached/embedded pricing |
+| `--refresh-pricing` | Force re-fetch pricing from OpenRouter |
+
+### Configuration
+
+```bash
+burnwatch --init          # Write default .burnwatch.toml
+burnwatch --print-config  # Print effective config and exit
+burnwatch --config <path> # Use custom config file
 ```
 
 ## What It Detects

@@ -1,4 +1,4 @@
-package output
+package report
 
 import (
 	"encoding/json"
@@ -44,7 +44,7 @@ func TestFormatReport_DataEmbedded(t *testing.T) {
 		t.Fatal("REPORT data block not found")
 	}
 	raw := report[scriptStart+len("const REPORT = "):]
-	scriptEnd := strings.Index(raw, ";\n</script>")
+	scriptEnd := strings.Index(raw, ";\n\n")
 	if scriptEnd < 0 {
 		t.Fatal("REPORT data block end not found")
 	}
@@ -54,6 +54,8 @@ func TestFormatReport_DataEmbedded(t *testing.T) {
 	if err := json.Unmarshal([]byte(raw), &data); err != nil {
 		t.Fatalf("unmarshal REPORT data: %v", err)
 	}
+
+
 
 	if data.Version != "v3.0.0" {
 		t.Errorf("version = %q, want v3.0.0", data.Version)
@@ -106,7 +108,7 @@ func TestFormatReport_CostOverTime(t *testing.T) {
 
 	scriptStart := strings.Index(report, "const REPORT = ")
 	raw := report[scriptStart+len("const REPORT = "):]
-	scriptEnd := strings.Index(raw, ";\n</script>")
+	scriptEnd := strings.Index(raw, ";\n\n")
 	raw = raw[:scriptEnd]
 
 	var data reportData

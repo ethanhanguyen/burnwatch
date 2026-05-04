@@ -1,4 +1,4 @@
-package output
+package report
 
 import (
 	"encoding/json"
@@ -364,10 +364,9 @@ footer {
 const REPORT = `)
 	b.Write(jsonData)
 	b.WriteString(`;
-</script>
 `)
 	b.WriteString(renderJS())
-	b.WriteString(`
+	b.WriteString(`</script>
 </body>
 </html>`)
 
@@ -388,9 +387,9 @@ func renderSummary(s reportSummary) string {
 	var b strings.Builder
 	b.WriteString(`<div class="summary-row">
 `)
-	costClass := ""
-	if s.TotalCost > 0 {
-		costClass = " value"
+	costClass := "value"
+	if s.TotalCost == 0 {
+		costClass = ""
 	}
 	fmt.Fprintf(&b, `<div class="summary-card"><div class="label">Total Cost</div><div class="%s">$%.2f</div></div>
 `, costClass, s.TotalCost)

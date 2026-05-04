@@ -39,3 +39,8 @@ burnwatch.log
 
 # GoReleaser output
 dist/
+
+# Generated outputs
+reports/
+logs/
+burnwatch-report*.html

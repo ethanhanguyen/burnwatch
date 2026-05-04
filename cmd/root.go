@@ -12,7 +12,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/ethanhanguyen/burnwatch/analyze"
 	"github.com/ethanhanguyen/burnwatch/config"
-	"github.com/ethanhanguyen/burnwatch/output"
+	"github.com/ethanhanguyen/burnwatch/report"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
@@ -137,7 +137,7 @@ func Execute() {
 			os.Exit(1)
 		}
 
-		events := output.CollectEvents(sources)
+		events := report.CollectEvents(sources)
 		if len(events) == 0 {
 			fmt.Fprintln(os.Stderr, "No data found.")
 			os.Exit(1)
@@ -160,17 +160,17 @@ func Execute() {
 			os.Exit(1)
 		}
 
-		report := analyze.ComputeCalibration(events)
+		data := analyze.ComputeCalibration(events)
 
 		if flags.JSON {
-			jsonBytes, err := output.FormatCalibrationJSON(report)
+			jsonBytes, err := report.FormatCalibrationJSON(data)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error formatting JSON: %v\n", err)
 				os.Exit(1)
 			}
 			fmt.Println(string(jsonBytes))
 		} else {
-			text := output.FormatCalibrationText(report)
+			text := report.FormatCalibrationText(data)
 			fmt.Print(text)
 		}
 		return
@@ -182,7 +182,7 @@ func Execute() {
 			fmt.Fprintln(os.Stderr, "No data sources found.")
 			os.Exit(1)
 		}
-		events := output.CollectEvents(sources)
+		events := report.CollectEvents(sources)
 		var sessionEvents []source.TokenEvent
 		for _, e := range events {
 			if e.SessionID == *explainID {
@@ -220,7 +220,7 @@ func Execute() {
 			}
 		}
 
-		text := output.FormatExplain(*explainID, sessionEvents, sessionSignals, sessionTrees)
+		text := report.FormatExplain(*explainID, sessionEvents, sessionSignals, sessionTrees)
 		fmt.Print(text)
 		return
 	}
@@ -269,7 +269,7 @@ func Execute() {
 		os.Exit(1)
 	}
 
-	events := output.CollectEvents(sources)
+	events := report.CollectEvents(sources)
 	if len(events) == 0 {
 		fmt.Fprintln(os.Stderr, "No data found.")
 		os.Exit(1)
@@ -365,14 +365,14 @@ func Execute() {
 	recommendations := analyze.GenerateRecommendations(signals, baselines)
 
 	if flags.JSON {
-		jsonBytes, err := output.FormatJSON(events, baselines, signals, recommendations, trees)
+		jsonBytes, err := report.FormatJSON(events, baselines, signals, recommendations, trees)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error formatting JSON: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Println(string(jsonBytes))
 	} else {
-		text := output.FormatText(events, baselines, signals, recommendations, flags.Verbose, cfg)
+		text := report.FormatText(events, baselines, signals, recommendations, flags.Verbose, cfg)
 		fmt.Print(text)
 	}
 }
@@ -498,7 +498,7 @@ func handleReport(extraArgs []string, flags struct {
 		os.Exit(1)
 	}
 
-	events := output.CollectEvents(sources)
+	events := report.CollectEvents(sources)
 	if len(events) == 0 {
 		fmt.Fprintln(os.Stderr, "No data found.")
 		os.Exit(1)
@@ -532,7 +532,7 @@ func handleReport(extraArgs []string, flags struct {
 	recs := analyze.GenerateRecommendations(signals, baselines)
 
 	if rf.reportJSON {
-		jsonData, err := output.FormatReportJSON(events, baselines, signals, trees, version, time.Now())
+		jsonData, err := report.FormatReportJSON(events, baselines, signals, trees, version, time.Now())
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error formatting JSON: %v\n", err)
 			os.Exit(1)
@@ -541,18 +541,19 @@ func handleReport(extraArgs []string, flags struct {
 		return
 	}
 
-	report := output.FormatReport(events, baselines, signals, recs, trees, version, time.Now())
+	htmlReport := report.FormatReport(events, baselines, signals, recs, trees, version, time.Now())
 
 	outputPath := rf.outputPath
 	if outputPath == "" {
-		outputPath = fmt.Sprintf("burnwatch-report-%s.html", time.Now().Format("2006-01-02"))
+		outputPath = fmt.Sprintf("reports/burnwatch-report-%s.html", time.Now().Format("2006-01-02"))
 	}
+	_ = os.MkdirAll("reports", 0755)
 
-	if err := os.WriteFile(outputPath, []byte(report), 0644); err != nil {
+	if err := os.WriteFile(outputPath, []byte(htmlReport), 0644); err != nil {
 		fmt.Fprintf(os.Stderr, "Error writing report: %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Printf("Report written to %s (%d KiB)\n", outputPath, len(report)/1024)
+	fmt.Printf("Report written to %s (%d KiB)\n", outputPath, len(htmlReport)/1024)
 
 	if rf.open {
 		if err := openBrowser(outputPath); err != nil {

@@ -12,7 +12,7 @@ import (
 
 	"github.com/ethanhanguyen/burnwatch/analyze"
 	"github.com/ethanhanguyen/burnwatch/config"
-	"github.com/ethanhanguyen/burnwatch/output"
+	"github.com/ethanhanguyen/burnwatch/report"
 	"github.com/ethanhanguyen/burnwatch/source"
 )
 
@@ -40,7 +40,7 @@ func TestEndToEnd(t *testing.T) {
 		t.Fatal("no sources discovered")
 	}
 
-	events := output.CollectEvents(sources)
+	events := report.CollectEvents(sources)
 	if len(events) == 0 {
 		t.Fatal("expected events from test data, got none")
 	}
@@ -55,13 +55,13 @@ func TestEndToEnd(t *testing.T) {
 
 	_ = analyze.GenerateRecommendations(signals, baselines)
 
-	text := output.FormatText(events, baselines, signals, nil, false, config.Config{})
+	text := report.FormatText(events, baselines, signals, nil, false, config.Config{})
 	if text == "" {
 		t.Error("expected non-empty text output")
 	}
 
 	trees := analyze.BuildSubagentTree(events)
-	jsonBytes, err := output.FormatJSON(events, baselines, signals, nil, trees)
+	jsonBytes, err := report.FormatJSON(events, baselines, signals, nil, trees)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -152,7 +152,7 @@ func TestTogglesSuppressOutput(t *testing.T) {
 		t.Fatal("no sources discovered")
 	}
 
-	events := output.CollectEvents(sources)
+	events := report.CollectEvents(sources)
 	baselines := analyze.ComputeBaselines(events, config.Defaults())
 
 	allOff := config.Defaults()
@@ -279,7 +279,7 @@ func TestTrendsOutput(t *testing.T) {
 
 	cfg = config.Config{}
 	cfg.Output.ShowTrends = true
-	text := output.FormatText(events, baselines, signals, recommendations, false, cfg)
+	text := report.FormatText(events, baselines, signals, recommendations, false, cfg)
 
 	if !strings.Contains(text, "Trends:") {
 		t.Error("expected trends section, got none")
