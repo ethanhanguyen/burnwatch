@@ -2,13 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 6/7 complete (v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 7/7 complete (v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
 v2.5  ████████████████████████████████████████ 3/3 merged
-v3    ████████████████████████████████████░░░ 6/7
+v3    ████████████████████████████████████████ 7/7
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -36,7 +36,7 @@ N3   ██████████████████████ Subagent
 N4   ██████████████████████ Polish + Calibration
 N5   ██████████████████████ Session Drill-Down (--explain)
 N6   ██████████████████████ Static HTML Report (report)
-N7   ····················· Live Monitoring TUI (watch)
+N7   ██████████████████████ Live Monitoring TUI (watch)
 
 PR18 ····················· Unsupervised Anomaly Detection (DEFERRED)
 PR19 ····················· LLM Verification (DEFERRED)
@@ -71,7 +71,7 @@ PR20 ····················· ML Pipeline (DEFERRED)
 | N4 | `n4-polish` | **merged** | 2026-05-03 | 2026-05-03 | Performance, calibration, path normalization |
 | N5 | `n5-explain` | **merged** | 2026-05-03 | 2026-05-03 | --explain flag, annotated timeline |
 | N6 | `n6-report` | **merged** | — | — | Static HTML report with Chart.js visualizations |
-| N7 | `n7-watch` | **planned** | — | — | Live monitoring TUI with incremental detection |
+| N7 | `n7-watch` | **merged** | 2026-05-03 | 2026-05-03 | Live monitoring TUI via BubbleTea |
 
 ## Blockers
 
@@ -141,6 +141,14 @@ Each milestone requires a gate check before the next PR can start.
 - [x] **N5.2 — Unknown session:** `burnwatch --explain nonexistent` prints error to stderr, exits code 1.
 - [x] **N5.3 — Scenarios pass:** 4 scenario tests (loop, reread, mixed, clean) verify annotation correctness.
 - [x] **N5.4 — No config needed:** `--explain` skips `.burnwatch.toml`, runs with all signals enabled.
+
+### Gate N7 (after N7 merge)
+
+- [x] **N7.1 — Watch starts:** `burnwatch watch` launches TUI, shows session list and alert pane.
+- [x] **N7.2 — Polling works:** Sessions refresh every `--interval` seconds (default 5s). New events update sparklines.
+- [x] **N7.3 — Partial detection:** Tool loops and file re-reads detected on partial sessions with relaxed thresholds.
+- [x] **N7.4 — Drill-down:** ENTER on session shows `--explain`-format detail inline. ESC returns.
+- [x] **N7.5 — Clean exit:** Q quits without dangling goroutines. Idle detection works (>30s).
 
 ## Quality snapshot
 

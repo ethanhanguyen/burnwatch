@@ -140,6 +140,28 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 
 - Signal timeline drill-down in the HTML table reuses `ComputeAnnotations` from `output/explain.go`. Any change to the annotation format in explain.go propagates to the report's expandable rows without compile error. `output/report_data.go:375-401`
 
+## N7 — Live Monitoring TUI (watch)
+
+### Gotcha
+
+- `UpdateState` calls `DetectPartialWaste` on every session on every poll cycle, not just the ones that received new events. Deduplication is needed — alerts with the same `(SessionID, Reason, Detail)` tuple are skipped if already in the alerts list. Without this, the same partial-session signal re-fires every 5 seconds. `analyze/watch.go:167-190`
+
+- `RenderSparkline` used a `maxVal == 0` check after the all-zero guard, but the all-zero guard returns early. The second zero-division guard is still needed for edge cases where a single poll interval has data but max is zero. `report/watch_format.go:48-50`
+
+- BubbleTea v1.x imports are `github.com/charmbracelet/bubbletea` and `github.com/charmbracelet/lipgloss`. Both must be explicit `go get` dependencies despite lipgloss being transitive — the module path is different from what older tutorials reference. `go.mod:7-8`
+
+### Pattern
+
+- Watch mode uses a `PartialDetectionConfig` struct to pass relaxed thresholds to `UpdateState` and `DetectPartialWaste`. This avoids importing `config.Config` in the watch path (watch mode is zero-config, like calibrate mode). `analyze/watch.go:9-13`
+
+- `NewFlagSet("watch", flag.ExitOnError)` follows the same subcommand pattern as `report`. Adding a new subcommand requires: (1) parse flags with `NewFlagSet`, (2) add dispatch in `cmd/root.go`, (3) create handler function. `cmd/root.go:591-603`
+
+- `handleWatch` returns the `tea.Model` error from `p.Run()` — this correctly propagates BubbleTea runtime errors (terminal init failures, etc.) to the caller for stderr + exit code handling. `cmd/watch.go:57`
+
+### Hidden coupling
+
+- Drill-down in watch mode calls `report.FormatExplain` with `nil` subagent trees. The explain formatter handles this by skipping the subagent breakdown section entirely. Any change to `FormatExplain` that assumes non-nil trees will break watch drill-down without compile error. `cmd/watch.go:253`
+
 ## Rules
 
 These govern how this file is maintained. Violating them makes the file less useful over time.
