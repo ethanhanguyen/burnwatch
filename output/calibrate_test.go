@@ -44,6 +44,8 @@ func TestCalibrationTextOutput(t *testing.T) {
 		"cost_outlier_sigma",
 		"input_overconsumption_sigma",
 		"output_explosion_sigma",
+		"tool_loop_max_repeats",
+		"file_reread_min_count",
 	}
 
 	for _, want := range required {
@@ -63,6 +65,13 @@ func TestCalibrationTextOutput(t *testing.T) {
 	}
 	if report.SessionCost.Count > 0 && !strings.Contains(text, "P50=") {
 		t.Error("text output missing percentile 'P50='")
+	}
+
+	if !strings.Contains(text, "Max consecutive tool repeats per session:") {
+		t.Error("text output missing tool loop distribution section")
+	}
+	if !strings.Contains(text, "Max file re-read count per session:") {
+		t.Error("text output missing file re-read distribution section")
 	}
 }
 

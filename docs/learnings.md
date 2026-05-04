@@ -35,6 +35,8 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Map iteration order in Go is non-deterministic. `BuildSubagentTree` iterates over `sessions` map, causing different output per run. Golden file tests must either sort output or avoid map-iteration-dependent sections. `output/json.go:113-115`
 - Unexported helper types must be declared at package level, not inside functions. Defining types inside functions is prohibited by the codebase convention and makes types invisible to other package-level functions. `output/text.go:12-29`
 - `--calibrate` mode skips config loading entirely. It works with zero-config — no `.burnwatch.toml` needed. Adding any config dependency to the calibration path would create a self-referential loop (can't calibrate thresholds until you have config, can't write config until you've calibrated). `cmd/root.go:107-167`
+- `NormalizePath` is in `source/claude.go`, not `source/path.go`. Despite the N4 plan referencing `source/path.go`, the function lives in `source/claude.go` because it was implemented during N1 alongside the Claude source. Both Claude and OpenCode sources import and use it from there. `source/claude.go:309-322`
+- Behavioral thresholds in calibration suggestions need conservative floors to avoid suggesting unreasonably low values from sparse data. If P95 = 0 (no loops/overlaps in test data), fall back to sensible defaults (5 for tool loops, 3 for file re-reads, 50 for overlap, 80 for restart). `analyze/calibrate.go:296-336`
 
 ## Mistakes
 
@@ -88,6 +90,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Changing `ComputeBaselines` or `DetectWaste` function signatures requires updating every call site: `cmd/root.go`, `output/text.go`, `output/bench_test.go`, `cmd/root_test.go`, `analyze/baseline_test.go`, `analyze/waste_test.go`, `output/scenario_test.go`, `output/output_test.go`. Use `replaceAll` with precise old/new strings for mechanical edits, but always review diff manually. `analyze/baseline.go:41`, `analyze/waste.go:56`
 
 - Behavioral heuristics (H10+) operate on raw `[]source.TokenEvent`, not `sessionAgg`. They need `EventIndex` for ordering and `ToolCalls`/`FileOps` for analysis. Scenario test fixtures MUST have `EventIndex` set correctly — the loader (`output/scenario_test.go:assignEventIndex`) sets it per-session in load order. Adding new signal reasons requires updating: `signalRank` in `signal_filter.go`, `writeSignalBlock` in `output/text.go`, and `recommendForSignal` in `recommend.go`. Default-off signals still need their config thresholds validated and test-covered. `analyze/loop.go:11`, `analyze/reread.go:10`
+- Calibration extension follows a pattern: add `DistStats` field to `CalibrationReport` → compute in `ComputeCalibration` with helper → add suggestion in `generateSuggestions` → display in `output/calibrate_text.go` → add test check → update golden file. The calibration path is zero-config by design (no `.burnwatch.toml` dependency). `analyze/calibrate.go:27-45`
 
 - `detectSubagentOverlap` uses Jaccard index to compare parent and subagent read paths. Threshold check uses `>=` not `>` because scenario data may produce exact-threshold matches (e.g., 4 parent files, 2 subagent files = exactly 50%). Using `>` causes false negatives at the threshold boundary. `analyze/overlap.go:55`
 
