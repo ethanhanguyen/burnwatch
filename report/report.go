@@ -493,6 +493,16 @@ canvas { width: 100% !important; height: 100% !important; }
   gap: var(--s4);
 }
 .leaderboard { display: flex; flex-direction: column; gap: var(--s2); }
+.leaderboard-scroll { max-height: 380px; overflow-y: auto; }
+.file-filter { display: flex; gap: 6px; margin-bottom: var(--s3); }
+.file-filter button {
+  background: var(--surface-2); border: 1px solid var(--rule);
+  color: var(--parchment-dim); font-family: 'Cinzel', serif;
+  font-size: 10px; padding: 4px 12px; border-radius: var(--r-sm);
+  cursor: pointer; letter-spacing: 0.1em; transition: all 0.15s;
+}
+.file-filter button.active,
+.file-filter button:hover { background: var(--surface-3); border-color: var(--gold); color: var(--gold); }
 .lb-row {
   display: grid;
   grid-template-columns: 32px 1fr auto;
@@ -902,7 +912,14 @@ func renderWasteSection() string {
 </div>
 <div class="panel">
 <div class="panel-title">Most Re-Read Files <span class="panel-meta">top files</span></div>
-<div class="leaderboard" id="leaderboard"></div>
+<div class="file-filter">
+  <button data-n="3">Top 3</button>
+  <button data-n="10" class="active">Top 10</button>
+  <button data-n="15">All</button>
+</div>
+<div class="leaderboard-scroll">
+  <div class="leaderboard" id="leaderboard"></div>
+</div>
 </div>
 </div>
 </section>
@@ -1048,7 +1065,7 @@ func renderJS() string {
             borderColor: gold,
             backgroundColor: 'rgba(202,138,4,0.10)',
             fill: true, tension: 0.32,
-            pointRadius: 0, pointHoverRadius: 5,
+            pointRadius: 3, pointHoverRadius: 5,
             pointBackgroundColor: goldBright,
             borderWidth: 2
           },
@@ -1057,7 +1074,7 @@ func renderJS() string {
             data: data.map(function(d){ return d.movingAvg; }),
             borderColor: copper,
             borderDash: [4, 4], borderWidth: 1.5,
-            pointRadius: 0, fill: false, tension: 0.32
+            pointRadius: 3, fill: false, tension: 0.32
           }
         ]
       },
@@ -1180,24 +1197,42 @@ func renderJS() string {
   function buildLeaderboard() {
     var data = REPORT.topFiles || [];
     if (!data.length) return;
-    var container = document.getElementById('leaderboard');
-    container.innerHTML = '';
-    var maxReads = data[0] ? data[0].readCount : 1;
-    var roman = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
-    data.forEach(function(d, i){
-      if (i >= roman.length) return;
-      var barPct = Math.round((d.readCount / maxReads) * 100);
-      var row = document.createElement('div');
-      row.className = 'lb-row';
-      row.style.setProperty('--bar', barPct + '%');
-      var rankCls = i === 0 ? 'lb-rank top' : 'lb-rank';
-      var label = formatFileLabel(d.path);
-      row.innerHTML = '<span class="' + rankCls + '">' + roman[i] + '</span>' +
-        '<span class="lb-name">' + label + '</span>' +
-        '<span class="lb-meta"><span class="reads">' + d.readCount + '\u00d7</span>' +
-        '<span class="cost">$' + d.cost.toFixed(2) + '</span></span>';
-      container.appendChild(row);
-    });
+    var currentN = 10;
+
+    function render(n) {
+      var container = document.getElementById('leaderboard');
+      container.innerHTML = '';
+      var maxReads = data[0] ? data[0].readCount : 1;
+      var roman = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
+      var limit = Math.min(n, data.length, roman.length);
+      for (var i = 0; i < limit; i++) {
+        var d = data[i];
+        var barPct = Math.round((d.readCount / maxReads) * 100);
+        var row = document.createElement('div');
+        row.className = 'lb-row';
+        row.style.setProperty('--bar', barPct + '%');
+        var rankCls = i === 0 ? 'lb-rank top' : 'lb-rank';
+        var label = formatFileLabel(d.path);
+        row.innerHTML = '<span class="' + rankCls + '">' + roman[i] + '</span>' +
+          '<span class="lb-name">' + label + '</span>' +
+          '<span class="lb-meta"><span class="reads">' + d.readCount + '\u00d7</span>' +
+          '<span class="cost">$' + d.cost.toFixed(2) + '</span></span>';
+        container.appendChild(row);
+      }
+    }
+
+    render(currentN);
+
+    var buttons = document.querySelectorAll('.file-filter button');
+    for (var b = 0; b < buttons.length; b++) {
+      buttons[b].addEventListener('click', function(e){
+        var n = parseInt(this.getAttribute('data-n'));
+        currentN = n;
+        render(n);
+        buttons.forEach(function(bt){ bt.classList.remove('active'); });
+        this.classList.add('active');
+      });
+    }
   }
 
   function formatFileLabel(path) {
@@ -1325,7 +1360,7 @@ func renderJS() string {
     signals.forEach(function(s, i){
       var reasonLabel = s.reason.replace(/_/g, ' ');
       var reasonCap = reasonLabel.charAt(0).toUpperCase() + reasonLabel.slice(1);
-      var detailText = s.reason + ' · ' + s.metric.toFixed(1);
+      var detailText = escHtml(s.detail);
 
       var row = document.createElement('tr');
       row.innerHTML =

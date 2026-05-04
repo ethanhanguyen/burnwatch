@@ -37,6 +37,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - `--calibrate` mode skips config loading entirely. It works with zero-config — no `.burnwatch.toml` needed. Adding any config dependency to the calibration path would create a self-referential loop (can't calibrate thresholds until you have config, can't write config until you've calibrated). `cmd/root.go:107-167`
 - `NormalizePath` is in `source/claude.go`, not `source/path.go`. Despite the N4 plan referencing `source/path.go`, the function lives in `source/claude.go` because it was implemented during N1 alongside the Claude source. Both Claude and OpenCode sources import and use it from there. `source/claude.go:309-322`
 - Behavioral thresholds in calibration suggestions need conservative floors to avoid suggesting unreasonably low values from sparse data. If P95 = 0 (no loops/overlaps in test data), fall back to sensible defaults (5 for tool loops, 3 for file re-reads, 50 for overlap, 80 for restart). `analyze/calibrate.go:296-336`
+- `WasteSignal.Detail` may contain HTML-special characters (`<`, `>`, `&`) from file paths and tool arguments. When embedding into JS innerHTML assignments, the string MUST pass through `escHtml()` — raw injection is an XSS vector. `report/report.go:1363`
 
 ## Mistakes
 
@@ -46,6 +47,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - Defined `sessionInfo` as a local type inside `BuildSubagentTree` but tried to use it in helper function signatures. Local types defined inside a function can't be referenced from other function signatures — must be package-level. `analyze/subagent.go:25-31`
 - Infinite recursion in `BuildSubagentTree` — real OpenCode data contained cyclic parent-child relationships among subagent sessions, causing stack overflow. Fix: `buildChildNodesVisited` tracks visited session IDs with a `map[string]bool` passed through the call chain. `analyze/subagent.go:114-145`
 - Golden file tests used `time.Now()` for today/week calculations, making output non-deterministic. Tests passed at generation time but failed on subsequent runs. Fix: extract to package-level `NowFunc = time.Now` variable, override in tests to a fixed reference time. `output/json.go:223, output/output_test.go:21`
+- `tracedCost` double-counts when summed per-signal without deduplicating by session ID. A session generating 4 waste signals has its `SessionCost` added 4×, so `tracedCost > totalCost`. Fix: track sessions with a `map[string]bool`, only add cost for first-time sessions. Always check whether the cost metric is session-scoped or signal-scoped before summing. `report/report_data.go:126-146`
 
 - `BurntSushi/toml` unmarshals into an existing struct, only overriding fields present in the TOML file. The `Defaults()` pattern (return a struct, unmarshal on top) gives partial-override semantics without manual field merging. `config/config.go:70-75`
 
@@ -64,6 +66,7 @@ This file is a curated knowledge reference, not a chronological PR log. Its purp
 - HTTP clients that fetch from a fixed external URL should expose a package-level `var url = "..."` so tests can override it with a `httptest.Server` URL. The main function delegates to an unexported helper that takes the URL explicitly. `source/pricing_fetcher.go:42-49`
 - Use a package-level `var NowFunc = time.Now` for testable time-dependent code. Override in tests to a fixed reference time so today/week/month calculations produce deterministic output. `output/json.go:223`, `output/output_test.go:21`
 - Golden file tests with `-update` flag: use `flag.Bool("update", ...)` and `os.WriteFile` to regenerate expected output when format changes. Run `go test ./pkg/... -update` to update, then re-run without flag to verify. `output/output_test.go:15,51-57`
+- `projectLabel()` extracts display names from project identifiers across harnesses: basename for `/`-separated Claude paths (`Users/hoang/burnwatch` → `burnwatch`), first 8 chars for OpenCode hashes longer than 12 chars (`808a448f25e...` → `808a448f`), pass-through for short strings, `"(unknown)"` for empty or trailing-slash-only inputs. `report/report_data.go:454-469`
 
 ## Hidden Couplings
 

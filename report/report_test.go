@@ -151,6 +151,28 @@ func TestFormatReport_WasteByType(t *testing.T) {
 	}
 }
 
+func TestProjectLabel(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"", "(unknown)"},
+		{"burnwatch", "burnwatch"},
+		{"Users/hoang/burnwatch", "burnwatch"},
+		{"Users/hoang/multi/word/path", "path"},
+		{"simple", "simple"},
+		{"a/b/", "(unknown)"},
+		{"808a448f25e36b3c4f28799d475699889c2c7219", "808a448f"},
+		{"short-proj", "short-proj"},
+	}
+	for _, tt := range tests {
+		got := projectLabel(tt.input)
+		if got != tt.expected {
+			t.Errorf("projectLabel(%q) = %q, want %q", tt.input, got, tt.expected)
+		}
+	}
+}
+
 func TestFormatReport_TopFiles(t *testing.T) {
 	signals := []analyze.WasteSignal{
 		{SessionID: "s1", Reason: "file_reread", Detail: "config/settings.json read 5 times, 0 cache hits between reads", SessionCost: 1.0},

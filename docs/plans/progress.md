@@ -2,7 +2,7 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 7/7 complete (v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 7/7 complete (v3), 1/1 complete (v3.1)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
@@ -37,6 +37,7 @@ N4   ██████████████████████ Polish +
 N5   ██████████████████████ Session Drill-Down (--explain)
 N6   ██████████████████████ Static HTML Report (report)
 N7   ██████████████████████ Live Monitoring TUI (watch)
+N8   ██████████████████████ Report Bug Fixes (5 corrections)
 
 PR18 ····················· Unsupervised Anomaly Detection (DEFERRED)
 PR19 ····················· LLM Verification (DEFERRED)
@@ -72,6 +73,7 @@ PR20 ····················· ML Pipeline (DEFERRED)
 | N5 | `n5-explain` | **merged** | 2026-05-03 | 2026-05-03 | --explain flag, annotated timeline |
 | N6 | `n6-report` | **merged** | — | — | Static HTML report with Chart.js visualizations |
 | N7 | `n7-watch` | **merged** | 2026-05-03 | 2026-05-03 | Live monitoring TUI via BubbleTea |
+| N8 | `n8-report-fixes` | **merged** | 2026-05-04 | 2026-05-04 | 5 report corrections: tracedCost dedup, chart points, project labels, top-N filter, signal detail |
 
 ## Blockers
 
@@ -97,6 +99,9 @@ UX phases:
   N5 (explain)  — depends on N2 (H10/H11 signals for annotation)
   N6 (report)   — depends on N5 (reuses annotation helpers)
   N7 (watch)    — depends on N5 (reuses drill-down), N2 (incremental detection)
+
+v3.1 (Report Fixes — 1 PR)
+  N8      — depends on N6
 
 Phase 2 (Deferred — post v3)
   N4 ─── PR19 (LLM verification)
@@ -149,6 +154,14 @@ Each milestone requires a gate check before the next PR can start.
 - [x] **N7.3 — Partial detection:** Tool loops and file re-reads detected on partial sessions with relaxed thresholds.
 - [x] **N7.4 — Drill-down:** ENTER on session shows `--explain`-format detail inline. ESC returns.
 - [x] **N7.5 — Clean exit:** Q quits without dangling goroutines. Idle detection works (>30s).
+
+### Gate N8 (after N8 merge)
+
+- [x] **N8.1 — TracedCost sanity:** For report output, `summary.tracedCost ≤ summary.totalCost`. Spot-check a report with ≥2 signals per session.
+- [x] **N8.2 — Chart points visible:** Cost Over Time chart has visible data dots. Tooltip shows date + dollar amount on hover.
+- [x] **N8.3 — Project basenames:** Waste bar chart x-axis and signals table project column show basenames (e.g. `burnwatch`), not paths.
+- [x] **N8.4 — Top-files filter:** Leaderboard has Top 3 / Top 10 / All buttons. Clicking changes list count. Container scrolls when content overflows.
+- [x] **N8.5 — Reason detail:** `<small>` under each signal reason shows the full explanation, not `reason + ' · ' + metric`.
 
 ## Quality snapshot
 

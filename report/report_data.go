@@ -2,6 +2,7 @@ package report
 
 import (
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/ethanhanguyen/burnwatch/analyze"
@@ -124,6 +125,7 @@ func computeReportSummary(events []source.TokenEvent, signals []analyze.WasteSig
 
 	var toolLoop, reRead, overlap, restart int
 	var tracedCost float64
+	tracedSessions := make(map[string]bool)
 	highSignals := 0
 	mediumSignals := 0
 	lowSignals := 0
@@ -138,7 +140,10 @@ func computeReportSummary(events []source.TokenEvent, signals []analyze.WasteSig
 		case "session_restart":
 			restart++
 		}
-		tracedCost += s.SessionCost
+		if !tracedSessions[s.SessionID] {
+			tracedSessions[s.SessionID] = true
+			tracedCost += s.SessionCost
+		}
 		switch s.Severity {
 		case "high":
 			highSignals++
@@ -158,7 +163,7 @@ func computeReportSummary(events []source.TokenEvent, signals []analyze.WasteSig
 	}
 
 	return reportSummary{
-		TotalCost:     totalCost,
+		TotalCost:     round2(totalCost),
 		TracedCost:    round2(tracedCost),
 		TotalSignals:  len(signals),
 		HighSignals:   highSignals,
@@ -228,13 +233,14 @@ func computeWasteByType(signals []analyze.WasteSignal) []wasteByProject {
 	type wp struct {
 		total   float64
 		reasons map[string]float64
+		label   string
 	}
 	projects := make(map[string]*wp)
 
 	for _, s := range signals {
 		p := projects[s.Project]
 		if p == nil {
-			p = &wp{reasons: make(map[string]float64)}
+			p = &wp{reasons: make(map[string]float64), label: projectLabel(s.Project)}
 			projects[s.Project] = p
 		}
 		p.total += s.SessionCost
@@ -242,9 +248,9 @@ func computeWasteByType(signals []analyze.WasteSignal) []wasteByProject {
 	}
 
 	var result []wasteByProject
-	for name, p := range projects {
+	for _, p := range projects {
 		result = append(result, wasteByProject{
-			Project: name,
+			Project: p.label,
 			Total:   round2(p.total),
 			Reasons: p.reasons,
 		})
@@ -366,7 +372,7 @@ func computeReportSignals(signals []analyze.WasteSignal) []reportSignal {
 	for _, s := range signals {
 		result = append(result, reportSignal{
 			SessionID: s.SessionID,
-			Project:   s.Project,
+			Project:   projectLabel(s.Project),
 			Severity:  s.Severity,
 			Reason:    s.Reason,
 			Detail:    s.Detail,
@@ -446,6 +452,22 @@ func toolCallSummary(tc source.ToolCall) string {
 		return name + " " + args
 	}
 	return name
+}
+
+func projectLabel(project string) string {
+	if project == "" {
+		return "(unknown)"
+	}
+	if idx := strings.LastIndex(project, "/"); idx >= 0 {
+		if result := project[idx+1:]; result != "" {
+			return result
+		}
+		return "(unknown)"
+	}
+	if len(project) > 12 {
+		return project[:8]
+	}
+	return project
 }
 
 func round2(v float64) float64 {
