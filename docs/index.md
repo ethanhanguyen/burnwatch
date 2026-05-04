@@ -54,6 +54,8 @@ See [decisions/2026-05-03-event-level-waste-detection.md](./decisions/2026-05-03
 | **N3** | [plans/N3-prompt.md](./plans/N3-prompt.md) | **Subagent overlap + session restart (H12, H13)** | N1 |
 | **N4** | [plans/N4-prompt.md](./plans/N4-prompt.md) | **Performance, calibration, polish** | N2, N3 |
 | **N5** | [plans/N5-prompt.md](./plans/N5-prompt.md) | **Session drill-down — `--explain <id>`** | N2 |
+| **N6** | [plans/N6-prompt.md](./plans/N6-prompt.md) | **Static HTML report — `burnwatch report`** | N5 |
+| **N7** | [plans/N7-prompt.md](./plans/N7-prompt.md) | **Live monitoring TUI — `burnwatch watch`** | N5, N2 |
 
 ### Deferred
 

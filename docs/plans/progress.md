@@ -2,13 +2,13 @@
 
 > Read this on session start to understand current state.
 
-## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 4/5 complete (v3)
+## Overall: 10/10 PRs complete (v1), 4/4 complete (v2), 3/3 complete (v2.5), 4/7 complete (v3)
 
 ```
 v1    ████████████████████████████████████████ 10/10 merged
 v2    ████████████████████████████████████████ 4/4 merged
 v2.5  ████████████████████████████████████████ 3/3 merged
-v3    ████████████████████████████████░░░░░░ 4/5
+v3    ███████████████████████████░░░░░░░░░░░░ 4/7
 
 PR1  ██████████████████████ Foundation
 PR2  ██████████████████████ OpenCode Source
@@ -35,6 +35,8 @@ N2   ██████████████████████ Loop + R
 N3   ██████████████████████ Subagent Overlap + Restart (H12,H13)
 N4   ██████████████████████ Polish + Calibration
 N5   ····················· Session Drill-Down (--explain)
+N6   ····················· Static HTML Report (report)
+N7   ····················· Live Monitoring TUI (watch)
 
 PR18 ····················· Unsupervised Anomaly Detection (DEFERRED)
 PR19 ····················· LLM Verification (DEFERRED)
@@ -68,6 +70,8 @@ PR20 ····················· ML Pipeline (DEFERRED)
 | N3 | `n3-overlap-restart` | **merged** | 2026-05-03 | 2026-05-03 | H12, H13 — subagent overlap + session restart |
 | N4 | `n4-polish` | **merged** | 2026-05-03 | 2026-05-03 | Performance, calibration, path normalization |
 | N5 | `n5-explain` | **planned** | — | — | --explain <id>: annotated session timeline |
+| N6 | `n6-report` | **planned** | — | — | Static HTML report with Chart.js visualizations |
+| N7 | `n7-watch` | **planned** | — | — | Live monitoring TUI with incremental detection |
 
 ## Blockers
 
@@ -76,20 +80,23 @@ None.
 ## Dependency graph
 
 ```
-v3 (Event-Level Waste Detection — 5 PRs)
+v3 (Event-Level Waste Detection + UX — 7 PRs)
   N1 ─── N2
   │       │
   │       ├── N4
   │       │
   │       └── N5 (--explain)
+  │             │
+  │             └── N6 (report)
+  │                   │
+  │                   └── N7 (watch)
   │
-  └────── N3 ─── N4 ─── N5
+  └────── N3 ─── N4
 
-  N5 depends on N2 (needs H10/H11 signals for annotation).
-  N5 is parallel-safe with N3 and N4 (reads the same data model, adds new output formatting).
-
-UX (Phase II-III)
-  N5 ─── Report (HTML) ─── Watch (TUI live monitoring)
+UX phases:
+  N5 (explain)  — depends on N2 (H10/H11 signals for annotation)
+  N6 (report)   — depends on N5 (reuses annotation helpers)
+  N7 (watch)    — depends on N5 (reuses drill-down), N2 (incremental detection)
 
 Phase 2 (Deferred — post v3)
   N4 ─── PR19 (LLM verification)
