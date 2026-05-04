@@ -446,23 +446,17 @@ func maxFileReReads(events []source.TokenEvent) int {
 }
 
 func computeOverlapDist(sessionGroups map[string][]source.TokenEvent, trees []SubagentTree) DistStats {
-	eventsBySession := sessionGroups
-	treeBySession := make(map[string]*SubagentTree)
-	for i := range trees {
-		treeBySession[trees[i].SessionID] = &trees[i]
-	}
-
 	var overlapPcts []float64
 	for _, tree := range trees {
 		if len(tree.Subagents) == 0 {
 			continue
 		}
-		parentFiles := uniqueReadPaths(eventsBySession[tree.SessionID])
+		parentFiles := uniqueReadPaths(sessionGroups[tree.SessionID])
 		if len(parentFiles) == 0 {
 			continue
 		}
 		for _, sub := range tree.Subagents {
-			subFiles := uniqueReadPaths(eventsBySession[sub.SessionID])
+			subFiles := uniqueReadPaths(sessionGroups[sub.SessionID])
 			if len(subFiles) == 0 {
 				continue
 			}
